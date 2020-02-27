@@ -8,7 +8,7 @@ class Quad(): IDrawable {
     private val shader: Shader = Shader("assets/shaders/fragment.glsl","assets/shaders/vertex.glsl")
     init{
         glBindBuffer(GL_ARRAY_BUFFER, buffer)
-        glBufferData(GL_ARRAY_BUFFER, floatArrayOf(0f,0f,0f,1f,1f,1f,0f,0f,1f,0f,1f,1f), GL_STATIC_DRAW)
+        glBufferData(GL_ARRAY_BUFFER, floatArrayOf(0f,0f,0f,1f,1f,1f,1f,0f), GL_STATIC_DRAW)
         val positionAttr = glGetAttribLocation(shader.program, "position")
         glVertexAttribPointer(positionAttr, 2, GL_FLOAT, false, 0, 0)
         glEnableVertexAttribArray(positionAttr)
@@ -20,6 +20,7 @@ class Quad(): IDrawable {
         glBindBuffer(GL_ARRAY_BUFFER, buffer)
 
         shader.bind()
-        glDrawArrays(GL_TRIANGLES, 0, 6)
+        glDrawArrays(GL11.GL_QUADS, 0, 4)
+
     }
 }

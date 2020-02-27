@@ -1,5 +1,7 @@
+import org.lwjgl.opengl.GL20
 import java.io.File
 import org.lwjgl.opengl.GL46.*
+import java.time.LocalDateTime
 
 class Shader(pathFrag: String, pathVert: String) {
     public val program: Int
@@ -15,6 +17,7 @@ class Shader(pathFrag: String, pathVert: String) {
 
     fun bind() {
         glUseProgram(program)
+        glUniform1f(glGetUniformLocation(program, "time"), time)
     }
 
     private fun compileShader(path: String, type: Int): Int {

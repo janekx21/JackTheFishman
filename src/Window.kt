@@ -14,6 +14,7 @@ fun init() {
     isInitialised = true
 }
 
+var time = 0f
 
 class Window(var size: Point, var title: String, private var pointer: Long = 0): Closeable {
     init {
@@ -55,6 +56,7 @@ class Window(var size: Point, var title: String, private var pointer: Long = 0):
 
             glfwSwapBuffers(pointer)
             glfwPollEvents()
+            time += .177777f
         }
     }
 
