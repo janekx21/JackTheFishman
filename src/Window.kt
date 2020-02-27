@@ -46,10 +46,12 @@ class Window(var size: Point, var title: String, private var pointer: Long = 0):
     }
 
     fun loop() {
+        val quad = Quad()
         while(!glfwWindowShouldClose(pointer)){
-            glClearColor(1f,1f,1f,1f)
+            glClearColor(.1f,.1f,.1f,1f)
             glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
 
+            quad.draw()
 
             glfwSwapBuffers(pointer)
             glfwPollEvents()
