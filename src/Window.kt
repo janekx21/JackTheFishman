@@ -1,9 +1,15 @@
 import org.lwjgl.glfw.GLFW.*
+import org.lwjgl.glfw.GLFWErrorCallback
+import org.lwjgl.opengl.GL.*
+import org.lwjgl.opengl.GL11
+import org.lwjgl.opengl.GL46.*
+import java.awt.image.RGBImageFilter
 import java.io.Closeable
 
 var isInitialised = false;
 
 fun init() {
+    GLFWErrorCallback.createPrint(System.err).set()
     check(glfwInit()){"GLFW could'nt init"}
     isInitialised = true
 }
@@ -22,6 +28,17 @@ class Window(var size: Point, var title: String, private var pointer: Long = 0):
 
         pointer = glfwCreateWindow(size.x, size.y, title, 0, 0)
         glfwMakeContextCurrent(pointer)
+
+        glfwSetKeyCallback(pointer){window, key, scancode, action, mods ->
+            if(key == GLFW_KEY_ESCAPE && action == GLFW_PRESS){
+                glfwSetWindowShouldClose(window, true)
+            }
+        }
+
+
+
+        glfwSwapInterval(1)
+        createCapabilities()
     }
 
     fun open() {
@@ -30,8 +47,12 @@ class Window(var size: Point, var title: String, private var pointer: Long = 0):
 
     fun loop() {
         while(!glfwWindowShouldClose(pointer)){
-            glfwPollEvents()
+            glClearColor(1f,1f,1f,1f)
+            glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
+
+
             glfwSwapBuffers(pointer)
+            glfwPollEvents()
         }
     }
 
