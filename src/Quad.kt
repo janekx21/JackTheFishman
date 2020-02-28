@@ -18,10 +18,15 @@ class Quad() : IDrawable {
         val data = stbi_load("assets/ex.png", width, height, channels, 4)
         check(data != null) { "image could not be loaded" }
         val texture = glGenTextures()
+        glActiveTexture(GL_TEXTURE0)
         glBindTexture(GL_TEXTURE_2D, texture)
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width[0], height[0], 0, GL_RGBA, GL_UNSIGNED_BYTE, data)
         glGenerateMipmap(GL_TEXTURE_2D)
+
         stbi_image_free(data)
+
+        val texAttr = glGetAttribLocation(shader.program, "tex")
+        glProgramUniform1i(shader.program, texAttr, 0)
     }
 
     override fun draw() {
