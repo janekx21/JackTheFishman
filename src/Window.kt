@@ -1,23 +1,21 @@
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.glfw.GLFWErrorCallback
-import org.lwjgl.opengl.GL.*
-import org.lwjgl.opengl.GL11
+import org.lwjgl.opengl.GL.createCapabilities
 import org.lwjgl.opengl.GL46.*
-import java.awt.image.RGBImageFilter
 import java.io.Closeable
 
 var isInitialised = false;
 
 fun init() {
     GLFWErrorCallback.createPrint(System.err).set()
-    check(glfwInit()){"GLFW could'nt init"}
+    check(glfwInit()) { "GLFW could'nt init" }
     isInitialised = true
 }
 
 
-class Window(var size: Point, var title: String, private var pointer: Long = 0): Closeable {
+class Window(var size: Point, var title: String, private var pointer: Long = 0) : Closeable {
     init {
-        check(isInitialised) {"is not initialed"}
+        check(isInitialised) { "is not initialed" }
 
         // Configure GLFW
         glfwDefaultWindowHints() // optional, the current window hints are already the default
@@ -29,12 +27,15 @@ class Window(var size: Point, var title: String, private var pointer: Long = 0):
         pointer = glfwCreateWindow(size.x, size.y, title, 0, 0)
         glfwMakeContextCurrent(pointer)
 
-        glfwSetKeyCallback(pointer){window, key, scancode, action, mods ->
-            if(key == GLFW_KEY_ESCAPE && action == GLFW_PRESS){
+        glfwSetKeyCallback(pointer) { window, key, scancode, action, mods ->
+            if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
                 glfwSetWindowShouldClose(window, true)
             }
         }
 
+        glfwSetFramebufferSizeCallback(pointer) { window, width, height ->
+            glViewport(0, 0, width, height)
+        }
 
 
         glfwSwapInterval(1)
@@ -47,8 +48,8 @@ class Window(var size: Point, var title: String, private var pointer: Long = 0):
 
     fun loop() {
         val quad = Quad()
-        while(!glfwWindowShouldClose(pointer)){
-            glClearColor(.1f,.1f,.1f,1f)
+        while (!glfwWindowShouldClose(pointer)) {
+            glClearColor(.1f, .1f, .1f, 1f)
             glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
 
             quad.draw()
