@@ -1,7 +1,7 @@
 import java.io.File
 import org.lwjgl.opengl.GL46.*
 
-class Shader(pathFrag: String, pathVert: String) {
+open class Shader(pathFrag: String, pathVert: String) : IBindable {
     public val program: Int
     init {
         val vs = compileShader(pathVert, GL_VERTEX_SHADER)
@@ -13,7 +13,7 @@ class Shader(pathFrag: String, pathVert: String) {
         glLinkProgram(program)
     }
 
-    fun bind() {
+    override fun bind() {
         glUseProgram(program)
     }
 

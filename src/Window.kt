@@ -3,6 +3,7 @@ import org.lwjgl.glfw.GLFWErrorCallback
 import org.lwjgl.opengl.GL.createCapabilities
 import org.lwjgl.opengl.GL46.*
 import java.io.Closeable
+import kotlin.math.roundToInt
 
 var isInitialised = false;
 
@@ -38,7 +39,7 @@ class Window(var size: Point, var title: String, private var pointer: Long = 0) 
         }
 
 
-        glfwSwapInterval(1)
+        // glfwSwapInterval(1)
         createCapabilities()
     }
 
@@ -47,15 +48,29 @@ class Window(var size: Point, var title: String, private var pointer: Long = 0) 
     }
 
     fun loop() {
-        val quad = Quad()
+        val model = Model(primitiveQuad, DefaultShader, Vector(.5f, .5f), Texture("assets/ex.png"))
+        val tex = Texture("assets/ex.png")
+        val quadBuffer = primitiveQuad.toVertexBuffer()
+        val num = 1000;
+        val arr = List<Model>(num) {i -> Model(quadBuffer, DefaultShader, Vector(i*(1f/num) - 1f, (i%32)*(1f/num) - 1f), tex)}
+        var lastFps = 60f;
         while (!glfwWindowShouldClose(pointer)) {
+            val a = glfwGetTime()
             glClearColor(.1f, .1f, .1f, 1f)
             glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
 
-            quad.draw()
+            // model.draw()
+            // quad.draw()
+            for (m in arr) {
+                m.draw()
+            }
 
             glfwSwapBuffers(pointer)
             glfwPollEvents()
+            val b = glfwGetTime()
+            val fps = (1f / (b-a)) * .1f + lastFps*.9f;
+            glfwSetWindowTitle(pointer, "fps: ${fps.roundToInt()}")
+            lastFps = fps.toFloat();
         }
     }
 
