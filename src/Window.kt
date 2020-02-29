@@ -52,7 +52,7 @@ class Window(var size: Point, var title: String, private var pointer: Long = 0) 
         val tex = Texture("assets/ex.png")
         val quadBuffer = primitiveQuad.toVertexBuffer()
         val num = 1000;
-        val arr = List<Model>(num) {i -> Model(quadBuffer, DefaultShader, Vector(i*(1f/num) - 1f, (i%32)*(1f/num) - 1f), tex)}
+        val arr = List<Model>(num) {i -> Model(quadBuffer, DefaultShader, Vector(i*(1f/num) - 1f, i*(1f/num) - 1f), tex)}
         var lastFps = 60f;
         while (!glfwWindowShouldClose(pointer)) {
             val a = glfwGetTime()
