@@ -1,3 +1,7 @@
+package graphics
+
+import linear.Vector
+
 data class Mesh(public var vertexes: List<Vector>) {
     val size: Int
         get() = vertexes.size

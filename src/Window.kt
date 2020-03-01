@@ -1,3 +1,7 @@
+import linear.Point
+import linear.Vector
+import ui.Component
+import ui.Panel
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.glfw.GLFWErrorCallback
 import org.lwjgl.opengl.GL.createCapabilities
@@ -40,7 +44,10 @@ class Window(var size: Point, var title: String, private var pointer: Long = 0) 
         }
 
         glfwSetCursorPosCallback(pointer) { window, xpos, ypos ->
-            panel.position = Vector(xpos.toFloat() / size.x, 1f - ypos.toFloat() / size.y) * 2f - Vector.one
+            panel.position = Vector(
+                xpos.toFloat() / size.x,
+                1f - ypos.toFloat() / size.y
+            ) * 2f - Vector.one
         }
 
 
@@ -48,9 +55,17 @@ class Window(var size: Point, var title: String, private var pointer: Long = 0) 
         createCapabilities()
     }
 
-    val panel = Panel(Vector(.1f, .1f), Vector(.5f, .2f))
-    val panel2 = Panel(Vector(.1f, .1f), Vector(.5f, .2f))
-    val panel3 = Panel(Vector(.1f, .1f), Vector(.5f, .2f))
+    private val panel = Panel(Vector(.1f, .1f), Vector(.5f, .2f))
+    private val panel2 = Panel(Vector(.1f, .1f), Vector(.5f, .2f))
+    private val panel3 = Panel(Vector(.1f, .1f), Vector(.5f, .2f))
+
+    private val rootComponent = Component.Group.Horizontal(
+        Vector.one, listOf(
+        panel2,
+        Component.Group.Vertical(
+            Vector.one, listOf(
+            panel3,
+            Component.Final(Vector(2f, 2f))))))
 
     fun open() {
         glfwShowWindow(pointer)
@@ -59,20 +74,13 @@ class Window(var size: Point, var title: String, private var pointer: Long = 0) 
 
     fun loop() {
         var lastFps = 60f;
-        val c = Component.Group.Horizontal(Vector.one, listOf(
-            panel2,
-            Component.Group.Vertical(Vector.one, listOf(
-                panel3,
-                Component.Final(Vector(2f, 2f))))))
-
-
         while (!glfwWindowShouldClose(pointer)) {
             val a = glfwGetTime()
             glClearColor(.1f, .1f, .1f, 1f)
             glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
 
             panel.draw()
-            c.draw(Vector.zero, Vector.one * 2f)
+            rootComponent.draw(Vector.zero, Vector.one * 2f)
 
             glfwSwapBuffers(pointer)
             glfwPollEvents()

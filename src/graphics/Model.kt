@@ -1,3 +1,7 @@
+package graphics
+
+import linear.Location
+import linear.Vector
 import org.lwjgl.opengl.GL46.*
 
 open class Model(

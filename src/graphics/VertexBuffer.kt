@@ -1,6 +1,8 @@
+package graphics
+
 import org.lwjgl.opengl.GL46.*
 
-class VertexBuffer(private val mesh: Mesh) : IBindable, IDrawable {
+open class VertexBuffer(private val mesh: Mesh) : IBindable, IDrawable {
     private val buffer = glGenBuffers()
     private val size: Int = mesh.size
 

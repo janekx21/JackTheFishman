@@ -1,3 +1,7 @@
+package graphics
+
+import linear.Vector
+
 val primitiveQuad = Mesh(
     listOf(
         Vector(0f, 0f),
@@ -7,4 +11,6 @@ val primitiveQuad = Mesh(
     )
 )
 
-val primitiveQuadBuffer = primitiveQuad.toVertexBuffer()
+object QuadBuffer : VertexBuffer(primitiveQuad) {}
+
+

@@ -1,3 +1,5 @@
+package linear
+
 import kotlin.math.sqrt
 
 data class Vector(val x: Float, val y: Float) {
@@ -26,7 +28,7 @@ data class Vector(val x: Float, val y: Float) {
         val down = Vector(0f, -1f)
 
         fun lerp(a: Vector, b: Vector, t: Float) : Vector {
-            return Vector(a.x * (1-t) + b.x * t, a.y * (1-t) + b.y * t)
+            return Vector(a.x * (1 - t) + b.x * t, a.y * (1 - t) + b.y * t)
         }
     }
 }
