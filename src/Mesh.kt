@@ -1,4 +1,4 @@
-data class Mesh(public val vertexes: List<Vector>) {
+data class Mesh(public var vertexes: List<Vector>) {
     val size: Int
         get() = vertexes.size
 
@@ -10,5 +10,13 @@ data class Mesh(public val vertexes: List<Vector>) {
 
     fun toVertexBuffer(): VertexBuffer {
         return VertexBuffer(this)
+    }
+
+    operator fun plus(other: Mesh): Mesh {
+        return Mesh(vertexes + other.vertexes);
+    }
+
+    public fun translate(delta: Vector): Mesh {
+        return Mesh(vertexes.map { vector -> vector + delta })
     }
 }

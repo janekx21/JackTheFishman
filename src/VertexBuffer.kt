@@ -1,6 +1,6 @@
 import org.lwjgl.opengl.GL46.*
 
-class VertexBuffer(mesh: Mesh) : IBindable, IDrawable {
+class VertexBuffer(private val mesh: Mesh) : IBindable, IDrawable {
     private val buffer = glGenBuffers()
     private val size: Int = mesh.size
 
@@ -14,6 +14,7 @@ class VertexBuffer(mesh: Mesh) : IBindable, IDrawable {
     }
 
     override fun draw() {
-        glDrawArrays(GL_TRIANGLES, 0, size)
+        bind()
+        glDrawArrays(GL_QUADS, 0, size)
     }
 }
