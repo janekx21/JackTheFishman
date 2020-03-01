@@ -1,11 +1,11 @@
 import linear.Point
 import linear.Vector
-import ui.Component
-import ui.Panel
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.glfw.GLFWErrorCallback
 import org.lwjgl.opengl.GL.createCapabilities
 import org.lwjgl.opengl.GL46.*
+import ui.Component
+import ui.Panel
 import java.io.Closeable
 import kotlin.math.roundToInt
 
@@ -36,6 +36,12 @@ class Window(var size: Point, var title: String, private var pointer: Long = 0) 
             if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
                 glfwSetWindowShouldClose(window, true)
             }
+            if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS) {
+                panel2.volume += Vector.right * .1f
+            }
+            if (key == GLFW_KEY_LEFT && action == GLFW_PRESS) {
+                panel2.volume += Vector.left * .1f
+            }
         }
 
         glfwSetFramebufferSizeCallback(pointer) { window, width, height ->
@@ -51,7 +57,7 @@ class Window(var size: Point, var title: String, private var pointer: Long = 0) 
         }
 
 
-        // glfwSwapInterval(1)
+        glfwSwapInterval(1)
         createCapabilities()
     }
 
@@ -61,11 +67,15 @@ class Window(var size: Point, var title: String, private var pointer: Long = 0) 
 
     private val rootComponent = Component.Group.Horizontal(
         Vector.one, listOf(
-        panel2,
-        Component.Group.Vertical(
-            Vector.one, listOf(
-            panel3,
-            Component.Final(Vector(2f, 2f))))))
+            panel2,
+            Component.Group.Vertical(
+                Vector.one, listOf(
+                    panel3,
+                    Component.Final(Vector(2f, 2f))
+                )
+            )
+        )
+    )
 
     fun open() {
         glfwShowWindow(pointer)

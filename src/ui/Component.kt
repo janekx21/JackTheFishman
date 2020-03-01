@@ -2,7 +2,7 @@ package ui
 
 import linear.Vector
 
-abstract class Component(val type: LayoutType, val volume: Vector) {
+abstract class Component(val type: LayoutType, var volume: Vector) {
 
     abstract class Group(volume: Vector, protected val childes: List<Component>) : Component(
         LayoutType.flexBox, volume
