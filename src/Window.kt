@@ -5,6 +5,7 @@ import org.lwjgl.glfw.GLFWErrorCallback
 import org.lwjgl.opengl.GL.createCapabilities
 import org.lwjgl.opengl.GL46.*
 import ui.Component
+import ui.Font
 import ui.Panel
 import java.io.Closeable
 import kotlin.math.roundToInt
@@ -64,6 +65,8 @@ class Window(var size: Point, var title: String, private var pointer: Long = 0) 
     private val panel = Panel(Vector(.1f, .1f), Vector(.5f, .2f))
     private val panel2 = Panel(Vector(.1f, .1f), Vector(.5f, .2f))
     private val panel3 = Panel(Vector(.1f, .1f), Vector(.5f, .2f))
+
+    private val font = Font("assets/fonts/consola")
 
     private val rootComponent = Component.Group.Horizontal(
         Vector.one, listOf(

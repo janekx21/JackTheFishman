@@ -2,14 +2,14 @@ package graphics
 
 import linear.Vector
 
-data class Mesh(public var vertexes: List<Vector>) {
+data class Mesh(public var vertexes: List<Vertex>) {
     val size: Int
         get() = vertexes.size
 
     fun toFloatArray(): FloatArray {
-        return FloatArray(vertexes.size * 2) { i ->
-            if (i % 2 == 0) vertexes[i / 2].x else vertexes[i / 2].y
-        }
+        var ret = floatArrayOf()
+        vertexes.forEach { t: Vertex -> ret += t.toArray().toFloatArray() }
+        return ret
     }
 
     fun toVertexBuffer(): VertexBuffer {
@@ -18,9 +18,5 @@ data class Mesh(public var vertexes: List<Vector>) {
 
     operator fun plus(other: Mesh): Mesh {
         return Mesh(vertexes + other.vertexes);
-    }
-
-    public fun translate(delta: Vector): Mesh {
-        return Mesh(vertexes.map { vector -> vector + delta })
     }
 }

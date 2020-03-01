@@ -2,6 +2,7 @@ package graphics
 
 import linear.Location
 import linear.Vector
+import org.lwjgl.opengl.GL46
 import org.lwjgl.opengl.GL46.*
 
 open class Model(
@@ -21,9 +22,15 @@ open class Model(
     }
 
     init {
-        val positionAttr = glGetAttribLocation(shader.program, "position")
-        glVertexAttribPointer(positionAttr, 2, GL_FLOAT, false, 0, 0)
-        glEnableVertexAttribArray(positionAttr)
+        with(glGetAttribLocation(shader.program, "position")) {
+            glVertexAttribPointer(this, 2, GL_FLOAT, false, Int.SIZE_BYTES*4, 0)
+            glEnableVertexAttribArray(this)
+        }
+
+        with(glGetAttribLocation(shader.program, "uv")) {
+            glVertexAttribPointer(this, 2, GL_FLOAT, false, Int.SIZE_BYTES*4, Int.SIZE_BYTES.toLong()*2)
+            glEnableVertexAttribArray(this)
+        }
 
         posAttr = glGetUniformLocation(shader.program, "pos")
         scaleAttr = glGetUniformLocation(shader.program, "scale")
