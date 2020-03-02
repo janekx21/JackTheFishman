@@ -1,3 +1,5 @@
+package graphics
+
 import org.lwjgl.opengl.GL20
 import java.io.File
 import org.lwjgl.opengl.GL46.*

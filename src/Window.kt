@@ -1,7 +1,12 @@
+import linear.Point
+import linear.Vector
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.glfw.GLFWErrorCallback
 import org.lwjgl.opengl.GL.createCapabilities
 import org.lwjgl.opengl.GL46.*
+import ui.Component
+import ui.Font
+import ui.Panel
 import java.io.Closeable
 import kotlin.math.roundToInt
 
@@ -32,43 +37,68 @@ class Window(var size: Point, var title: String, private var pointer: Long = 0) 
             if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
                 glfwSetWindowShouldClose(window, true)
             }
+            if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS) {
+                panel2.volume += Vector.right * .1f
+            }
+            if (key == GLFW_KEY_LEFT && action == GLFW_PRESS) {
+                panel2.volume += Vector.left * .1f
+            }
         }
 
         glfwSetFramebufferSizeCallback(pointer) { window, width, height ->
+            size = Point(width, height)
             glViewport(0, 0, width, height)
         }
 
+        glfwSetCursorPosCallback(pointer) { window, xpos, ypos ->
+            panel.position = Vector(
+                xpos.toFloat() / size.x,
+                1f - ypos.toFloat() / size.y
+            ) * 2f - Vector.one
+        }
 
-        // glfwSwapInterval(1)
+
+        glfwSwapInterval(1)
         createCapabilities()
     }
+
+    private val panel = Panel(Vector(.1f, .1f), Vector(.5f, .2f))
+    private val panel2 = Panel(Vector(.1f, .1f), Vector(.5f, .2f))
+    private val panel3 = Panel(Vector(.1f, .1f), Vector(.5f, .2f))
+
+    private val font = Font("assets/fonts/consola")
+
+    private val rootComponent = Component.Group.Horizontal(
+        Vector.one, listOf(
+            panel2,
+            Component.Group.Vertical(
+                Vector.one, listOf(
+                    panel3,
+                    Component.Final(Vector(2f, 2f))
+                )
+            )
+        )
+    )
 
     fun open() {
         glfwShowWindow(pointer)
     }
 
+
     fun loop() {
-        val model = Model(primitiveQuad, DefaultShader, Vector(.5f, .5f), Texture("assets/ex.png"))
-        val tex = Texture("assets/ex.png")
-        val quadBuffer = primitiveQuad.toVertexBuffer()
-        val num = 1000;
-        val arr = List<Model>(num) {i -> Model(quadBuffer, DefaultShader, Vector(i*(1f/num) - 1f, i*(1f/num) - 1f), tex)}
         var lastFps = 60f;
         while (!glfwWindowShouldClose(pointer)) {
             val a = glfwGetTime()
             glClearColor(.1f, .1f, .1f, 1f)
             glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
 
-            // model.draw()
-            // quad.draw()
-            for (m in arr) {
-                m.draw()
-            }
+            panel.draw()
+            rootComponent.draw(Vector.zero, Vector.one * 2f)
 
             glfwSwapBuffers(pointer)
             glfwPollEvents()
             val b = glfwGetTime()
-            val fps = (1f / (b-a)) * .1f + lastFps*.9f;
+            val fps = (1f / (b - a)) * .1f + lastFps * .9f;
             glfwSetWindowTitle(pointer, "fps: ${fps.roundToInt()}")
             lastFps = fps.toFloat();
         }

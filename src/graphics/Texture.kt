@@ -1,3 +1,6 @@
+package graphics
+
+import linear.Point
 import org.lwjgl.opengl.GL46.*
 import org.lwjgl.stb.STBImage.*
 
