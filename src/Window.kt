@@ -4,19 +4,6 @@ import org.lwjgl.opengl.GL.createCapabilities
 import org.lwjgl.opengl.GL46.*
 import java.io.Closeable
 
-var isInitialised = false;
-
-fun init() {
-    GLFWErrorCallback.createPrint(System.err).set()
-    check(glfwInit()) { "GLFW could'nt init" }
-    isInitialised = true
-}
-
-fun close() {
-    // Terminate GLFW and free the error callback
-    glfwTerminate()
-}
-
 
 class Window(var size: Point, var title: String, private var pointer: Long = 0) : Closeable {
     init {
@@ -48,7 +35,7 @@ class Window(var size: Point, var title: String, private var pointer: Long = 0) 
         val quad = Quad(floatArrayOf(0f, 0f, 0f, 1f, 1f, 1f, 0f, 0f, 1f, 0f, 1f, 1f))
         val quad2 = Quad(floatArrayOf(-1f, -1f, -1f, -.5f, -.5f, -.5f))
         while (!glfwWindowShouldClose(pointer)) {
-            glClearColor(.1f, .1f, .1f, 1f)
+            glClearColor(.2f, .2f, .2f, 1f)
             glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
 
             quad.draw()
@@ -61,5 +48,20 @@ class Window(var size: Point, var title: String, private var pointer: Long = 0) 
 
     override fun close() {
         glfwDestroyWindow(pointer)
+    }
+
+    companion object {
+        var isInitialised = false;
+
+        fun init() {
+            GLFWErrorCallback.createPrint(System.err).set()
+            check(glfwInit()) { "GLFW could'nt init" }
+            isInitialised = true
+        }
+
+        fun close() {
+            // Terminate GLFW and free the error callback
+            glfwTerminate()
+        }
     }
 }

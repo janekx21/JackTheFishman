@@ -1,3 +1,4 @@
+import org.lwjgl.opengl.GL32
 import org.lwjgl.opengl.GL46.*
 
 

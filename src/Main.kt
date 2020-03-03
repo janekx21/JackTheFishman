@@ -1,7 +1,7 @@
 fun main() {
-    init()
+    Window.init()
     Window(Point(640, 480), "FooBar").use {
         it.loop()
     }
-    close()
+    Window.close()
 }
