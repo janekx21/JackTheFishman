@@ -1,25 +1,25 @@
-import org.lwjgl.opengl.GL11
-import org.lwjgl.opengl.GL30
 import org.lwjgl.opengl.GL46.*
 
 
-class Quad(): IDrawable {
-    private val buffer: Int = glGenBuffers()
-    private val shader: Shader = Shader("assets/shaders/fragment.glsl","assets/shaders/vertex.glsl")
-    init{
-        glBindBuffer(GL_ARRAY_BUFFER, buffer)
-        glBufferData(GL_ARRAY_BUFFER, floatArrayOf(0f,0f,0f,1f,1f,1f,0f,0f,1f,0f,1f,1f), GL_STATIC_DRAW)
+class Quad(data: FloatArray) : IDrawable {
+    private val vbo: Int = glGenBuffers()
+    private val vao: Int = glGenVertexArrays()
+    private val shader: Shader = Shader("assets/shaders/fragment.glsl", "assets/shaders/vertex.glsl")
+
+    init {
+        glBindVertexArray(vao)
+        glBindBuffer(GL_ARRAY_BUFFER, vbo)
+        glBufferData(GL_ARRAY_BUFFER, data, GL_STATIC_DRAW)
         val positionAttr = glGetAttribLocation(shader.program, "position")
         glVertexAttribPointer(positionAttr, 2, GL_FLOAT, false, 0, 0)
         glEnableVertexAttribArray(positionAttr)
-
-
+        glBindVertexArray(0)
     }
 
     override fun draw() {
-        glBindBuffer(GL_ARRAY_BUFFER, buffer)
-
+        glBindVertexArray(vao)
         shader.bind()
         glDrawArrays(GL_TRIANGLES, 0, 6)
+        glBindVertexArray(0)
     }
 }
