@@ -1,11 +1,11 @@
 package linear
 
-data class Location(var position: Vector, var rotaion: Float, var scale: Vector) {
+data class Location(var position: Vector, var rotation: Float, var scale: Vector) {
     companion object {
-        val zero = Location(
+        val identity = Location(
             Vector.zero,
             0f,
-            Vector.zero
+            Vector.one
         )
     }
 }

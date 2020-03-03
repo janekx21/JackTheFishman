@@ -2,35 +2,30 @@ package graphics
 
 import linear.Location
 import linear.Vector
-import org.lwjgl.opengl.GL46
 import org.lwjgl.opengl.GL46.*
 
 open class Model(
     private val buffer: VertexBuffer,
     private val shader: Shader,
-    private var location: Location = Location.zero,
+    private var location: Location = Location.identity,
     private val texture: Texture? = null
 ) : IDrawable {
     private val posAttr: Int
     private val scaleAttr: Int
 
-    constructor(
-        mesh: Mesh, shader: Shader,
-        position: Vector = Vector(0f, 0f),
-        texture: Texture? = null
-    ) : this(mesh.toVertexBuffer(), shader, Location(position, 0f, Vector.zero), texture) {
-    }
-
     init {
+        buffer.bind()
         with(glGetAttribLocation(shader.program, "position")) {
-            glVertexAttribPointer(this, 2, GL_FLOAT, false, Int.SIZE_BYTES*4, 0)
+            glVertexAttribPointer(this, 2, GL_FLOAT, false, 4 * 4, 0)
             glEnableVertexAttribArray(this)
         }
 
         with(glGetAttribLocation(shader.program, "uv")) {
-            glVertexAttribPointer(this, 2, GL_FLOAT, false, Int.SIZE_BYTES*4, Int.SIZE_BYTES.toLong()*2)
+            glVertexAttribPointer(this, 2, GL_FLOAT, false, 4 * 4, 2 * 4)
             glEnableVertexAttribArray(this)
         }
+
+        // Vertex.generateVertexAttrib(shader)
 
         posAttr = glGetUniformLocation(shader.program, "pos")
         scaleAttr = glGetUniformLocation(shader.program, "scale")
@@ -42,11 +37,14 @@ open class Model(
     }
 
     override fun draw() {
-
         texture?.bind()
         shader.bind()
 
         buffer.draw()
+
+        glUseProgram(0)
+        glBindTexture(GL_TEXTURE_2D, 0)
+        glBindBuffer(GL_ARRAY_BUFFER, 0)
     }
 
     public fun setPosition(value: Vector) {

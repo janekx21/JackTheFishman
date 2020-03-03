@@ -6,6 +6,6 @@ out vec4 color;
 
 void main() {
     vec4 c = texture(tex, coord);
-    if(c.a < .5) c = vec4(1,1,.8, 1);
+    if(c.a < .5) discard;
     color = c;
 }

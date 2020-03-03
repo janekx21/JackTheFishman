@@ -9,7 +9,7 @@ class Panel(var position: Vector, var size: Vector) : IDrawable, Component.Final
 ) {
 
     private val quad =
-        Model(QuadBuffer, DefaultShader, Location.zero, Texture("assets/ex.png"))
+        Model(QuadBuffer, DefaultShader, Location.identity, Texture("assets/ex.png"))
 
     override fun draw() {
         quad.setPosition(position - size * .5f)

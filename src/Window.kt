@@ -1,3 +1,5 @@
+import graphics.*
+import linear.Location
 import linear.Point
 import linear.Vector
 import org.lwjgl.glfw.GLFW.*
@@ -5,7 +7,6 @@ import org.lwjgl.glfw.GLFWErrorCallback
 import org.lwjgl.opengl.GL.createCapabilities
 import org.lwjgl.opengl.GL46.*
 import ui.Component
-import ui.Font
 import ui.Panel
 import java.io.Closeable
 import kotlin.math.roundToInt
@@ -62,11 +63,13 @@ class Window(var size: Point, var title: String, private var pointer: Long = 0) 
         createCapabilities()
     }
 
+
+    // private val font = Font("assets/fonts/consola")
+    // private val text = Text(font, "Foo&Bar")
+
     private val panel = Panel(Vector(.1f, .1f), Vector(.5f, .2f))
     private val panel2 = Panel(Vector(.1f, .1f), Vector(.5f, .2f))
     private val panel3 = Panel(Vector(.1f, .1f), Vector(.5f, .2f))
-
-    private val font = Font("assets/fonts/consola")
 
     private val rootComponent = Component.Group.Horizontal(
         Vector.one, listOf(
@@ -86,21 +89,40 @@ class Window(var size: Point, var title: String, private var pointer: Long = 0) 
 
 
     fun loop() {
-        var lastFps = 60f;
+        // VertexBuffer(Mesh(listOf(Vertex(Vector(0f, 0f), Vector(0f, 0f)))))
+        // Model(VertexBuffer(Mesh(listOf(Vertex(Vector(0f, 0f), Vector(0f, 0f))))), DefaultShader, Location.identity)
+
+        val shader = DefaultShader
+        /*
+        with(glGetAttribLocation(shader.program, "position")) {
+            glVertexAttribPointer(this, 2, GL_FLOAT, false, 4 * 4, 0)
+            glEnableVertexAttribArray(this)
+        }
+         */
+
+        /*
+        with(glGetAttribLocation(shader.program, "uv")) {
+            glVertexAttribPointer(this, 2, GL_FLOAT, false, 4 * 4, 4 * 2)
+            glEnableVertexAttribArray(this)
+        }
+         */
+
         while (!glfwWindowShouldClose(pointer)) {
             val a = glfwGetTime()
-            glClearColor(.1f, .1f, .1f, 1f)
+
+            glClearColor(.4f, .4f, .42f, 1f)
             glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
 
             panel.draw()
             rootComponent.draw(Vector.zero, Vector.one * 2f)
+            // text.draw()
 
             glfwSwapBuffers(pointer)
             glfwPollEvents()
+
             val b = glfwGetTime()
-            val fps = (1f / (b - a)) * .1f + lastFps * .9f;
-            glfwSetWindowTitle(pointer, "fps: ${fps.roundToInt()}")
-            lastFps = fps.toFloat();
+            val fps = 1 / (b - a);
+            glfwSetWindowTitle(pointer, "$title fps: ${fps.roundToInt()}")
         }
     }
 

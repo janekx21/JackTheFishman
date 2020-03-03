@@ -2,16 +2,18 @@ package ui
 
 import com.beust.klaxon.Klaxon
 import graphics.Texture
+import graphics.Vertex
 import util.Path
 import java.io.File
 
 class Font(private val path: String) {
     data class Size(val width: Int, val height: Int) {}
-    data class Info(val name: String, val size: Int, val rect: Size, val chars: Map<Int, Int>) {}
+    data class Char(val char: Int, val pos: Int) {}
+    data class Info(val name: String, val size: Int, val rect: Size, val chars: Array<Char>) {}
 
     val texture = Texture(Path.combine(path, "image.png"))
 
-    private val info: Info
+    public val info: Info
 
     init {
         val i = Klaxon().parse<Info>(File(Path.combine(path, "info.json")))
