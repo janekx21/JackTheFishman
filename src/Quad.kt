@@ -1,4 +1,3 @@
-import org.lwjgl.opengl.GL32
 import org.lwjgl.opengl.GL46.*
 
 
@@ -21,6 +20,7 @@ class Quad(data: FloatArray) : IDrawable {
         glBindVertexArray(vao)
         shader.bind()
         glDrawArrays(GL_TRIANGLES, 0, 6)
+        shader.unbind()
         glBindVertexArray(0)
     }
 }
