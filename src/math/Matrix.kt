@@ -1,9 +1,12 @@
+package math
+
 data class Matrix(private val data: FloatArray) {
     companion object {
         const val dim = 4
         const val size = dim * dim
 
-        val identity = Matrix(FloatArray(size) { i -> if (i % (dim + 1) == 0) 1f else 0f })
+        val identity =
+            Matrix(FloatArray(size) { i -> if (i % (dim + 1) == 0) 1f else 0f })
     }
 
     init {

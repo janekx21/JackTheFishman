@@ -1,3 +1,6 @@
+package graphics
+
+import org.lwjgl.opengl.GL20
 import org.lwjgl.opengl.GL46.*
 import java.io.File
 
@@ -13,9 +16,14 @@ class Shader(pathFrag: String, pathVert: String) {
         glBindFragDataLocation(program, 0, "color")
         glLinkProgram(program)
     }
+    val mvpLocation = glGetUniformLocation(program, "mvp")
 
     fun bind() {
         glUseProgram(program)
+
+        val array = FloatArray(16)
+        glGetFloatv(GL_MODELVIEW_MATRIX, array)
+        glProgramUniformMatrix4fv(program, mvpLocation, false, array)
     }
 
     fun unbind() {
