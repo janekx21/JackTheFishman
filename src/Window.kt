@@ -1,3 +1,4 @@
+import graphics.Camera
 import graphics.Quad
 import graphics.Texture
 import math.Point
@@ -7,12 +8,20 @@ import org.lwjgl.assimp.Assimp.*
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.glfw.GLFWErrorCallback
 import org.lwjgl.opengl.GL.createCapabilities
-import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL46.*
 import java.io.Closeable
 
 
 class Window(var size: Point, var title: String, private var pointer: Long = 0) : Closeable {
+
+    val windowPointer: Long
+        get() = pointer
+
+    val deltaTime: Float
+        get() = delta
+
+    var delta = 0f
+
     init {
         check(isInitialised) { "is not initialed" }
 
@@ -26,15 +35,16 @@ class Window(var size: Point, var title: String, private var pointer: Long = 0) 
         pointer = glfwCreateWindow(size.x, size.y, title, 0, 0)
         glfwMakeContextCurrent(pointer)
 
-        var fov = 1.0 / 90.0;
+        val fov = 1.0 / 90.0
 
-        glfwSetKeyCallback(pointer) { window, key, scancode, action, mods ->
+        glfwSetKeyCallback(pointer) { window, key, _, action, _ ->
             if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
                 glfwSetWindowShouldClose(window, true)
             }
         }
 
         glfwSetFramebufferSizeCallback(pointer) { window, width, height ->
+            size = Point(width, height)
             glViewport(0, 0, width, height)
             glLoadIdentity()
             // glOrtho(-1.0, 1.0, -1.0, 1.0, -10.0, 10.0);
@@ -63,7 +73,6 @@ class Window(var size: Point, var title: String, private var pointer: Long = 0) 
         println("there are ${scene.mNumMeshes()} meshes")
 
 
-        val l = arrayListOf<Vector>()
         val fl = arrayListOf<Float>()
         for (i in 0 until scene.mNumMeshes()) {
             val x = scene.mMeshes()?.get(i)
@@ -77,7 +86,6 @@ class Window(var size: Point, var title: String, private var pointer: Long = 0) 
                     for (k in 0 until face.mNumIndices()) {
                         val index = face.mIndices().get(k)
                         val vec = mesh.mVertices().get(index)
-                        l.add(Vector(vec.x(), vec.y()))
                         fl.add(vec.x())
                         fl.add(vec.y())
                         fl.add(vec.z())
@@ -101,13 +109,16 @@ class Window(var size: Point, var title: String, private var pointer: Long = 0) 
         val normal = Texture("assets/textures/normal_map.png", 1)
         // glActiveTexture(GL_TEXTURE0)
         // glActiveTexture(GL_TEXTURE1)
+        val cam = Camera(Vector(0f, 0f, -1f), 0f, 0f)
 
         val quad = Quad(floatArrayOf(0f, 0f, 0f, 1f, 1f, 1f, 0f, 0f, 1f, 0f, 1f, 1f))
         val quad2 = Quad(floatArrayOf(-1f, -1f, -1f, -.5f, -.5f, -.5f))
-
+        var last = 0f
 
         while (!glfwWindowShouldClose(pointer)) {
-            glRotatef(1f, .1f, 1f, .1567f)
+            // glRotatef(1f, .1f, 1f, .1567f)
+            cam.update(this)
+            cam.matrix(size.x.toFloat() / size.y.toFloat())
 
             glClearColor(.2f, .2f, .2f, 1f)
             glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
@@ -118,6 +129,8 @@ class Window(var size: Point, var title: String, private var pointer: Long = 0) 
 
             glfwSwapBuffers(pointer)
             glfwPollEvents()
+            delta = glfwGetTime().toFloat() - last
+            last = glfwGetTime().toFloat()
         }
     }
 
