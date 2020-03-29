@@ -8,6 +8,7 @@ import org.lwjgl.assimp.Assimp.*
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.glfw.GLFWErrorCallback
 import org.lwjgl.opengl.GL.createCapabilities
+import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL46.*
 import java.io.Closeable
 
@@ -111,21 +112,86 @@ class Window(var size: Point, var title: String, private var pointer: Long = 0) 
         // glActiveTexture(GL_TEXTURE1)
         val cam = Camera(Vector(0f, 0f, -1f), 0f, 0f)
 
-        val quad = Quad(floatArrayOf(0f, 0f, 0f, 1f, 1f, 1f, 0f, 0f, 1f, 0f, 1f, 1f))
-        val quad2 = Quad(floatArrayOf(-1f, -1f, -1f, -.5f, -.5f, -.5f))
+        val quad = Quad(floatArrayOf(
+            -1f, -1f, 0f, 0f, 0f, -1f, 0f, 0f,
+            +1f, -1f, 0f, 0f, 0f, -1f, 1f, 0f,
+            +1f, +1f, 0f, 0f, 0f, -1f, 1f, 1f,
+
+            -1f, -1f, 0f, 0f, 0f, -1f, 0f, 0f,
+            +1f, +1f, 0f, 0f, 0f, -1f, 1f, 1f,
+            -1f, +1f, 0f, 0f, 0f, -1f, 0f, 1f
+        ))
         var last = 0f
 
+        val fbo = glGenFramebuffers()
+        val texture = glGenTextures()
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo)
+        glBindTexture(GL_TEXTURE_2D, texture)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST)
+        glTexImage2D(
+            GL_TEXTURE_2D, 0, GL_RGBA, size.x, size.y, 0,
+            GL_RGBA, GL_UNSIGNED_BYTE, 0
+        )
+        glBindTexture(GL_TEXTURE_2D, 0)
+
+        with(glGenTextures()) {
+            glBindTexture(GL_TEXTURE_2D, this)
+            glTexImage2D(
+                GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, size.x, size.y, 0,
+                GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, 0
+            )
+            glBindTexture(GL_TEXTURE_2D, 0)
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, this, 0);
+        }
+
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0)
+
+        glBindFramebuffer(GL_FRAMEBUFFER, 0)
+        /*
+        val rbo = glGenRenderbuffers()
+        glBindRenderbuffer(GL_RENDERBUFFER, rbo)
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, 800, 600)
+        glBindRenderbuffer(GL_RENDERBUFFER, 0)
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo)
+         */
+
         while (!glfwWindowShouldClose(pointer)) {
-            // glRotatef(1f, .1f, 1f, .1567f)
             cam.update(this)
             cam.matrix(size.x.toFloat() / size.y.toFloat())
 
-            glClearColor(.2f, .2f, .2f, 1f)
+            glBindFramebuffer(GL_FRAMEBUFFER, fbo)
+            glEnable(GL_DEPTH_TEST)
+
+            glClearColor(1f, 1f, 1f, 1f)
             glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
+            check(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE) {
+                "Framebuffer status not complete"
+            }
 
             tex.bind()
             normal.bind()
             quad3.draw()
+
+            glBindFramebuffer(GL_FRAMEBUFFER, 0) // bind default fbo
+
+            // glRotatef(1f, .1f, 1f, .1567f)
+
+            glClearColor(.2f, .2f, .2f, 1f)
+            glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
+
+            // cam.matrix(size.x.toFloat() / size.y.toFloat())
+
+            // tex.bind()
+            glActiveTexture(GL_TEXTURE0)
+            glBindTexture(GL_TEXTURE_2D, texture)
+            normal.bind()
+
+            glLoadIdentity()
+            glTranslatef(0f, 0f, -1f)
+            quad.draw()
+
+            glBindTexture(GL_TEXTURE_2D, 0)
 
             glfwSwapBuffers(pointer)
             glfwPollEvents()
