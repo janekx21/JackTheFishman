@@ -1,3 +1,4 @@
+import graphics.Framebuffer
 import math.Point
 
 fun main() {

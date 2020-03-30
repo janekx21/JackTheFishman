@@ -1,4 +1,5 @@
 import graphics.Camera
+import graphics.Framebuffer
 import graphics.Quad
 import graphics.Texture
 import math.Point
@@ -112,42 +113,46 @@ class Window(var size: Point, var title: String, private var pointer: Long = 0) 
         // glActiveTexture(GL_TEXTURE1)
         val cam = Camera(Vector(0f, 0f, -1f), 0f, 0f)
 
-        val quad = Quad(floatArrayOf(
-            -1f, -1f, 0f, 0f, 0f, -1f, 0f, 0f,
-            +1f, -1f, 0f, 0f, 0f, -1f, 1f, 0f,
-            +1f, +1f, 0f, 0f, 0f, -1f, 1f, 1f,
+        val quad = Quad(
+            floatArrayOf(
+                -1f, -1f, 0f, 0f, 0f, -1f, 0f, 0f,
+                +1f, -1f, 0f, 0f, 0f, -1f, 1f, 0f,
+                +1f, +1f, 0f, 0f, 0f, -1f, 1f, 1f,
 
-            -1f, -1f, 0f, 0f, 0f, -1f, 0f, 0f,
-            +1f, +1f, 0f, 0f, 0f, -1f, 1f, 1f,
-            -1f, +1f, 0f, 0f, 0f, -1f, 0f, 1f
-        ))
+                -1f, -1f, 0f, 0f, 0f, -1f, 0f, 0f,
+                +1f, +1f, 0f, 0f, 0f, -1f, 1f, 1f,
+                -1f, +1f, 0f, 0f, 0f, -1f, 0f, 1f
+            )
+        )
         var last = 0f
 
-        val fbo = glGenFramebuffers()
+        val cameraFrameBuffer = Framebuffer()
         val texture = glGenTextures()
-        glBindFramebuffer(GL_FRAMEBUFFER, fbo)
-        glBindTexture(GL_TEXTURE_2D, texture)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST)
-        glTexImage2D(
-            GL_TEXTURE_2D, 0, GL_RGBA, size.x, size.y, 0,
-            GL_RGBA, GL_UNSIGNED_BYTE, 0
-        )
-        glBindTexture(GL_TEXTURE_2D, 0)
 
-        with(glGenTextures()) {
-            glBindTexture(GL_TEXTURE_2D, this)
-            glTexImage2D(
-                GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, size.x, size.y, 0,
-                GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, 0
-            )
-            glBindTexture(GL_TEXTURE_2D, 0)
-            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, this, 0);
+        cameraFrameBuffer.bind {
+            with(texture) {
+                glBindTexture(GL_TEXTURE_2D, this)
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST)
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST)
+                glTexImage2D(
+                    GL_TEXTURE_2D, 0, GL_RGBA, size.x, size.y, 0,
+                    GL_RGBA, GL_UNSIGNED_BYTE, 0
+                )
+                glBindTexture(GL_TEXTURE_2D, 0)
+                glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, this, 0)
+            }
+
+            with(glGenTextures()) {
+                glBindTexture(GL_TEXTURE_2D, this)
+                glTexImage2D(
+                    GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, size.x, size.y, 0,
+                    GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, 0
+                )
+                glBindTexture(GL_TEXTURE_2D, 0)
+                glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, this, 0)
+            }
         }
 
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0)
-
-        glBindFramebuffer(GL_FRAMEBUFFER, 0)
         /*
         val rbo = glGenRenderbuffers()
         glBindRenderbuffer(GL_RENDERBUFFER, rbo)
@@ -160,18 +165,18 @@ class Window(var size: Point, var title: String, private var pointer: Long = 0) 
             cam.update(this)
             cam.matrix(size.x.toFloat() / size.y.toFloat())
 
-            glBindFramebuffer(GL_FRAMEBUFFER, fbo)
-            glEnable(GL_DEPTH_TEST)
+            cameraFrameBuffer.bind {
+                glEnable(GL_DEPTH_TEST)
+                glClearColor(1f, 1f, 1f, 1f)
+                glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
+                check(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE) {
+                    "Framebuffer status not complete"
+                }
 
-            glClearColor(1f, 1f, 1f, 1f)
-            glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
-            check(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE) {
-                "Framebuffer status not complete"
+                tex.bind()
+                normal.bind()
+                quad3.draw()
             }
-
-            tex.bind()
-            normal.bind()
-            quad3.draw()
 
             glBindFramebuffer(GL_FRAMEBUFFER, 0) // bind default fbo
 
