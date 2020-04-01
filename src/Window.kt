@@ -2,7 +2,7 @@ import graphics.Camera
 import graphics.Framebuffer
 import graphics.Quad
 import graphics.Texture
-import math.Point
+import math.Point2
 import math.Vector
 import org.lwjgl.assimp.AIMesh
 import org.lwjgl.assimp.Assimp.*
@@ -14,7 +14,7 @@ import org.lwjgl.opengl.GL46.*
 import java.io.Closeable
 
 
-class Window(var size: Point, var title: String, private var pointer: Long = 0) : Closeable {
+class Window(var size: Point2, var title: String, private var pointer: Long = 0) : Closeable {
 
     val windowPointer: Long
         get() = pointer
@@ -46,7 +46,7 @@ class Window(var size: Point, var title: String, private var pointer: Long = 0) 
         }
 
         glfwSetFramebufferSizeCallback(pointer) { window, width, height ->
-            size = Point(width, height)
+            size = Point2(width, height)
             glViewport(0, 0, width, height)
             glLoadIdentity()
             // glOrtho(-1.0, 1.0, -1.0, 1.0, -10.0, 10.0);
@@ -107,8 +107,8 @@ class Window(var size: Point, var title: String, private var pointer: Long = 0) 
             }
         }
         val quad3 = Quad(fl.toFloatArray())
-        val tex = Texture("assets/textures/krakula-xl.png")
-        val normal = Texture("assets/textures/normal_map.png", 1)
+        val tex = Texture.fromPath("assets/textures/krakula-xl.png")
+        val normal = Texture.fromPath("assets/textures/normal_map.png")
         // glActiveTexture(GL_TEXTURE0)
         // glActiveTexture(GL_TEXTURE1)
         val cam = Camera(Vector(0f, 0f, -1f), 0f, 0f)
@@ -173,9 +173,11 @@ class Window(var size: Point, var title: String, private var pointer: Long = 0) 
                     "Framebuffer status not complete"
                 }
 
-                tex.bind()
-                normal.bind()
-                quad3.draw()
+                tex.bind(0) {
+                    normal.bind(1) {
+                        quad3.draw()
+                    }
+                }
             }
 
             glBindFramebuffer(GL_FRAMEBUFFER, 0) // bind default fbo
@@ -190,11 +192,13 @@ class Window(var size: Point, var title: String, private var pointer: Long = 0) 
             // tex.bind()
             glActiveTexture(GL_TEXTURE0)
             glBindTexture(GL_TEXTURE_2D, texture)
-            normal.bind()
 
             glLoadIdentity()
             glTranslatef(0f, 0f, -1f)
-            quad.draw()
+
+            normal.bind(1) {
+                quad.draw()
+            }
 
             glBindTexture(GL_TEXTURE_2D, 0)
 

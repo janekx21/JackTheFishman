@@ -13,7 +13,7 @@ data class Matrix(private val data: FloatArray) {
         assert(data.size == size)
     }
 
-    fun index(pos: Point): Int {
+    fun index(pos: Point2): Int {
         return pos.x + pos.y * dim
     }
 
@@ -21,8 +21,8 @@ data class Matrix(private val data: FloatArray) {
         return x + y * dim
     }
 
-    private fun index(i: Int): Point {
-        return Point(i % dim, i / dim)
+    private fun index(i: Int): Point2 {
+        return Point2(i % dim, i / dim)
     }
 
     operator fun times(other: Matrix): Matrix {

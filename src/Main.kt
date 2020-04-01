@@ -1,9 +1,8 @@
-import graphics.Framebuffer
-import math.Point
+import math.Point2
 
 fun main() {
     Window.init()
-    Window(Point(640, 480), "FooBar").use {
+    Window(Point2(640, 480), "FooBar").use {
         it.loop()
     }
     Window.close()

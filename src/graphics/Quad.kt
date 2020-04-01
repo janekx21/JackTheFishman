@@ -1,7 +1,6 @@
 package graphics
 
 import IDrawable
-import org.lwjgl.opengl.GL41
 import org.lwjgl.opengl.GL46.*
 
 
@@ -9,7 +8,7 @@ class Quad(private val data: FloatArray) : IDrawable {
     private val vbo: Int = glGenBuffers()
     private val vao: Int = glGenVertexArrays()
     private val shader: Shader =
-        Shader("assets/shaders/fragment.glsl", "assets/shaders/vertex.glsl")
+        Shader("assets/shaders/fragment.glsl", "assets/shaders/vertex.glsl").also { println(it.toString()) }
 
     init {
         glBindVertexArray(vao)
