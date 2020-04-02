@@ -54,7 +54,7 @@ class Camera(var position: Vector3, var pan: Float, var tilt: Float) {
 
         GL46.glMatrixMode(GL46.GL_PROJECTION)
         GL46.glLoadIdentity()
-        GL46.glFrustum(-fov * aspect, fov * aspect, -fov, fov, .01, 10.0)
+        GL46.glFrustum(-fov * aspect, fov * aspect, -fov, fov, .01, 1.0)
 
         GL46.glMatrixMode(GL46.GL_MODELVIEW)
     }

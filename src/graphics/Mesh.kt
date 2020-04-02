@@ -6,11 +6,14 @@ import org.lwjgl.assimp.Assimp.*
 import org.lwjgl.opengl.GL46.*
 
 
-class Mesh(private val data: FloatArray) : IDrawable {
+class Mesh(private val data: FloatArray,
+           private val shader: Shader = Shader(
+               "assets/shaders/fragment.glsl",
+               "assets/shaders/vertex.glsl"
+           ).also { println(it.toString()) }
+) : IDrawable {
     private val vbo: Int = glGenBuffers()
     private val vao: Int = glGenVertexArrays()
-    private val shader: Shader =
-        Shader("assets/shaders/fragment.glsl", "assets/shaders/vertex.glsl").also { println(it.toString()) }
 
     init {
         glBindVertexArray(vao)

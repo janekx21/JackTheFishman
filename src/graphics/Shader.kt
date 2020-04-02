@@ -15,6 +15,10 @@ class Shader(pathFrag: String, pathVert: String) {
         glAttachShader(program, fs)
         glBindFragDataLocation(program, 0, "color")
         glLinkProgram(program)
+        for (i in 0 until 4) {
+            val location = glGetUniformLocation(program, "tex$i")
+            glProgramUniform1i(program, location, i)
+        }
     }
 
     val parameters = getActiveParameters()

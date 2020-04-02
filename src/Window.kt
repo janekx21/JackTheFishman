@@ -1,8 +1,5 @@
 
-import graphics.Camera
-import graphics.Framebuffer
-import graphics.Mesh
-import graphics.Texture
+import graphics.*
 import math.Point2
 import math.Vector3
 import org.lwjgl.glfw.GLFW.*
@@ -78,24 +75,16 @@ object Window : Closeable {
                 -1f, -1f, 0f, 0f, 0f, -1f, 0f, 0f,
                 +1f, +1f, 0f, 0f, 0f, -1f, 1f, 1f,
                 -1f, +1f, 0f, 0f, 0f, -1f, 0f, 1f
-            )
+            ), Shader("assets/shaders/post.glsl", "assets/shaders/stay.glsl")
         )
 
         val cameraFrameBuffer = Framebuffer()
         val cameraTexture = Texture(size)
+        val depthTexture = Texture.createDepthTexture(size)
 
         cameraFrameBuffer.bind {
             glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, cameraTexture.texture, 0)
-
-            with(glGenTextures()) {
-                glBindTexture(GL_TEXTURE_2D, this)
-                glTexImage2D(
-                    GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, size.x, size.y, 0,
-                    GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, 0
-                )
-                glBindTexture(GL_TEXTURE_2D, 0)
-                glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, this, 0)
-            }
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, depthTexture.texture, 0)
         }
 
         while (!glfwWindowShouldClose(pointer)) {
@@ -125,10 +114,13 @@ object Window : Closeable {
             glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
 
             glLoadIdentity()
-            glTranslatef(0f, 0f, -1f)
+            // glTranslatef(0f, 0f, -1f)
+            // glScalef(size.x.toFloat() / size.y.toFloat(), 1f, 1f)
             cameraTexture.bind(0) {
                 normal.bind(1) {
-                    quad.draw()
+                    depthTexture.bind(2) {
+                        quad.draw()
+                    }
                 }
             }
 

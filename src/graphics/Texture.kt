@@ -57,6 +57,15 @@ class Texture : IBindableViaIndex {
     companion object {
         val indexBound = BooleanArray(maxTextureUnits()) { false }
 
+        fun createDepthTexture(size: Point2): Texture = Texture(size).also {
+            it.bind(0) {
+                glTexImage2D(
+                    GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, size.x, size.y, 0,
+                    GL_DEPTH_COMPONENT, GL_FLOAT, 0
+                )
+            }
+        }
+
         fun fromPath(path: String): Texture {
             val width = intArrayOf(0)
             val height = intArrayOf(0)
