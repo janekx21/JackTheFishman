@@ -41,7 +41,6 @@ class Camera(var position: Vector3, var pan: Float, var tilt: Float) {
         val y = doubleArrayOf(0.0)
         glfwGetCursorPos(Window.pointer, x, y)
 
-
         tilt += Input.Mouse.deltaPosition.y * .1f
         pan += Input.Mouse.deltaPosition.x * .1f
     }
