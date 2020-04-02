@@ -7,11 +7,16 @@ import org.lwjgl.opengl.GL46.*
 import org.lwjgl.stb.STBImage.*
 import java.nio.ByteBuffer
 
-class Texture(data: ByteBuffer, private val size: Point2) : IBindableViaIndex {
-    private val texture = glGenTextures()
+class Texture : IBindableViaIndex {
+    val size: Point2
+    val texture = glGenTextures()
 
     init {
         glEnable(GL_TEXTURE_2D)
+    }
+
+    constructor(data: ByteBuffer?, size: Point2) {
+        this.size = size
         bind(0) {
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
@@ -27,6 +32,25 @@ class Texture(data: ByteBuffer, private val size: Point2) : IBindableViaIndex {
                 data
             )
             glGenerateMipmap(GL_TEXTURE_2D)
+        }
+    }
+
+    constructor(size: Point2) {
+        this.size = size
+        bind(0) {
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
+            glTexImage2D(
+                GL_TEXTURE_2D,
+                0,
+                GL_RGBA,
+                size.x,
+                size.y,
+                0,
+                GL_RGBA,
+                GL_UNSIGNED_BYTE,
+                0
+            )
         }
     }
 

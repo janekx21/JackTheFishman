@@ -1,31 +1,24 @@
+
 import graphics.Camera
 import graphics.Framebuffer
-import graphics.Quad
+import graphics.Mesh
 import graphics.Texture
 import math.Point2
-import math.Vector
-import org.lwjgl.assimp.AIMesh
-import org.lwjgl.assimp.Assimp.*
+import math.Vector3
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.glfw.GLFWErrorCallback
 import org.lwjgl.opengl.GL.createCapabilities
-import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL46.*
 import java.io.Closeable
 
 
-class Window(var size: Point2, var title: String, private var pointer: Long = 0) : Closeable {
-
-    val windowPointer: Long
-        get() = pointer
-
-    val deltaTime: Float
-        get() = delta
-
-    var delta = 0f
+object Window : Closeable {
+    var size: Point2 = Point2(640, 480)
+    private var title: String = "fooBar"
 
     init {
-        check(isInitialised) { "is not initialed" }
+        GLFWErrorCallback.createPrint(System.err).set()
+        check(glfwInit()) { "GLFW could'nt init" }
 
         // Configure GLFW
         glfwDefaultWindowHints() // optional, the current window hints are already the default
@@ -33,29 +26,32 @@ class Window(var size: Point2, var title: String, private var pointer: Long = 0)
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE) // the window will stay hidden after creation
 
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE) // the window will be resizable
+    }
 
-        pointer = glfwCreateWindow(size.x, size.y, title, 0, 0)
+    val pointer = glfwCreateWindow(size.x, size.y, title, 0, 0)
+
+    init {
         glfwMakeContextCurrent(pointer)
 
         val fov = 1.0 / 90.0
 
-        glfwSetKeyCallback(pointer) { window, key, _, action, _ ->
+        glfwSetKeyCallback(pointer) { window, key, scanCode, action, mods ->
             if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
                 glfwSetWindowShouldClose(window, true)
             }
+            Input.Keyboard.updateKeyState(this, key, scanCode, action, mods)
         }
 
-        glfwSetFramebufferSizeCallback(pointer) { window, width, height ->
+        glfwSetFramebufferSizeCallback(pointer) { _, width, height ->
             size = Point2(width, height)
             glViewport(0, 0, width, height)
             glLoadIdentity()
-            // glOrtho(-1.0, 1.0, -1.0, 1.0, -10.0, 10.0);
             val aspect = width.toFloat() / height.toFloat()
             glTranslatef(0f, 0f, -1f)
-            glTranslatef(0f, -.5f, 0f);
+            glTranslatef(0f, -.5f, 0f)
             glMatrixMode(GL_PROJECTION)
             glLoadIdentity()
-            glFrustum(-fov * aspect, fov * aspect, -fov, fov, .01, 10.0);
+            glFrustum(-fov * aspect, fov * aspect, -fov, fov, .01, 10.0)
             glMatrixMode(GL_MODELVIEW)
         }
 
@@ -68,52 +64,12 @@ class Window(var size: Point2, var title: String, private var pointer: Long = 0)
     }
 
     fun loop() {
-        val scene =
-            aiImportFile("assets/models/arrow.obj", aiProcess_Triangulate or aiProcess_GenNormals)
-        check(scene != null) { "scene could not be loaded" }
-
-        println("there are ${scene.mNumMeshes()} meshes")
-
-
-        val fl = arrayListOf<Float>()
-        for (i in 0 until scene.mNumMeshes()) {
-            val x = scene.mMeshes()?.get(i)
-            if (x !== null) {
-                val mesh = AIMesh.create(x)
-                println("vertex len is ${mesh.mNumVertices()}")
-                println("num of faces is ${mesh.mNumFaces()}")
-
-                for (j in 0 until mesh.mNumFaces()) {
-                    val face = mesh.mFaces().get(j)
-                    for (k in 0 until face.mNumIndices()) {
-                        val index = face.mIndices().get(k)
-                        val vec = mesh.mVertices().get(index)
-                        fl.add(vec.x())
-                        fl.add(vec.y())
-                        fl.add(vec.z())
-                        val normal = mesh.mNormals()?.get(index)
-                        if (normal != null) {
-                            fl.add(normal.x())
-                            fl.add(normal.y())
-                            fl.add(normal.z())
-                        }
-                        val uv = mesh.mTextureCoords(0)?.get(index)
-                        if (uv != null) {
-                            fl.add(uv.x())
-                            fl.add(uv.y())
-                        }
-                    }
-                }
-            }
-        }
-        val quad3 = Quad(fl.toFloatArray())
+        val quad3 = Mesh("assets/models/arrow.obj")
         val tex = Texture.fromPath("assets/textures/krakula-xl.png")
         val normal = Texture.fromPath("assets/textures/normal_map.png")
-        // glActiveTexture(GL_TEXTURE0)
-        // glActiveTexture(GL_TEXTURE1)
-        val cam = Camera(Vector(0f, 0f, -1f), 0f, 0f)
+        val cam = Camera(Vector3(0f, 0f, -1f), 0f, 0f)
 
-        val quad = Quad(
+        val quad = Mesh(
             floatArrayOf(
                 -1f, -1f, 0f, 0f, 0f, -1f, 0f, 0f,
                 +1f, -1f, 0f, 0f, 0f, -1f, 1f, 0f,
@@ -124,23 +80,12 @@ class Window(var size: Point2, var title: String, private var pointer: Long = 0)
                 -1f, +1f, 0f, 0f, 0f, -1f, 0f, 1f
             )
         )
-        var last = 0f
 
         val cameraFrameBuffer = Framebuffer()
-        val texture = glGenTextures()
+        val cameraTexture = Texture(size)
 
         cameraFrameBuffer.bind {
-            with(texture) {
-                glBindTexture(GL_TEXTURE_2D, this)
-                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST)
-                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST)
-                glTexImage2D(
-                    GL_TEXTURE_2D, 0, GL_RGBA, size.x, size.y, 0,
-                    GL_RGBA, GL_UNSIGNED_BYTE, 0
-                )
-                glBindTexture(GL_TEXTURE_2D, 0)
-                glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, this, 0)
-            }
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, cameraTexture.texture, 0)
 
             with(glGenTextures()) {
                 glBindTexture(GL_TEXTURE_2D, this)
@@ -153,20 +98,16 @@ class Window(var size: Point2, var title: String, private var pointer: Long = 0)
             }
         }
 
-        /*
-        val rbo = glGenRenderbuffers()
-        glBindRenderbuffer(GL_RENDERBUFFER, rbo)
-        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, 800, 600)
-        glBindRenderbuffer(GL_RENDERBUFFER, 0)
-        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo)
-         */
-
         while (!glfwWindowShouldClose(pointer)) {
-            cam.update(this)
+            glfwPollEvents()
+            Input.Keyboard.update()
+            Input.Mouse.update()
+            Time.update(glfwGetTime().toFloat())
+
+            cam.update()
             cam.matrix(size.x.toFloat() / size.y.toFloat())
 
             cameraFrameBuffer.bind {
-                glEnable(GL_DEPTH_TEST)
                 glClearColor(1f, 1f, 1f, 1f)
                 glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
                 check(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE) {
@@ -180,51 +121,25 @@ class Window(var size: Point2, var title: String, private var pointer: Long = 0)
                 }
             }
 
-            glBindFramebuffer(GL_FRAMEBUFFER, 0) // bind default fbo
-
-            // glRotatef(1f, .1f, 1f, .1567f)
-
             glClearColor(.2f, .2f, .2f, 1f)
             glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
 
-            // cam.matrix(size.x.toFloat() / size.y.toFloat())
-
-            // tex.bind()
-            glActiveTexture(GL_TEXTURE0)
-            glBindTexture(GL_TEXTURE_2D, texture)
-
             glLoadIdentity()
             glTranslatef(0f, 0f, -1f)
-
-            normal.bind(1) {
-                quad.draw()
+            cameraTexture.bind(0) {
+                normal.bind(1) {
+                    quad.draw()
+                }
             }
 
             glBindTexture(GL_TEXTURE_2D, 0)
 
             glfwSwapBuffers(pointer)
-            glfwPollEvents()
-            delta = glfwGetTime().toFloat() - last
-            last = glfwGetTime().toFloat()
         }
     }
 
     override fun close() {
         glfwDestroyWindow(pointer)
-    }
-
-    companion object {
-        var isInitialised = false;
-
-        fun init() {
-            GLFWErrorCallback.createPrint(System.err).set()
-            check(glfwInit()) { "GLFW could'nt init" }
-            isInitialised = true
-        }
-
-        fun close() {
-            // Terminate GLFW and free the error callback
-            glfwTerminate()
-        }
+        glfwTerminate()
     }
 }
