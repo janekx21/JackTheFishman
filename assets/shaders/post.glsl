@@ -23,40 +23,17 @@ float random (vec2 st) {
 }
 
 void main() {
-    mat4 projMatrixInv = inverse(projection);
-    mat4 viewMatrixInv = inverse(mvp);
-    float depth = texture(tex2, pixelUV).r;
-    vec4 clipSpacePosition = vec4(pixelUV * 2 - 1, depth * 2 - 1, 1);
-    vec4 viewSpacePosition = projMatrixInv * clipSpacePosition;
-    viewSpacePosition /= viewSpacePosition.w;
-    vec4 worldSpacePosition = viewMatrixInv * viewSpacePosition;
-
-    vec3 wPos = worldSpacePosition.xyz;
-    vec3 off = vec3(random(wPos.xy + vec2(1,3)),random(wPos.xz + vec2(2, -2)),random(wPos.yz + vec2(3,-1)));
-    wPos += off * .1;
-
-
-    float sum = 0;
-
-    for (float count = 0; count < iter; count++) {
-        vec2 offset = (vec2(random(pixelUV + vec2(0, count)), random(pixelUV + vec2(10, count)))-.5) * 2;
-        offset = normalize(offset) * random(pixelUV + vec2(5, count));
-
-        float pick = texture(tex2, pixelUV + offset * aoDist).r;// in unit circle
-        float distance = length(offset);// 0 - 1
-        float zOffset = (random(pixelUV + vec2(3, count)) - .5) * 2 * aoDist;
-
-        if (pick + zOffset < depth) {
-            float difference = abs(depth - pick);
-            sum = 1;
-        }
+    float depth = sqrt(1-texture(tex2, pixelUV).r);
+    float pick = 0;
+    for(int i=0;i<iter;i++) {
+        vec2 offset = vec2(random(pixelUV + vec2(0,i)), random(pixelUV + vec2(1,i)))*2-1;
+        pick += sqrt(1-texture(tex2, pixelUV + offset * aoDist).r) / iter;
     }
-    float outside = sum / iter;
+    float diff = pick - depth;
 
-    float v = outside;//abs(depth - outside);
-    // v = flag2 * v;
+    vec3 ao = vec3(diff);
 
     vec4 c = texture(texture, pixelUV);
-    c.rgb = mix(c.rgb, wPos, .9);
+    c.rgb = mix(c.rgb, ao, .9);
     color = c;
 }
