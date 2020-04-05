@@ -27,7 +27,8 @@ void main() {
     float pick = 0;
     for(int i=0;i<iter;i++) {
         vec2 offset = vec2(random(pixelUV + vec2(0,i)), random(pixelUV + vec2(1,i)))*2-1;
-        pick += sqrt(1-texture(tex2, pixelUV + offset * aoDist).r) / iter;
+        float picked = sqrt(1-texture(tex2, pixelUV + offset * aoDist).r);
+        pick += picked / iter;
     }
     float diff = pick - depth;
 
