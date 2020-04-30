@@ -1,11 +1,10 @@
 package graphics
 
 import IDrawable
-import org.lwjgl.opengl.GL41
 import org.lwjgl.opengl.GL46.*
 
 
-class Quad(private val data: FloatArray) : IDrawable {
+class Mesh(private val data: FloatArray) : IDrawable {
     private val vbo: Int = glGenBuffers()
     private val vao: Int = glGenVertexArrays()
     private val shader: Shader =

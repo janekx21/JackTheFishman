@@ -1,9 +1,7 @@
 package graphics
 
-import org.lwjgl.opengl.GL11
-import org.lwjgl.opengl.GL20
-import org.lwjgl.opengl.GL41
 import org.lwjgl.opengl.GL46.*
+import util.IntPointer
 import java.io.File
 
 class Shader(pathFrag: String, pathVert: String) {
@@ -51,9 +49,9 @@ class Shader(pathFrag: String, pathVert: String) {
         val shader = glCreateShader(type)
         glShaderSource(shader, code)
         glCompileShader(shader)
-        val status = intArrayOf(0)
-        glGetShaderiv(shader, GL_COMPILE_STATUS, status)
-        check(status[0] != GL_FALSE) { glGetShaderInfoLog(shader) }
+        val status = IntPointer()
+        glGetShaderiv(shader, GL_COMPILE_STATUS, status.buffer)
+        check(status.value != GL_FALSE) { glGetShaderInfoLog(shader) }
         return shader
     }
 }

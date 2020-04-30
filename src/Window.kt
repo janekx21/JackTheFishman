@@ -1,5 +1,5 @@
 import graphics.Camera
-import graphics.Quad
+import graphics.Mesh
 import graphics.Texture
 import math.Point
 import math.Vector
@@ -104,15 +104,15 @@ class Window(var size: Point, var title: String, private var pointer: Long = 0) 
                 }
             }
         }
-        val quad3 = Quad(fl.toFloatArray())
+        val quad3 = Mesh(fl.toFloatArray())
         val tex = Texture("assets/textures/krakula-xl.png")
         val normal = Texture("assets/textures/normal_map.png", 1)
         // glActiveTexture(GL_TEXTURE0)
         // glActiveTexture(GL_TEXTURE1)
         val cam = Camera(Vector(0f, 0f, -1f), 0f, 0f)
 
-        val quad = Quad(floatArrayOf(0f, 0f, 0f, 1f, 1f, 1f, 0f, 0f, 1f, 0f, 1f, 1f))
-        val quad2 = Quad(floatArrayOf(-1f, -1f, -1f, -.5f, -.5f, -.5f))
+        val quad = Mesh(floatArrayOf(0f, 0f, 0f, 1f, 1f, 1f, 0f, 0f, 1f, 0f, 1f, 1f))
+        val quad2 = Mesh(floatArrayOf(-1f, -1f, -1f, -.5f, -.5f, -.5f))
         var last = 0f
 
         while (!glfwWindowShouldClose(pointer)) {
