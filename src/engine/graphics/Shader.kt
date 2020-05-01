@@ -6,7 +6,7 @@ import java.io.File
 
 class Shader(pathFrag: String, pathVert: String) {
     val program: Int
-    private val colorAttribute = "outColor";
+    private val colorAttribute = "outColor"
 
     init {
         val vs = compileShader(pathVert, GL_VERTEX_SHADER)

@@ -1,5 +1,7 @@
 package engine
 
+import engine.graphics.Texture
+
 class SpriteBatch {
     public fun Begin(): Unit {
 

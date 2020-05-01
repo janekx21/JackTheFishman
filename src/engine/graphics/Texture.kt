@@ -1,9 +1,9 @@
-package engine
+package engine.graphics
 
 import engine.math.Point
+import engine.util.IntPointer
 import org.lwjgl.opengl.GL46.*
 import org.lwjgl.stb.STBImage.*
-import engine.util.IntPointer
 
 class Texture(private val path: String, private val index: Int = 0) {
     private val size: Point

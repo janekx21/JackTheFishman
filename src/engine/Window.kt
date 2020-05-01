@@ -2,6 +2,7 @@ package engine
 
 import engine.graphics.Camera
 import engine.graphics.Mesh
+import engine.graphics.Texture
 import engine.math.Point
 import engine.math.Vector
 import org.lwjgl.assimp.AIMesh
