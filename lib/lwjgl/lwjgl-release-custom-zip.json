@@ -1,7 +1,10 @@
 {
   "build": "release",
   "mode": "zip",
-  "selectedAddons": [],
+  "selectedAddons": [
+    "joml",
+    "lwjglx-debug"
+  ],
   "platform": [
     "windows"
   ],
@@ -13,7 +16,15 @@
   "source": true,
   "osgi": false,
   "language": "kotlin",
-  "preset": "minimal-opengl",
+  "contents": [
+    "lwjgl",
+    "lwjgl-assimp",
+    "lwjgl-glfw",
+    "lwjgl-openal",
+    "lwjgl-opengl",
+    "lwjgl-stb",
+    "lwjgl-tinyfd"
+  ],
   "version": "3.2.3",
   "versionLatest": "3.2.3"
 }
