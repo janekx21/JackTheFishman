@@ -1,7 +1,7 @@
-package graphics
+package engine.graphics
 
-import Window
-import math.Vector
+import engine.Window
+import engine.math.Vector
 import org.lwjgl.glfw.GLFW
 import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL46

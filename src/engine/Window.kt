@@ -1,8 +1,9 @@
-import graphics.Camera
-import graphics.Mesh
-import graphics.Texture
-import math.Point
-import math.Vector
+package engine
+
+import engine.graphics.Camera
+import engine.graphics.Mesh
+import engine.math.Point
+import engine.math.Vector
 import org.lwjgl.assimp.AIMesh
 import org.lwjgl.assimp.Assimp.*
 import org.lwjgl.glfw.GLFW.*

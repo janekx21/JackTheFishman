@@ -1,6 +1,6 @@
-package graphics
+package engine.graphics
 
-import IDrawable
+import engine.IDrawable
 import org.lwjgl.opengl.GL46.*
 
 

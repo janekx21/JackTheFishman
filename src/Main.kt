@@ -1,4 +1,5 @@
-import math.Point
+import engine.Window
+import engine.math.Point
 
 fun main() {
     Window.init()

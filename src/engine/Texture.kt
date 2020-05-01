@@ -1,22 +1,22 @@
-package graphics
+package engine
 
-import math.Point
-import org.lwjgl.opengl.GL11
+import engine.math.Point
 import org.lwjgl.opengl.GL46.*
 import org.lwjgl.stb.STBImage.*
+import engine.util.IntPointer
 
 class Texture(private val path: String, private val index: Int = 0) {
     private val size: Point
     private val texture: Int
 
     init {
-        val width = intArrayOf(0)
-        val height = intArrayOf(0)
-        val channels = intArrayOf(0)
+        val width = IntPointer()
+        val height = IntPointer()
+        val channels = IntPointer()
         stbi_set_flip_vertically_on_load(true)
-        val data = stbi_load(path, width, height, channels, 4)
+        val data = stbi_load(path, width.buffer, height.buffer, channels.buffer, 4)
         check(data != null) { "image could not be loaded" }
-        size = Point(width[0], height[0])
+        size = Point(width.value, height.value)
 
         glActiveTexture(GL_TEXTURE0 + index)
         glEnable(GL_TEXTURE_2D)

@@ -1,4 +1,4 @@
-package math
+package engine.math
 
 data class Matrix(private val data: FloatArray) {
     companion object {
@@ -22,7 +22,10 @@ data class Matrix(private val data: FloatArray) {
     }
 
     private fun index(i: Int): Point {
-        return Point(i % dim, i / dim)
+        return Point(
+            i % dim,
+            i / dim
+        )
     }
 
     operator fun times(other: Matrix): Matrix {

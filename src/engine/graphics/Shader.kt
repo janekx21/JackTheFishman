@@ -1,11 +1,12 @@
-package graphics
+package engine.graphics
 
+import engine.util.IntPointer
 import org.lwjgl.opengl.GL46.*
-import util.IntPointer
 import java.io.File
 
 class Shader(pathFrag: String, pathVert: String) {
     val program: Int
+    private val colorAttribute = "outColor";
 
     init {
         val vs = compileShader(pathVert, GL_VERTEX_SHADER)
@@ -13,7 +14,8 @@ class Shader(pathFrag: String, pathVert: String) {
         program = glCreateProgram()
         glAttachShader(program, vs)
         glAttachShader(program, fs)
-        glBindFragDataLocation(program, 0, "color")
+        glBindFragDataLocation(program, 0, colorAttribute)
+        // glBindAttribLocation()
         glLinkProgram(program)
     }
     private val mvpLocation = glGetUniformLocation(program, "mvp")
@@ -53,5 +55,9 @@ class Shader(pathFrag: String, pathVert: String) {
         glGetShaderiv(shader, GL_COMPILE_STATUS, status.buffer)
         check(status.value != GL_FALSE) { glGetShaderInfoLog(shader) }
         return shader
+    }
+
+    public fun compileProgram() {
+
     }
 }
