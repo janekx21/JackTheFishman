@@ -1,63 +1,87 @@
 package engine.graphics
 
 import engine.util.IntPointer
+import org.joml.Matrix4f
+import org.joml.Vector3f
+import org.lwjgl.opengl.GL20
 import org.lwjgl.opengl.GL46.*
 import java.io.File
 
-class Shader(pathFrag: String, pathVert: String) {
-    val program: Int
-    private val colorAttribute = "outColor"
+class Shader(pathVert: String, pathFrag: String) {
+    val program = compileProgram(pathVert, pathFrag)
+    private val uniformLocations = HashMap<String, Int>()
 
-    init {
-        val vs = compileShader(pathVert, GL_VERTEX_SHADER)
-        val fs = compileShader(pathFrag, GL_FRAGMENT_SHADER)
-        program = glCreateProgram()
-        glAttachShader(program, vs)
-        glAttachShader(program, fs)
-        glBindFragDataLocation(program, 0, colorAttribute)
-        // glBindAttribLocation()
-        glLinkProgram(program)
-    }
-    private val mvpLocation = glGetUniformLocation(program, "mvp")
-    private val pLocation = glGetUniformLocation(program, "projection")
-    private val lightLocation = glGetUniformLocation(program, "light")
-    private val textureLocation = glGetUniformLocation(program, "texture")
-    private val normalMapLocation = glGetUniformLocation(program, "normalMap")
-
-    fun bind() {
+    fun use(callback: () -> Unit) {
         glUseProgram(program)
-
-        with(FloatArray(16)) {
-            glGetFloatv(GL_MODELVIEW_MATRIX, this)
-            glProgramUniformMatrix4fv(program, mvpLocation, false, this)
-        }
-
-        with(FloatArray(16)) {
-            glGetFloatv(GL_PROJECTION_MATRIX, this)
-            glProgramUniformMatrix4fv(program, pLocation, false, this)
-        }
-
-        glProgramUniform3f(program, lightLocation, .3f, .3f, .3f)
-        glProgramUniform1i(program, textureLocation, 0)
-        glProgramUniform1i(program, normalMapLocation, 1)
-    }
-
-    fun unbind() {
+        callback()
         glUseProgram(0)
     }
 
-    private fun compileShader(path: String, type: Int): Int {
-        val code = File(path).readText()
-        val shader = glCreateShader(type)
-        glShaderSource(shader, code)
-        glCompileShader(shader)
-        val status = IntPointer()
-        glGetShaderiv(shader, GL_COMPILE_STATUS, status.buffer)
-        check(status.value != GL_FALSE) { glGetShaderInfoLog(shader) }
-        return shader
+    fun setUniform(name: String, value: Vector3f) {
+        glProgramUniform3f(program, getUniformLocation(name), value.x, value.y, value.z);
     }
 
-    public fun compileProgram() {
+    fun setUniform(name: String, value: Matrix4f) {
+        val buffer = FloatArray(16)
+        value.get(buffer)
+        glProgramUniformMatrix4fv(program, getUniformLocation(name), false, buffer)
+    }
 
+    private fun getUniformLocation(name: String): Int {
+        return uniformLocations.getOrDefault(name, GL20.glGetUniformLocation(program, name))
+    }
+
+    public fun setMatrix(world: Matrix4f, view: Matrix4f, projection: Matrix4f) {
+        val mvp = Matrix4f(projection).mul(view).mul(world)
+        setUniform(worldAttributeName, world)
+        setUniform(viewAttributeName, view)
+        setUniform(projectionAttributeName, projection)
+        setUniform(mvpAttributeName, mvp)
+    }
+
+    companion object {
+        private const val colorAttribute = "outColor"
+        private const val versionString = "#version 150 core\n"
+
+        private const val worldAttributeName = "World"
+        private const val viewAttributeName = "View"
+        private const val projectionAttributeName = "Projection"
+        private const val mvpAttributeName = "MVP"
+
+        private const val worldAttribute = "uniform mat4 $worldAttributeName;"
+        private const val viewAttribute = "uniform mat4 $viewAttributeName;"
+        private const val projectionAttribute = "uniform mat4 $projectionAttributeName;"
+        private const val mvpAttribute = "uniform mat4 $mvpAttributeName;"
+
+        private fun compileShader(path: String, type: Int): Int {
+            val code = prefixShader(File(path).readText())
+            val shader = glCreateShader(type)
+            glShaderSource(shader, code)
+            glCompileShader(shader)
+            val status = IntPointer()
+            glGetShaderiv(shader, GL_COMPILE_STATUS, status.buffer)
+            check(status.value != GL_FALSE) { glGetShaderInfoLog(shader) }
+            return shader
+        }
+
+        private fun prefixShader(code: String): String {
+            return "$versionString$worldAttribute$viewAttribute$projectionAttribute$mvpAttribute\n$code"
+        }
+
+        fun compileProgram(vertPath: String, fragPath: String): Int {
+            val vs = compileShader(vertPath, GL_VERTEX_SHADER)
+            val fs = compileShader(fragPath, GL_FRAGMENT_SHADER)
+            val program = glCreateProgram()
+            glAttachShader(program, vs)
+            glAttachShader(program, fs)
+            glBindFragDataLocation(program, 0, colorAttribute)
+
+            for (attribute in Vertex.namedIndex().withIndex()) {
+                GL20.glBindAttribLocation(program, attribute.index, attribute.value)
+            }
+
+            glLinkProgram(program)
+            return program
+        }
     }
 }

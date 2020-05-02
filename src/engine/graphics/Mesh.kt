@@ -1,47 +1,78 @@
 package engine.graphics
 
 import engine.IDrawable
+import org.joml.Vector2f
+import org.joml.Vector3f
+import org.lwjgl.assimp.AIMesh
+import org.lwjgl.assimp.Assimp
 import org.lwjgl.opengl.GL46.*
 
 
-class Mesh(private val data: FloatArray) : IDrawable {
+class Mesh(private val data: Array<Vertex>) : IDrawable {
     private val vbo: Int = glGenBuffers()
     private val vao: Int = glGenVertexArrays()
-    private val shader: Shader =
-        Shader("assets/shaders/fragment.glsl", "assets/shaders/vertex.glsl")
 
     init {
         glBindVertexArray(vao)
         glBindBuffer(GL_ARRAY_BUFFER, vbo)
-        glBufferData(GL_ARRAY_BUFFER, data, GL_STATIC_DRAW)
 
-        with(glGetAttribLocation(shader.program, "position")) {
-            glVertexAttribPointer(this, 2, GL_FLOAT, false, 8 * 4, 0)
-            glEnableVertexAttribArray(this)
-        }
+        val buffer = data.flatMap { vertex -> vertex.toBuffer() }.toFloatArray()
+        glBufferData(GL_ARRAY_BUFFER, buffer, GL_STATIC_DRAW)
 
-        with(glGetAttribLocation(shader.program, "z")) {
-            glVertexAttribPointer(this, 1, GL_FLOAT, false, 8 * 4, 2 * 4)
-            glEnableVertexAttribArray(this)
-        }
+        Vertex.vertexAttribute()
+        glBindVertexArray(0)
+    }
 
-        with(glGetAttribLocation(shader.program, "normal")) {
-            glVertexAttribPointer(this, 3, GL_FLOAT, false, 8 * 4, 3 * 4)
-            glEnableVertexAttribArray(this)
-        }
-
-        with(glGetAttribLocation(shader.program, "uv")) {
-            glVertexAttribPointer(this, 2, GL_FLOAT, false, 8 * 4, 6 * 4)
-            glEnableVertexAttribArray(this)
-        }
+    fun use(callback: () -> Unit) {
+        glBindVertexArray(vao)
+        callback()
         glBindVertexArray(0)
     }
 
     override fun draw() {
-        glBindVertexArray(vao)
-        shader.bind()
-        glDrawArrays(GL_TRIANGLES, 0, data.size / 3)
-        shader.unbind()
-        glBindVertexArray(0)
+        this.use {
+            glDrawArrays(GL_TRIANGLES, 0, data.size)
+        }
+    }
+
+    companion object {
+        fun createViePath(path: String): Mesh {
+            val scene =
+                Assimp.aiImportFile(path, Assimp.aiProcess_Triangulate or Assimp.aiProcess_GenNormals)
+            check(scene != null) { "scene could not be loaded" }
+
+            println("there are ${scene.mNumMeshes()} meshes")
+
+            val fl = arrayListOf<Vertex>()
+            for (i in 0 until scene.mNumMeshes()) {
+                val x = scene.mMeshes()?.get(i)
+                if (x !== null) {
+                    val mesh = AIMesh.create(x)
+                    println("vertex len is ${mesh.mNumVertices()}")
+                    println("num of faces is ${mesh.mNumFaces()}")
+
+                    for (j in 0 until mesh.mNumFaces()) {
+                        val face = mesh.mFaces().get(j)
+                        for (k in 0 until face.mNumIndices()) {
+                            val index = face.mIndices().get(k)
+                            val vec = mesh.mVertices().get(index)
+                            val uv = mesh.mTextureCoords(0)?.get(index)
+                            check(uv != null) { "no uv prvided" }
+                            val normal = mesh.mNormals()?.get(index)
+                            check(normal != null) { "no normal provied" }
+                            fl.add(
+                                Vertex(
+                                    Vector3f(vec.x(), vec.y(), vec.z()),
+                                    Vector2f(uv.x(), uv.y()),
+                                    Vector3f(normal.x(), normal.y(), normal.z())
+                                )
+                            )
+                        }
+                    }
+                }
+            }
+
+            return Mesh(fl.toTypedArray())
+        }
     }
 }

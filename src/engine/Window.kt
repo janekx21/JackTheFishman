@@ -1,20 +1,20 @@
 package engine
 
-import engine.graphics.Camera
 import engine.graphics.Mesh
+import engine.graphics.Shader
 import engine.graphics.Texture
-import engine.math.Point
-import engine.math.Vector
-import org.lwjgl.assimp.AIMesh
-import org.lwjgl.assimp.Assimp.*
+import org.joml.Matrix4f
+import org.joml.Vector2i
+import org.joml.Vector3f
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.glfw.GLFWErrorCallback
 import org.lwjgl.opengl.GL.createCapabilities
 import org.lwjgl.opengl.GL46.*
 import java.io.Closeable
+import kotlin.math.sin
 
 
-class Window(var size: Point, var title: String, private var pointer: Long = 0) : Closeable {
+class Window(var size: Vector2i, var title: String, private var pointer: Long = 0) : Closeable {
 
     val windowPointer: Long
         get() = pointer
@@ -46,7 +46,7 @@ class Window(var size: Point, var title: String, private var pointer: Long = 0) 
         }
 
         glfwSetFramebufferSizeCallback(pointer) { window, width, height ->
-            size = Point(width, height)
+            size = Vector2i(width, height)
             glViewport(0, 0, width, height)
             glLoadIdentity()
             // glOrtho(-1.0, 1.0, -1.0, 1.0, -10.0, 10.0);
@@ -68,71 +68,42 @@ class Window(var size: Point, var title: String, private var pointer: Long = 0) 
     }
 
     fun loop() {
-        val scene =
-            aiImportFile("assets/models/arrow.obj", aiProcess_Triangulate or aiProcess_GenNormals)
-        check(scene != null) { "scene could not be loaded" }
 
-        println("there are ${scene.mNumMeshes()} meshes")
+        val loadedMesh = Mesh.createViePath("assets/models/arrow.obj")
+        val tex = Texture.createViaPath("assets/textures/krakula-xl.png")
+        val shader: Shader = Shader("assets/shaders/vertex.glsl", "assets/shaders/fragment.glsl")
+
+        // val stack = Matrix4f()
+        // stack.setOrtho(-1f, 1f, -1f, 1f, -1f, 1f)
+        val world = Matrix4f()
+        val projection = Matrix4f()
 
 
-        val fl = arrayListOf<Float>()
-        for (i in 0 until scene.mNumMeshes()) {
-            val x = scene.mMeshes()?.get(i)
-            if (x !== null) {
-                val mesh = AIMesh.create(x)
-                println("vertex len is ${mesh.mNumVertices()}")
-                println("num of faces is ${mesh.mNumFaces()}")
-
-                for (j in 0 until mesh.mNumFaces()) {
-                    val face = mesh.mFaces().get(j)
-                    for (k in 0 until face.mNumIndices()) {
-                        val index = face.mIndices().get(k)
-                        val vec = mesh.mVertices().get(index)
-                        fl.add(vec.x())
-                        fl.add(vec.y())
-                        fl.add(vec.z())
-                        val normal = mesh.mNormals()?.get(index)
-                        if (normal != null) {
-                            fl.add(normal.x())
-                            fl.add(normal.y())
-                            fl.add(normal.z())
-                        }
-                        val uv = mesh.mTextureCoords(0)?.get(index)
-                        if (uv != null) {
-                            fl.add(uv.x())
-                            fl.add(uv.y())
-                        }
-                    }
-                }
-            }
-        }
-        val quad3 = Mesh(fl.toFloatArray())
-        val tex = Texture("assets/textures/krakula-xl.png")
-        val normal = Texture("assets/textures/normal_map.png", 1)
-        // glActiveTexture(GL_TEXTURE0)
-        // glActiveTexture(GL_TEXTURE1)
-        val cam = Camera(Vector(0f, 0f, -1f), 0f, 0f)
-
-        val quad = Mesh(floatArrayOf(0f, 0f, 0f, 1f, 1f, 1f, 0f, 0f, 1f, 0f, 1f, 1f))
-        val quad2 = Mesh(floatArrayOf(-1f, -1f, -1f, -.5f, -.5f, -.5f))
-        var last = 0f
+        // projection.ortho(-1f, 1.1f, -1f, 1f, -1f, 10f)
 
         while (!glfwWindowShouldClose(pointer)) {
-            // glRotatef(1f, .1f, 1f, .1567f)
-            cam.update(this)
-            cam.matrix(size.x.toFloat() / size.y.toFloat())
-
             glClearColor(.2f, .2f, .2f, 1f)
             glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
 
-            tex.bind()
-            normal.bind()
-            quad3.draw()
+            val x = DoubleArray(1)
+            val y = DoubleArray(1)
+            glfwGetCursorPos(windowPointer, x, y)
+            projection.identity()
+            projection.perspective(Math.toRadians(100.0).toFloat(), 1f, .1f, 10f)
+
+            val view = Matrix4f()
+            view.translate(Vector3f(x[0].toFloat() / 100, -y[0].toFloat() / 100, -.1f))
+
+            world.identity()
+            world.translate(Vector3f(sin(glfwGetTime()).toFloat() * .1f, 0f, 0f))
+
+            shader.setMatrix(world, view, projection)
+            shader.use {
+                loadedMesh.draw()
+            }
 
             glfwSwapBuffers(pointer)
             glfwPollEvents()
-            delta = glfwGetTime().toFloat() - last
-            last = glfwGetTime().toFloat()
         }
     }
 

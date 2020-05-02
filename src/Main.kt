@@ -1,9 +1,9 @@
 import engine.Window
-import engine.math.Point
+import org.joml.Vector2i
 
 fun main() {
     Window.init()
-    Window(Point(640, 480), "FooBar").use {
+    Window(Vector2i(640, 480), "FooBar").use {
         it.loop()
     }
     Window.close()
