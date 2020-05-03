@@ -3,15 +3,15 @@ package engine
 import engine.graphics.Texture
 
 class SpriteBatch {
-    public fun Begin(): Unit {
+    fun Begin(): Unit {
 
     }
 
-    public fun Draw(texture: Texture): Unit {
+    fun Draw(texture: Texture): Unit {
 
     }
 
-    public fun End(): Unit {
+    fun End(): Unit {
 
     }
 }

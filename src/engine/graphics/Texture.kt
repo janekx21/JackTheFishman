@@ -13,7 +13,7 @@ class Texture(private val size: Vector2i) {
         glEnable(GL_TEXTURE_2D)
     }
 
-    public fun setData(data: ByteBuffer): Unit {
+    fun setData(data: ByteBuffer): Unit {
         bind {
             glTexImage2D(
                 GL_TEXTURE_2D,
@@ -35,14 +35,14 @@ class Texture(private val size: Vector2i) {
         glBindTexture(GL_TEXTURE_2D, texture)
     }
 
-    public fun bind(callback: () -> Unit) {
+    fun bind(callback: () -> Unit) {
         bindWithIndex(0)
         callback()
         unbindWithIndex(0)
     }
 
     companion object {
-        public fun createViaPath(path: String): Texture {
+        fun createViaPath(path: String): Texture {
             val width = IntPointer()
             val height = IntPointer()
             val channels = IntPointer()
@@ -63,7 +63,7 @@ class Texture(private val size: Vector2i) {
             glBindTexture(GL_TEXTURE_2D, 0)
         }
 
-        public fun bind(textures: Array<Texture>, callback: () -> Unit) {
+        fun bind(textures: Array<Texture>, callback: () -> Unit) {
             for (texture in textures.withIndex()) {
                 texture.value.bindWithIndex(texture.index)
             }

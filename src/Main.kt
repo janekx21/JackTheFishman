@@ -24,10 +24,10 @@ class Game1 : Game() {
                 GL46.glViewport(0, 0, size.x, size.y)
                 GL46.glLoadIdentity()
                 GL46.glTranslatef(0f, 0f, -1f)
-                GL46.glTranslatef(0f, -.5f, 0f);
+                GL46.glTranslatef(0f, -.5f, 0f)
                 GL46.glMatrixMode(GL46.GL_PROJECTION)
                 GL46.glLoadIdentity()
-                GL46.glFrustum(-fov * aspect, fov * aspect, -fov, fov, .01, 10.0);
+                GL46.glFrustum(-fov * aspect, fov * aspect, -fov, fov, .01, 10.0)
                 GL46.glMatrixMode(GL46.GL_MODELVIEW)
             }
         }

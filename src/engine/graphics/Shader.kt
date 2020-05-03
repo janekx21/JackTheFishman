@@ -18,7 +18,7 @@ class Shader(pathVert: String, pathFrag: String) {
     }
 
     fun setUniform(name: String, value: Vector3f) {
-        glProgramUniform3f(program, getUniformLocation(name), value.x, value.y, value.z);
+        glProgramUniform3f(program, getUniformLocation(name), value.x, value.y, value.z)
     }
 
     fun setUniform(name: String, value: Matrix4f) {
@@ -31,7 +31,7 @@ class Shader(pathVert: String, pathFrag: String) {
         return uniformLocations.getOrDefault(name, GL20.glGetUniformLocation(program, name))
     }
 
-    public fun setMatrix(world: Matrix4f, view: Matrix4f, projection: Matrix4f) {
+    fun setMatrix(world: Matrix4f, view: Matrix4f, projection: Matrix4f) {
         val mvp = Matrix4f(projection).mul(view).mul(world)
         setUniform(worldAttributeName, world)
         setUniform(viewAttributeName, view)
