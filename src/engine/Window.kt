@@ -3,17 +3,17 @@ package engine
 import org.joml.Vector2i
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.opengl.GL.createCapabilities
+import org.lwjgl.opengl.GL46
 import org.lwjgl.opengl.GL46.GL_DEPTH_TEST
 import org.lwjgl.opengl.GL46.glEnable
 import java.io.Closeable
 
 
 object Window : Closeable {
-    val size = Vector2i(680, 460)
-    val title = "FooBar"
+    private val size = Vector2i(680, 460)
+    private const val title = "Jack the Fishman Framework"
     val shouldClose
         get() = glfwWindowShouldClose(pointer)
-    val fov = 1.0 / 90.0
     val aspect: Float
         get() = size.x.toFloat() / size.y.toFloat()
     var onResize: (Window) -> Unit = {}
@@ -46,6 +46,7 @@ object Window : Closeable {
 
         glfwSetFramebufferSizeCallback(pointer) { _, width, height ->
             size.set(width, height)
+            GL46.glViewport(0, 0, size.x, size.y)
             onResize(this)
         }
 
