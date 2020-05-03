@@ -10,10 +10,6 @@ open class Game {
 
         // Configure GLFW
         GLFW.glfwDefaultWindowHints() // optional, the current window hints are already the default
-
-        GLFW.glfwWindowHint(GLFW.GLFW_VISIBLE, GLFW.GLFW_FALSE) // the window will stay hidden after creation
-
-        GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, GLFW.GLFW_TRUE) // the window will be resizable
     }
 
     var window = Window(Vector2i(640, 480), "FooBar")

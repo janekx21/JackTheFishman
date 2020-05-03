@@ -13,14 +13,14 @@ class Mesh(private val data: Array<Vertex>) : IDrawable {
     private val vao: Int = glGenVertexArrays()
 
     init {
-        glBindVertexArray(vao)
         glBindBuffer(GL_ARRAY_BUFFER, vbo)
-
         val buffer = data.flatMap { vertex -> vertex.toBuffer() }.toFloatArray()
         glBufferData(GL_ARRAY_BUFFER, buffer, GL_STATIC_DRAW)
 
-        Vertex.vertexAttribute()
+        glBindVertexArray(vao)
+        Vertex.generateVertexAttributePointers()
         glBindVertexArray(0)
+        glBindBuffer(GL_ARRAY_BUFFER, 0)
     }
 
     fun use(callback: () -> Unit) {

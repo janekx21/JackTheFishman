@@ -19,8 +19,9 @@ data class Vertex(val position: Vector3f, val uv: Vector2f, val normal: Vector3f
             Attribute("UV", 2, GL_FLOAT),
             Attribute("Normal", 3, GL_FLOAT)
         )
+        const val floatSize = 4
 
-        fun vertexAttribute() {
+        fun generateVertexAttributePointers() {
             var stride = 0
             for (attribute in attributes.withIndex()) {
                 with(attribute.index) {
@@ -29,7 +30,7 @@ data class Vertex(val position: Vector3f, val uv: Vector2f, val normal: Vector3f
                         false, size(), stride.toLong()
                     )
                     GL46.glEnableVertexAttribArray(this)
-                    stride += attribute.value.size * 4
+                    stride += attribute.value.size * floatSize // only upload floats
                 }
             }
         }
@@ -39,7 +40,7 @@ data class Vertex(val position: Vector3f, val uv: Vector2f, val normal: Vector3f
         }
 
         private fun size(): Int {
-            return attributes.sumBy { attribute -> attribute.size } * 4
+            return attributes.sumBy { attribute -> attribute.size } * floatSize // only upload floats
         }
     }
 }

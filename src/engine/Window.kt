@@ -3,47 +3,48 @@ package engine
 import org.joml.Vector2i
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.opengl.GL.createCapabilities
-import org.lwjgl.opengl.GL46.*
+import org.lwjgl.opengl.GL46.GL_DEPTH_TEST
+import org.lwjgl.opengl.GL46.glEnable
 import java.io.Closeable
 
 
 class Window(var size: Vector2i, var title: String) : Closeable {
     val shouldClose
         get() = glfwWindowShouldClose(pointer)
+    val fov = 1.0 / 90.0
+    val aspect: Float
+        get() = size.x.toFloat() / size.y.toFloat()
+    var onResize: (Window) -> Unit = {}
 
     private val pointer = glfwCreateWindow(size.x, size.y, title, 0, 0)
 
     init {
+        config()
         glfwMakeContextCurrent(pointer)
+        createCapabilities()
+        glEnable(GL_DEPTH_TEST)
+        glfwShowWindow(pointer)
+    }
 
-        val fov = 1.0 / 90.0
+    private fun config() {
+        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE) // the window will stay hidden after creation
+        glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE) // the window will be resizable
+        configEvents()
+        glfwSwapInterval(1)
+    }
 
+    private fun configEvents() {
         glfwSetKeyCallback(pointer) { window, key, _, action, _ ->
             if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
                 glfwSetWindowShouldClose(window, true)
             }
         }
 
-        glfwSetFramebufferSizeCallback(pointer) { window, width, height ->
+        glfwSetFramebufferSizeCallback(pointer) { _, width, height ->
             size = Vector2i(width, height)
-            glViewport(0, 0, width, height)
-            glLoadIdentity()
-            // glOrtho(-1.0, 1.0, -1.0, 1.0, -10.0, 10.0);
-            val aspect = width.toFloat() / height.toFloat()
-            glTranslatef(0f, 0f, -1f)
-            glTranslatef(0f, -.5f, 0f);
-            glMatrixMode(GL_PROJECTION)
-            glLoadIdentity()
-            glFrustum(-fov * aspect, fov * aspect, -fov, fov, .01, 10.0);
-            glMatrixMode(GL_MODELVIEW)
+            onResize(this)
         }
 
-        glfwSwapInterval(1)
-        createCapabilities()
-
-        glEnable(GL_DEPTH_TEST)
-
-        glfwShowWindow(pointer)
     }
 
     fun update() {
