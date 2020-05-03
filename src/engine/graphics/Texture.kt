@@ -1,12 +1,13 @@
 package engine.graphics
 
+import engine.util.IUsable
 import engine.util.IntPointer
 import org.joml.Vector2i
 import org.lwjgl.opengl.GL46.*
 import org.lwjgl.stb.STBImage.*
 import java.nio.ByteBuffer
 
-class Texture(private val size: Vector2i) {
+class Texture(private val size: Vector2i) : IUsable {
     private val texture = glGenTextures()
 
     init {
@@ -14,7 +15,7 @@ class Texture(private val size: Vector2i) {
     }
 
     fun setData(data: ByteBuffer) {
-        bind {
+        use {
             glTexImage2D(
                 GL_TEXTURE_2D,
                 0,
@@ -35,7 +36,7 @@ class Texture(private val size: Vector2i) {
         glBindTexture(GL_TEXTURE_2D, texture)
     }
 
-    fun bind(callback: () -> Unit) {
+    override fun use(callback: () -> Unit) {
         bindWithIndex(0)
         callback()
         unbindWithIndex(0)

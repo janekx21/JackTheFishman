@@ -8,15 +8,17 @@ import org.lwjgl.opengl.GL46.glEnable
 import java.io.Closeable
 
 
-class Window(var size: Vector2i, title: String) : Closeable {
+object Window : Closeable {
+    val size = Vector2i(680, 460)
+    val title = "FooBar"
     val shouldClose
         get() = glfwWindowShouldClose(pointer)
     val fov = 1.0 / 90.0
     val aspect: Float
         get() = size.x.toFloat() / size.y.toFloat()
     var onResize: (Window) -> Unit = {}
+    val pointer = glfwCreateWindow(size.x, size.y, title, 0, 0)
 
-    private val pointer = glfwCreateWindow(size.x, size.y, title, 0, 0)
     private var lastTime = 0.0
 
     init {
@@ -35,14 +37,15 @@ class Window(var size: Vector2i, title: String) : Closeable {
     }
 
     private fun configEvents() {
-        glfwSetKeyCallback(pointer) { window, key, _, action, _ ->
+        glfwSetKeyCallback(pointer) { window, key, scanCode, action, mods ->
             if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
                 glfwSetWindowShouldClose(window, true)
             }
+            Input.Keyboard.updateKeyState(this, key, scanCode, action, mods)
         }
 
         glfwSetFramebufferSizeCallback(pointer) { _, width, height ->
-            size = Vector2i(width, height)
+            size.set(width, height)
             onResize(this)
         }
 

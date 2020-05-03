@@ -1,5 +1,6 @@
 import engine.Game
 import engine.Time
+import engine.Window
 import engine.graphics.Mesh
 import engine.graphics.Shader
 import engine.graphics.Texture
@@ -20,7 +21,7 @@ class Game1 : Game() {
     private val shader: Shader = Shader("assets/shaders/vertex.glsl", "assets/shaders/fragment.glsl")
 
     init {
-        window.onResize = {
+        Window.onResize = {
             with(it) {
                 GL46.glViewport(0, 0, size.x, size.y)
                 GL46.glLoadIdentity()
