@@ -73,8 +73,8 @@ class Shader(pathVert: String, pathFrag: String) : IUsable {
         private fun preprocess(path: String): String {
             var code = ""
             val folder = Path.of(path).parent
-            for(line in File(path).readText().lines()) {
-                if(line.startsWith(importKeyword)) {
+            for (line in File(path).readText().lines()) {
+                if (line.startsWith(importKeyword)) {
                     val file = line.substringAfterLast("$importKeyword ")
                     val addition = preprocess("$folder/$file")
                     code += "$addition\n"
