@@ -5,6 +5,12 @@ import org.joml.Vector2f
 import org.lwjgl.glfw.GLFW.*
 
 object Input {
+
+    fun update() {
+        Keyboard.update()
+        Mouse.update()
+    }
+
     object Keyboard {
         private val keyState = HashMap<Int, Boolean>()
         private val justDown = arrayListOf<Int>()

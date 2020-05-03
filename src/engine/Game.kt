@@ -17,6 +17,7 @@ open class Game {
     fun run() {
         while (!Window.shouldClose) {
             Window.update()
+            Input.update()
 
             update()
             draw()

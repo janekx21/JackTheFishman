@@ -4,17 +4,22 @@ import engine.util.IUsable
 import engine.util.IntPointer
 import org.joml.Matrix4f
 import org.joml.Vector3f
+import org.joml.Vector4f
 import org.lwjgl.opengl.GL20
 import org.lwjgl.opengl.GL46.*
 import java.io.File
+import java.nio.file.Path
 
 class Shader(pathVert: String, pathFrag: String) : IUsable {
     private val program = compileProgram(pathVert, pathFrag)
     private val uniformLocations = HashMap<String, Int>()
+    private val textureUniforms = arrayListOf<Texture>()
 
     override fun use(callback: () -> Unit) {
         glUseProgram(program)
-        callback()
+        Texture.bind(textureUniforms.toTypedArray()) {
+            callback()
+        }
         glUseProgram(0)
     }
 
@@ -26,6 +31,15 @@ class Shader(pathVert: String, pathFrag: String) : IUsable {
         val buffer = FloatArray(16)
         value.get(buffer)
         glProgramUniformMatrix4fv(program, getUniformLocation(name), false, buffer)
+    }
+
+    fun setUniform(name: String, value: Vector4f) {
+        glProgramUniform4f(program, getUniformLocation(name), value.x, value.y, value.z, value.w)
+    }
+
+    fun setUniform(name: String, value: Texture) {
+        textureUniforms.add(value)
+        glProgramUniform1i(program, getUniformLocation(name), textureUniforms.lastIndex)
     }
 
     private fun getUniformLocation(name: String): Int {
@@ -54,8 +68,29 @@ class Shader(pathVert: String, pathFrag: String) : IUsable {
         private const val projectionAttribute = "uniform mat4 $projectionAttributeName;"
         private const val mvpAttribute = "uniform mat4 $mvpAttributeName;"
 
+        private const val importKeyword = "#import"
+
+        private fun preprocess(path: String): String {
+            var code = ""
+            val folder = Path.of(path).parent
+            for(line in File(path).readText().lines()) {
+                if(line.startsWith(importKeyword)) {
+                    val file = line.substringAfterLast("$importKeyword ")
+                    val addition = preprocess("$folder/$file")
+                    code += "$addition\n"
+                } else {
+                    code += "$line\n"
+                }
+            }
+            return code
+        }
+
+        private fun prefixShader(code: String): String {
+            return "$versionString$worldAttribute$viewAttribute$projectionAttribute$mvpAttribute\n$code"
+        }
+
         private fun compileShader(path: String, type: Int): Int {
-            val code = prefixShader(File(path).readText())
+            val code = prefixShader(preprocess(path))
             val shader = glCreateShader(type)
             glShaderSource(shader, code)
             glCompileShader(shader)
@@ -63,10 +98,6 @@ class Shader(pathVert: String, pathFrag: String) : IUsable {
             glGetShaderiv(shader, GL_COMPILE_STATUS, status.buffer)
             check(status.value != GL_FALSE) { glGetShaderInfoLog(shader) }
             return shader
-        }
-
-        private fun prefixShader(code: String): String {
-            return "$versionString$worldAttribute$viewAttribute$projectionAttribute$mvpAttribute\n$code"
         }
 
         fun compileProgram(vertPath: String, fragPath: String): Int {

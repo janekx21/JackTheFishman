@@ -1,4 +1,5 @@
 import engine.Game
+import engine.Input
 import engine.Time
 import engine.Window
 import engine.graphics.Mesh
@@ -6,6 +7,7 @@ import engine.graphics.Shader
 import engine.graphics.Texture
 import org.joml.Matrix4f
 import org.joml.Vector3f
+import org.joml.Vector4f
 import org.lwjgl.glfw.GLFW
 import org.lwjgl.opengl.GL46
 import kotlin.math.sin
@@ -17,8 +19,8 @@ fun main() {
 class Game1 : Game() {
 
     private val loadedMesh = Mesh.createViePath("assets/models/arrow.obj")
-    val tex = Texture.createViaPath("assets/textures/krakula-xl.png")
-    private val shader: Shader = Shader("assets/shaders/vertex.glsl", "assets/shaders/fragment.glsl")
+    private val tex = Texture.createViaPath("assets/textures/krakula-xl.png")
+    private val shader: Shader = Shader("assets/shaders/vertex.glsl", "assets/shaders/funky.glsl")
 
     init {
         Window.onResize = {
@@ -49,6 +51,12 @@ class Game1 : Game() {
         world.translate(Vector3f(sin(GLFW.glfwGetTime()).toFloat() * .1f, 0f, 0f))
 
         shader.setMatrix(world, view, projection)
+        shader.setUniform("funkyColor", Vector4f(.2f, .5f, .7f, 1f))
+        shader.setUniform("funkyTex", tex)
+
+        if (Input.Keyboard.down(GLFW.GLFW_KEY_SPACE)) {
+            shader.setUniform("funkyColor", Vector4f(.9f, .2f, .2f, 1f))
+        }
         shader.use {
             loadedMesh.draw()
         }
