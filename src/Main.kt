@@ -1,4 +1,5 @@
 import engine.Game
+import engine.Time
 import engine.graphics.Mesh
 import engine.graphics.Shader
 import engine.graphics.Texture
@@ -42,6 +43,7 @@ class Game1 : Game() {
         val view = Matrix4f()
 
         projection.perspective(Math.toRadians(100.0).toFloat(), 1f, .1f, 10f)
+        view.rotateZ(Time.time * .1f)
         view.translate(Vector3f(.1f, -.4f, -.6f))
         world.translate(Vector3f(sin(GLFW.glfwGetTime()).toFloat() * .1f, 0f, 0f))
 

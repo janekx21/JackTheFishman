@@ -8,7 +8,7 @@ import org.lwjgl.opengl.GL46.glEnable
 import java.io.Closeable
 
 
-class Window(var size: Vector2i, var title: String) : Closeable {
+class Window(var size: Vector2i, title: String) : Closeable {
     val shouldClose
         get() = glfwWindowShouldClose(pointer)
     val fov = 1.0 / 90.0
@@ -17,6 +17,7 @@ class Window(var size: Vector2i, var title: String) : Closeable {
     var onResize: (Window) -> Unit = {}
 
     private val pointer = glfwCreateWindow(size.x, size.y, title, 0, 0)
+    var lastTime = 0.0
 
     init {
         config()
@@ -48,8 +49,11 @@ class Window(var size: Vector2i, var title: String) : Closeable {
     }
 
     fun update() {
+        val time = glfwGetTime()
         glfwSwapBuffers(pointer)
         glfwPollEvents()
+        Time.update((lastTime - time).toFloat())
+        lastTime = time
     }
 
     override fun close() {
