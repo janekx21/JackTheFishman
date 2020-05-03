@@ -8,7 +8,7 @@ import org.lwjgl.opengl.GL46.*
 import java.io.File
 
 class Shader(pathVert: String, pathFrag: String) {
-    val program = compileProgram(pathVert, pathFrag)
+    private val program = compileProgram(pathVert, pathFrag)
     private val uniformLocations = HashMap<String, Int>()
 
     fun use(callback: () -> Unit) {

@@ -21,13 +21,15 @@ data class Vertex(val position: Vector3f, val uv: Vector2f, val normal: Vector3f
         )
 
         fun vertexAttribute() {
+            var stride = 0
             for (attribute in attributes.withIndex()) {
                 with(attribute.index) {
                     GL46.glVertexAttribPointer(
                         this, attribute.value.size, attribute.value.type,
-                        false, size(), attribute.index.toLong() * 4
+                        false, size(), stride.toLong()
                     )
                     GL46.glEnableVertexAttribArray(this)
+                    stride += attribute.value.size * 4
                 }
             }
         }
