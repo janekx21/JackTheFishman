@@ -17,7 +17,7 @@ class Window(var size: Vector2i, title: String) : Closeable {
     var onResize: (Window) -> Unit = {}
 
     private val pointer = glfwCreateWindow(size.x, size.y, title, 0, 0)
-    var lastTime = 0.0
+    private var lastTime = 0.0
 
     init {
         config()

@@ -1,5 +1,6 @@
 package engine.graphics
 
+import engine.util.IUsable
 import engine.util.IntPointer
 import org.joml.Matrix4f
 import org.joml.Vector3f
@@ -7,11 +8,11 @@ import org.lwjgl.opengl.GL20
 import org.lwjgl.opengl.GL46.*
 import java.io.File
 
-class Shader(pathVert: String, pathFrag: String) {
+class Shader(pathVert: String, pathFrag: String) : IUsable {
     private val program = compileProgram(pathVert, pathFrag)
     private val uniformLocations = HashMap<String, Int>()
 
-    fun use(callback: () -> Unit) {
+    override fun use(callback: () -> Unit) {
         glUseProgram(program)
         callback()
         glUseProgram(0)

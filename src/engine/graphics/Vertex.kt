@@ -19,7 +19,7 @@ data class Vertex(val position: Vector3f, val uv: Vector2f, val normal: Vector3f
             Attribute("UV", 2, GL_FLOAT),
             Attribute("Normal", 3, GL_FLOAT)
         )
-        const val floatSize = 4
+        private const val floatSize = 4
 
         fun generateVertexAttributePointers() {
             var stride = 0

@@ -13,7 +13,7 @@ class Texture(private val size: Vector2i) {
         glEnable(GL_TEXTURE_2D)
     }
 
-    fun setData(data: ByteBuffer): Unit {
+    fun setData(data: ByteBuffer) {
         bind {
             glTexImage2D(
                 GL_TEXTURE_2D,

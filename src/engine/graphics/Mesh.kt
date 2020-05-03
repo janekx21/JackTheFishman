@@ -1,6 +1,7 @@
 package engine.graphics
 
-import engine.IDrawable
+import engine.util.IDrawable
+import engine.util.IUsable
 import org.joml.Vector2f
 import org.joml.Vector3f
 import org.lwjgl.assimp.AIMesh
@@ -8,7 +9,7 @@ import org.lwjgl.assimp.Assimp
 import org.lwjgl.opengl.GL46.*
 
 
-class Mesh(private val data: Array<Vertex>) : IDrawable {
+class Mesh(private val data: Array<Vertex>) : IDrawable, IUsable {
     private val vbo: Int = glGenBuffers()
     private val vao: Int = glGenVertexArrays()
 
@@ -23,7 +24,7 @@ class Mesh(private val data: Array<Vertex>) : IDrawable {
         glBindBuffer(GL_ARRAY_BUFFER, 0)
     }
 
-    fun use(callback: () -> Unit) {
+    override fun use(callback: () -> Unit) {
         glBindVertexArray(vao)
         callback()
         glBindVertexArray(0)
