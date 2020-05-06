@@ -20,7 +20,7 @@ class Game1 : Game() {
 
     private val loadedMesh = Mesh.createViePath("assets/models/arrow.obj")
     private val tex = Texture.createViaPath("assets/textures/krakula-xl.png")
-    private val shader: Shader = Shader("assets/shaders/vertex.glsl", "assets/shaders/funky.glsl")
+    private val shader: Shader = Shader.createViaPath("assets/shaders/funky.shader")
 
     val world = Matrix4f()
     val projection = Matrix4f()

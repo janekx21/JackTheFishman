@@ -10,8 +10,8 @@ import org.lwjgl.opengl.GL46.*
 import java.io.File
 import java.nio.file.Path
 
-class Shader(pathVert: String, pathFrag: String) : IUsable {
-    private val program = compileProgram(pathVert, pathFrag)
+class Shader(vertexCode: String, fragmentCode: String) : IUsable {
+    private val program = compileProgram(vertexCode, fragmentCode)
     private val uniformLocations = HashMap<String, Int>()
     private val textureUniforms = arrayListOf<Texture>()
 
@@ -63,17 +63,15 @@ class Shader(pathVert: String, pathFrag: String) : IUsable {
         private const val projectionAttributeName = "Projection"
         private const val mvpAttributeName = "MVP"
 
-        private const val worldAttribute = "uniform mat4 $worldAttributeName;"
-        private const val viewAttribute = "uniform mat4 $viewAttributeName;"
-        private const val projectionAttribute = "uniform mat4 $projectionAttributeName;"
-        private const val mvpAttribute = "uniform mat4 $mvpAttributeName;"
-
         private const val importKeyword = "#import"
+        private const val vertexKeyword = "#vertex"
+        private const val fragmentKeyword = "#fragment"
+        private const val noneKeyword = "#none"
 
         private fun preprocess(path: String): String {
             var code = ""
             val folder = Path.of(path).parent
-            for (line in File(path).readText().lines()) {
+            for (line in File(path).readLines()) {
                 code += if (line.startsWith(importKeyword)) {
                     val file = line.substringAfterLast("$importKeyword ")
                     val addition = preprocess("$folder/$file")
@@ -86,11 +84,10 @@ class Shader(pathVert: String, pathFrag: String) : IUsable {
         }
 
         private fun prefixShader(code: String): String {
-            return "$versionString$worldAttribute$viewAttribute$projectionAttribute$mvpAttribute\n$code"
+            return "$versionString\n$code"
         }
 
-        private fun compileShader(path: String, type: Int): Int {
-            val code = prefixShader(preprocess(path))
+        private fun compileShader(code: String, type: Int): Int {
             val shader = glCreateShader(type)
             glShaderSource(shader, code)
             glCompileShader(shader)
@@ -100,9 +97,9 @@ class Shader(pathVert: String, pathFrag: String) : IUsable {
             return shader
         }
 
-        fun compileProgram(vertPath: String, fragPath: String): Int {
-            val vs = compileShader(vertPath, GL_VERTEX_SHADER)
-            val fs = compileShader(fragPath, GL_FRAGMENT_SHADER)
+        private fun compileProgram(vertexCode: String, fragmentCode: String): Int {
+            val vs = compileShader(vertexCode, GL_VERTEX_SHADER)
+            val fs = compileShader(fragmentCode, GL_FRAGMENT_SHADER)
             val program = glCreateProgram()
             glAttachShader(program, vs)
             glAttachShader(program, fs)
@@ -114,6 +111,48 @@ class Shader(pathVert: String, pathFrag: String) : IUsable {
 
             glLinkProgram(program)
             return program
+        }
+
+        enum class Mode {
+            None, Vertex, Fragment
+        }
+
+        fun createViaPath(path: String): Shader {
+            var vertex = ""
+            var fragment = ""
+            var mode = Mode.None
+            val code = preprocess(path)
+
+            code.lines().forEach {
+                var ignore = true
+                when (it) {
+                    vertexKeyword -> {
+                        mode = Mode.Vertex
+                    }
+                    fragmentKeyword -> {
+                        mode = Mode.Fragment
+                    }
+                    noneKeyword -> {
+                        mode = Mode.None
+                    }
+                    else -> {
+                        ignore = false
+                    }
+                }
+
+                if (!ignore) {
+                    when (mode) {
+                        Mode.Vertex -> vertex += "$it\n"
+                        Mode.Fragment -> fragment += "$it\n"
+                        else -> {
+                            vertex += "$it\n"
+                            fragment += "$it\n"
+                        }
+                    }
+                }
+            }
+
+            return Shader(prefixShader(vertex), prefixShader(fragment))
         }
     }
 }
