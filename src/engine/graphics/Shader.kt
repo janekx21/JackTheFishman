@@ -1,5 +1,6 @@
 package engine.graphics
 
+import engine.util.ICreateViaPath
 import engine.util.IUsable
 import engine.util.IntPointer
 import org.joml.Matrix4f
@@ -54,7 +55,7 @@ class Shader(vertexCode: String, fragmentCode: String) : IUsable {
         setUniform(mvpAttributeName, mvp)
     }
 
-    companion object {
+    companion object : ICreateViaPath<Shader> {
         private const val colorAttribute = "outColor"
         private const val versionString = "#version 150 core\n"
 
@@ -117,7 +118,7 @@ class Shader(vertexCode: String, fragmentCode: String) : IUsable {
             None, Vertex, Fragment
         }
 
-        fun createViaPath(path: String): Shader {
+        override fun createViaPath(path: String): Shader {
             var vertex = ""
             var fragment = ""
             var mode = Mode.None

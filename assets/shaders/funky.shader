@@ -21,5 +21,6 @@ uniform sampler2D funkyTex;
 
 void main() {
     vec3 c = texture(funkyTex, uv).xyz;
+    c = mix(c, vec3(uv, 1), .5);
     outColor = vec4(funkyColor.xyz * c, 1);
 }

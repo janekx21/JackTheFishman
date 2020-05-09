@@ -1,5 +1,6 @@
 package engine.graphics
 
+import engine.util.ICreateViaPath
 import engine.util.IUsable
 import engine.util.IntPointer
 import org.joml.Vector2i
@@ -42,8 +43,8 @@ class Texture(private val size: Vector2i) : IUsable {
         unbindWithIndex(0)
     }
 
-    companion object {
-        fun createViaPath(path: String): Texture {
+    companion object : ICreateViaPath<Texture> {
+        override fun createViaPath(path: String): Texture {
             val width = IntPointer()
             val height = IntPointer()
             val channels = IntPointer()

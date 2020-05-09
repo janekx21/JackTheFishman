@@ -1,7 +1,6 @@
-import engine.Game
-import engine.Input
-import engine.Time
-import engine.Window
+package examples
+
+import engine.*
 import engine.graphics.Mesh
 import engine.graphics.Shader
 import engine.graphics.Texture
@@ -17,10 +16,13 @@ fun main() {
 }
 
 class Game1 : Game() {
+    init {
+        Loader.root = "assets"
+    }
 
-    private val loadedMesh = Mesh.createViePath("assets/models/arrow.obj")
-    private val tex = Texture.createViaPath("assets/textures/krakula-xl.png")
-    private val shader: Shader = Shader.createViaPath("assets/shaders/funky.shader")
+    private val loadedMesh = Loader.createViaPath(Mesh, "models/street.fbx")
+    private val tex = Loader.createViaPath(Texture, "textures/krakula-xl.png")
+    private val shader: Shader = Loader.createViaPath(Shader, "shaders/funky.shader")
 
     val world = Matrix4f()
     val projection = Matrix4f()
@@ -41,7 +43,7 @@ class Game1 : Game() {
 
         view.identity()
         view.rotateZ(Time.time * .1f)
-        view.translate(Vector3f(.1f, -.4f, -.6f))
+        view.translate(Vector3f(.1f, .2f, -3f))
 
         world.identity()
         world.translate(Vector3f(sin(GLFW.glfwGetTime()).toFloat() * .1f, 0f, 0f))

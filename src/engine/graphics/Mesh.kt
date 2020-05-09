@@ -1,5 +1,6 @@
 package engine.graphics
 
+import engine.util.ICreateViaPath
 import engine.util.IDrawable
 import engine.util.IUsable
 import org.joml.Vector2f
@@ -36,21 +37,17 @@ class Mesh(private val data: Array<Vertex>) : IDrawable, IUsable {
         }
     }
 
-    companion object {
-        fun createViePath(path: String): Mesh {
+    companion object : ICreateViaPath<Mesh> {
+        override fun createViaPath(path: String): Mesh {
             val scene =
                 Assimp.aiImportFile(path, Assimp.aiProcess_Triangulate or Assimp.aiProcess_GenNormals)
-            check(scene != null) { "scene could not be loaded" }
-
-            println("there are ${scene.mNumMeshes()} meshes")
+            check(scene != null) { Assimp.aiGetErrorString()!! }
 
             val fl = arrayListOf<Vertex>()
             for (i in 0 until scene.mNumMeshes()) {
                 val x = scene.mMeshes()?.get(i)
                 if (x !== null) {
                     val mesh = AIMesh.create(x)
-                    println("vertex len is ${mesh.mNumVertices()}")
-                    println("num of faces is ${mesh.mNumFaces()}")
 
                     for (j in 0 until mesh.mNumFaces()) {
                         val face = mesh.mFaces().get(j)
@@ -58,9 +55,9 @@ class Mesh(private val data: Array<Vertex>) : IDrawable, IUsable {
                             val index = face.mIndices().get(k)
                             val vec = mesh.mVertices().get(index)
                             val uv = mesh.mTextureCoords(0)?.get(index)
-                            check(uv != null) { "no uv prvided" }
+                            check(uv != null) { "no uv provided" }
                             val normal = mesh.mNormals()?.get(index)
-                            check(normal != null) { "no normal provied" }
+                            check(normal != null) { "no normal provided" }
                             fl.add(
                                 Vertex(
                                     Vector3f(vec.x(), vec.y(), vec.z()),
