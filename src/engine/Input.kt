@@ -56,12 +56,12 @@ object Input {
         }
 
         fun update() {
-            val last = Vector2f(position)
+            deltaPosition = Vector2f(position)
             val x = DoublePointer()
             val y = DoublePointer()
             glfwGetCursorPos(Window.pointer, x.buffer, y.buffer)
             position = Vector2f(x.value.toFloat(), y.value.toFloat())
-            deltaPosition = position.sub(last)
+            deltaPosition.sub(position).mul(-1f)
         }
     }
 }

@@ -17,7 +17,7 @@ fun main() {
 
 class Game1 : Game() {
     init {
-        Loader.root = "assets"
+        Loader.root = "assets/examples"
     }
 
     private val loadedMesh = Loader.createViaPath(Mesh, "models/street.fbx")
