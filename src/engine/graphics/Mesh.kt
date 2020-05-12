@@ -44,6 +44,12 @@ class Mesh(private val data: Array<Vertex>) : IDrawable, IUsable {
             check(scene != null) { Assimp.aiGetErrorString()!! }
 
             val fl = arrayListOf<Vertex>()
+            scene.mRootNode()?.also {
+                println("root node name ${it.mName().dataString()}")
+                for (j in 0 until it.mNumChildren()) {
+                    it.mChildren()?.get(j)
+                }
+            }
             for (i in 0 until scene.mNumMeshes()) {
                 val x = scene.mMeshes()?.get(i)
                 if (x !== null) {

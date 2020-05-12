@@ -1,7 +1,9 @@
 package engine
 
+import engine.graphics.Texture
 import org.joml.Vector2i
 import org.lwjgl.glfw.GLFW.*
+import org.lwjgl.glfw.GLFWImage
 import org.lwjgl.opengl.GL.createCapabilities
 import org.lwjgl.opengl.GL46
 import org.lwjgl.opengl.GL46.GL_DEPTH_TEST
@@ -50,6 +52,12 @@ object Window : Closeable {
             onResize(this)
         }
 
+    }
+
+    fun setIcon(texture: Texture) {
+        val buffer = GLFWImage.malloc(1)
+        buffer.put(0, texture.toGLFWImage())
+        glfwSetWindowIcon(pointer, buffer)
     }
 
     fun update() {

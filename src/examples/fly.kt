@@ -4,7 +4,9 @@ import engine.*
 import engine.graphics.Mesh
 import engine.graphics.Shader
 import engine.graphics.Texture
-import engine.util.*
+import engine.math.Const
+import engine.math.Copy
+import engine.math.clamp
 import org.joml.Matrix4f
 import org.joml.Quaternionf
 import org.joml.Vector3f
@@ -21,9 +23,10 @@ class Game2 : Game() {
         Loader.root = "assets/examples"
     }
 
-    private val loadedMesh = Loader.createViaPath(Mesh, "models/street.fbx")
+    private val loadedMesh = Loader.createViaPath(Mesh, "models/coords.fbx")
     private val tex = Loader.createViaPath(Texture, "textures/krakula-xl.png")
     private val shader: Shader = Loader.createViaPath(Shader, "shaders/funky.shader")
+    private val logo = Texture.createViaPath("assets/engine/logo.png")
 
     private val world = Matrix4f()
     private val projection = Matrix4f()
@@ -38,6 +41,7 @@ class Game2 : Game() {
             projection.perspective(Math.toRadians(100.0).toFloat(), it.aspect, .1f, 10f)
         }
         Window.onResize(Window)
+        Window.setIcon(logo)
 
         world.translate(0f, 0f, -3f)
         Input.Mouse.setMode(GLFW.GLFW_CURSOR_DISABLED)
@@ -49,30 +53,30 @@ class Game2 : Game() {
         GL46.glClear(GL46.GL_COLOR_BUFFER_BIT or GL46.GL_DEPTH_BUFFER_BIT)
 
 
-        val move = zero
+        val move = Copy.zero
         val speed = 8f
 
         if (Input.Keyboard.down(GLFW.GLFW_KEY_W)) {
-            move.add(forward)
+            move.add(Const.forward)
         }
         if (Input.Keyboard.down(GLFW.GLFW_KEY_S)) {
-            move.add(backwards)
+            move.add(Const.backwards)
         }
         if (Input.Keyboard.down(GLFW.GLFW_KEY_SPACE)) {
-            move.add(up)
+            move.add(Const.up)
         }
         if (Input.Keyboard.down(GLFW.GLFW_KEY_LEFT_SHIFT)) {
-            move.add(down)
+            move.add(Const.down)
         }
         if (Input.Keyboard.down(GLFW.GLFW_KEY_A)) {
-            move.add(left)
+            move.add(Const.left)
         }
         if (Input.Keyboard.down(GLFW.GLFW_KEY_D)) {
-            move.add(right)
+            move.add(Const.right)
         }
 
         val sensitivity = .006f
-        rotation.rotateAxis(Input.Mouse.deltaPosition.x * sensitivity, up)
+        rotation.rotateAxis(Input.Mouse.deltaPosition.x * sensitivity, Const.up)
         rotation.rotateLocalX(Input.Mouse.deltaPosition.y * sensitivity)
 
         move.clamp(1f)

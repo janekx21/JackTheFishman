@@ -2,6 +2,7 @@ package engine.graphics
 
 import org.joml.Vector2f
 import org.joml.Vector3f
+
 import org.lwjgl.opengl.GL46
 import org.lwjgl.opengl.GL46.GL_FLOAT
 
