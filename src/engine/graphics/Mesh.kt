@@ -1,11 +1,15 @@
 package engine.graphics
 
+import engine.math.toMatrix4f
 import engine.util.ICreateViaPath
 import engine.util.IDrawable
 import engine.util.IUsable
+import org.joml.Matrix4f
 import org.joml.Vector2f
 import org.joml.Vector3f
 import org.lwjgl.assimp.AIMesh
+import org.lwjgl.assimp.AINode
+import org.lwjgl.assimp.AIScene
 import org.lwjgl.assimp.Assimp
 import org.lwjgl.opengl.GL46.*
 
@@ -43,17 +47,23 @@ class Mesh(private val data: Array<Vertex>) : IDrawable, IUsable {
                 Assimp.aiImportFile(path, Assimp.aiProcess_Triangulate or Assimp.aiProcess_GenNormals)
             check(scene != null) { Assimp.aiGetErrorString()!! }
 
-            val fl = arrayListOf<Vertex>()
-            scene.mRootNode()?.also {
-                println("root node name ${it.mName().dataString()}")
-                for (j in 0 until it.mNumChildren()) {
-                    it.mChildren()?.get(j)
-                }
-            }
-            for (i in 0 until scene.mNumMeshes()) {
-                val x = scene.mMeshes()?.get(i)
-                if (x !== null) {
-                    val mesh = AIMesh.create(x)
+            val root = scene.mRootNode()!!
+            val list = processMesh(scene, root)
+
+            return Mesh(list.toTypedArray())
+        }
+
+        private val constantScale = Matrix4f().scale(.01f)
+
+        private fun nodeToVertices(scene: AIScene, node: AINode): ArrayList<Vertex> {
+            val list = arrayListOf<Vertex>()
+            val mat = node.mTransformation().toMatrix4f().mul(constantScale)
+
+            for (i in 0 until node.mNumMeshes()) {
+                val meshIndex = node.mMeshes()?.get(i)!!
+                val meshPointer = scene.mMeshes()!![meshIndex]
+                if (meshPointer != 0L) {
+                    val mesh = AIMesh.create(meshPointer)
 
                     for (j in 0 until mesh.mNumFaces()) {
                         val face = mesh.mFaces().get(j)
@@ -64,19 +74,32 @@ class Mesh(private val data: Array<Vertex>) : IDrawable, IUsable {
                             check(uv != null) { "no uv provided" }
                             val normal = mesh.mNormals()?.get(index)
                             check(normal != null) { "no normal provided" }
-                            fl.add(
-                                Vertex(
-                                    Vector3f(vec.x(), vec.y(), vec.z()),
-                                    Vector2f(uv.x(), uv.y()),
-                                    Vector3f(normal.x(), normal.y(), normal.z())
-                                )
+                            val vertex = Vertex(
+                                Vector3f(vec.x(), vec.y(), vec.z()),
+                                Vector2f(uv.x(), uv.y()),
+                                Vector3f(normal.x(), normal.y(), normal.z())
                             )
+                            vertex.position.mulTransposePosition(mat)
+                            vertex.normal.mulTransposeDirection(mat)
+                            list.add(vertex)
                         }
                     }
                 }
             }
+            return list
+        }
 
-            return Mesh(fl.toTypedArray())
+        private fun processMesh(
+            scene: AIScene,
+            parent: AINode
+        ): ArrayList<Vertex> {
+            val list = nodeToVertices(scene, parent)
+            for (w in 0 until parent.mNumChildren()) {
+                val address = parent.mChildren()?.get(w)!!
+                val node = AINode.create(address)
+                list += processMesh(scene, node)
+            }
+            return list
         }
     }
 }
