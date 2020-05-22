@@ -10,22 +10,32 @@ import engine.math.clamp
 import org.joml.Matrix4f
 import org.joml.Quaternionf
 import org.joml.Vector3f
-import org.joml.Vector4f
 import org.lwjgl.glfw.GLFW
 import org.lwjgl.opengl.GL46
 
+const val shaderName = "texture"
+
+// possible shader names
+// white
+// striped
+// wobble
+// texture
+
+
+
+
 fun main() {
-    Game2().run()
+    Game3().run()
 }
 
-class Game2 : Game() {
+class Game3 : Game() {
     init {
         Loader.root = "assets/examples"
     }
 
-    private val loadedMesh = Loader.createViaPath(Mesh, "models/coords.fbx")
+    private val loadedMesh = Loader.createViaPath(Mesh, "models/scene.fbx")
     private val tex = Loader.createViaPath(Texture, "textures/krakula-xl.png")
-    private val shader: Shader = Loader.createViaPath(Shader, "shaders/funky.shader")
+    private val shader: Shader = Loader.createViaPath(Shader, "shaders/demo/$shaderName.shader")
     private val logo = Texture.createViaPath("assets/engine/logo.png")
 
     private val world = Matrix4f()
@@ -92,8 +102,8 @@ class Game2 : Game() {
         view.translate(position)
 
         shader.setMatrix(world, view, projection)
-        shader.setUniform("funkyColor", Vector4f(.2f, .5f, .7f, 1f))
-        shader.setUniform("funkyTex", tex)
+        shader.setUniform("Time", Time.time)
+        shader.setUniform("Texture", tex)
 
         shader.use {
             loadedMesh.draw()

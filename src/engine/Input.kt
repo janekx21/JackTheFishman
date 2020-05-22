@@ -48,20 +48,22 @@ object Input {
     }
 
     object Mouse {
-        var position = Vector2f()
-        var deltaPosition = Vector2f()
+        val position = Vector2f()
+        val deltaPosition = Vector2f()
+        var leftMouseButton = false
 
         fun setMode(mode: Int) {
             glfwSetInputMode(Window.pointer, GLFW_CURSOR, mode)
         }
 
         fun update() {
-            deltaPosition = Vector2f(position)
+            deltaPosition.set(position)
             val x = DoublePointer()
             val y = DoublePointer()
             glfwGetCursorPos(Window.pointer, x.buffer, y.buffer)
-            position = Vector2f(x.value.toFloat(), y.value.toFloat())
+            position.set(x.value.toFloat(), y.value.toFloat())
             deltaPosition.sub(position).mul(-1f)
+            leftMouseButton = glfwGetMouseButton(Window.pointer, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS
         }
     }
 }

@@ -44,6 +44,10 @@ class Shader(vertexCode: String, fragmentCode: String) : IUsable {
         glProgramUniform1i(program, getUniformLocation(name), textureUniforms.lastIndex)
     }
 
+    fun setUniform(name: String, value: Float) {
+        glProgramUniform1f(program, getUniformLocation(name), value)
+    }
+
     private fun getUniformLocation(name: String): Int {
         return uniformLocations.getOrDefault(name, GL20.glGetUniformLocation(program, name))
     }
