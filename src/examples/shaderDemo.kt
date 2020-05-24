@@ -4,8 +4,8 @@ import engine.*
 import engine.graphics.Mesh
 import engine.graphics.Shader
 import engine.graphics.Texture2D
-import engine.math.Const
-import engine.math.Copy
+import engine.math.Vector3fConst
+import engine.math.Vector3fCopy
 import engine.math.clamp
 import org.joml.Matrix4f
 import org.joml.Quaternionf
@@ -22,8 +22,6 @@ const val shaderName = "demo"
 // texture
 
 // demo
-
-
 
 
 fun main() {
@@ -64,7 +62,7 @@ class Game3 : Game() {
         GL46.glClear(GL46.GL_COLOR_BUFFER_BIT or GL46.GL_DEPTH_BUFFER_BIT)
 
 
-        val move = Copy.zero
+        val move = Vector3fCopy.zero
         val speed = 6f
 
         if (Input.Mouse.leftMouseButton) {
@@ -72,26 +70,26 @@ class Game3 : Game() {
         }
 
         if (Input.Keyboard.down(GLFW.GLFW_KEY_W)) {
-            move.add(Const.forward)
+            move.add(Vector3fConst.forward)
         }
         if (Input.Keyboard.down(GLFW.GLFW_KEY_S)) {
-            move.add(Const.backwards)
+            move.add(Vector3fConst.backwards)
         }
         if (Input.Keyboard.down(GLFW.GLFW_KEY_SPACE)) {
-            move.add(Const.up)
+            move.add(Vector3fConst.up)
         }
         if (Input.Keyboard.down(GLFW.GLFW_KEY_LEFT_SHIFT)) {
-            move.add(Const.down)
+            move.add(Vector3fConst.down)
         }
         if (Input.Keyboard.down(GLFW.GLFW_KEY_A)) {
-            move.add(Const.left)
+            move.add(Vector3fConst.left)
         }
         if (Input.Keyboard.down(GLFW.GLFW_KEY_D)) {
-            move.add(Const.right)
+            move.add(Vector3fConst.right)
         }
 
         val sensitivity = .006f
-        rotation.rotateAxis(Input.Mouse.deltaPosition.x * sensitivity, Const.up)
+        rotation.rotateAxis(Input.Mouse.deltaPosition.x * sensitivity, Vector3fConst.up)
         rotation.rotateLocalX(Input.Mouse.deltaPosition.y * sensitivity)
 
         move.clamp(1f)

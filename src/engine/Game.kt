@@ -1,5 +1,6 @@
 package engine
 
+import engine.util.IFinalized
 import org.lwjgl.glfw.GLFW
 
 open class Game {
@@ -22,5 +23,6 @@ open class Game {
             update()
             draw()
         }
+        IFinalized.finalizeAll()
     }
 }

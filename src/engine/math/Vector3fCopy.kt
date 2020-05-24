@@ -2,7 +2,7 @@ package engine.math
 
 import org.joml.Vector3f
 
-object Copy {
+object Vector3fCopy {
     val zero: Vector3f get() = Vector3f(0f, 0f, 0f)
     val one: Vector3f get() = Vector3f(1f, 1f, 1f)
 

@@ -3,7 +3,7 @@ package engine.math
 import org.joml.Vector3f
 import org.joml.Vector3fc
 
-object Const {
+object Vector3fConst {
     val zero: Vector3fc = Vector3f(0f, 0f, 0f)
     val one: Vector3fc = Vector3f(1f, 1f, 1f)
 
