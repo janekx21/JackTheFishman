@@ -13,13 +13,15 @@ import org.joml.Vector3f
 import org.lwjgl.glfw.GLFW
 import org.lwjgl.opengl.GL46
 
-const val shaderName = "texture"
+const val shaderName = "demo"
 
 // possible shader names
 // white
 // striped
 // wobble
 // texture
+
+// demo
 
 
 
