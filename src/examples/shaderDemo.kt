@@ -3,7 +3,7 @@ package examples
 import engine.*
 import engine.graphics.Mesh
 import engine.graphics.Shader
-import engine.graphics.Texture
+import engine.graphics.Texture2D
 import engine.math.Const
 import engine.math.Copy
 import engine.math.clamp
@@ -34,9 +34,9 @@ class Game3 : Game() {
     }
 
     private val loadedMesh = Loader.createViaPath(Mesh, "models/scene.fbx")
-    private val tex = Loader.createViaPath(Texture, "textures/krakula-xl.png")
+    private val tex = Loader.createViaPath(Texture2D, "textures/krakula-xl.png")
     private val shader: Shader = Loader.createViaPath(Shader, "shaders/demo/$shaderName.shader")
-    private val logo = Texture.createViaPath("assets/engine/logo.png")
+    private val logo = Texture2D.createViaPath("assets/engine/logo.png")
 
     private val world = Matrix4f()
     private val projection = Matrix4f()

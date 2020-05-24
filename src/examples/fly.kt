@@ -1,9 +1,10 @@
 package examples
 
 import engine.*
+import engine.graphics.CubeTexture
 import engine.graphics.Mesh
 import engine.graphics.Shader
-import engine.graphics.Texture
+import engine.graphics.Texture2D
 import engine.math.Const
 import engine.math.Copy
 import engine.math.clamp
@@ -23,10 +24,11 @@ class Game2 : Game() {
         Loader.root = "assets/examples"
     }
 
-    private val loadedMesh = Loader.createViaPath(Mesh, "models/coords.fbx")
-    private val tex = Loader.createViaPath(Texture, "textures/krakula-xl.png")
+    private val loadedMesh = Loader.createViaPath(Mesh, "models/scene.fbx")
+    private val tex = Loader.createViaPath(Texture2D, "textures/krakula-xl.png")
     private val shader: Shader = Loader.createViaPath(Shader, "shaders/funky.shader")
-    private val logo = Texture.createViaPath("assets/engine/logo.png")
+    private val logo = Texture2D.createViaPath("assets/engine/logo.png")
+    private val cube = Loader.createViaPath(CubeTexture, "textures/cubeExample")
 
     private val world = Matrix4f()
     private val projection = Matrix4f()
@@ -43,7 +45,7 @@ class Game2 : Game() {
         Window.onResize(Window)
         Window.setIcon(logo)
 
-        world.translate(0f, 0f, -3f)
+        // world.translate(0f, 0f, -3f)
     }
 
 
@@ -83,17 +85,20 @@ class Game2 : Game() {
         rotation.rotateLocalX(Input.Mouse.deltaPosition.y * sensitivity)
 
         move.clamp(1f)
-        move.mul(Time.deltaTime * speed)
+        move.mul(Time.deltaTime * speed * -1)
         rotation.transformInverse(move)
         position.add(move)
 
         view.identity()
         view.rotation(rotation)
-        view.translate(position)
+        view.translate(Vector3f(position).negate())
 
         shader.setMatrix(world, view, projection)
         shader.setUniform("funkyColor", Vector4f(.2f, .5f, .7f, 1f))
+        shader.setUniform("Cube", cube)
+        shader.setUniform("CameraPosition", position)
         shader.setUniform("funkyTex", tex)
+        shader.setUniform("LightDirection", Vector3f(.3f, -1f, .3f).normalize())
 
         shader.use {
             loadedMesh.draw()

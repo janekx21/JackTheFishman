@@ -62,7 +62,7 @@ class Shader(vertexCode: String, fragmentCode: String) : IUsable {
 
     companion object : ICreateViaPath<Shader> {
         private const val colorAttribute = "outColor"
-        private const val versionString = "#version 150 core\n"
+        private const val versionString = "#version 330 core\n"
 
         private const val worldAttributeName = "World"
         private const val viewAttributeName = "View"

@@ -1,6 +1,6 @@
 package engine
 
-import engine.graphics.Texture
+import engine.graphics.Texture2D
 import org.joml.Vector2i
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.glfw.GLFWImage
@@ -54,7 +54,7 @@ object Window : Closeable {
 
     }
 
-    fun setIcon(texture: Texture) {
+    fun setIcon(texture: Texture2D) {
         val buffer = GLFWImage.malloc(1)
         buffer.put(0, texture.toGLFWImage())
         glfwSetWindowIcon(pointer, buffer)

@@ -3,7 +3,7 @@ package examples
 import engine.*
 import engine.graphics.Mesh
 import engine.graphics.Shader
-import engine.graphics.Texture
+import engine.graphics.Texture2D
 import org.joml.Matrix4f
 import org.joml.Vector3f
 
@@ -22,7 +22,7 @@ class Game1 : Game() {
     }
 
     private val loadedMesh = Loader.createViaPath(Mesh, "models/street.fbx")
-    private val tex = Loader.createViaPath(Texture, "textures/krakula-xl.png")
+    private val tex = Loader.createViaPath(Texture2D, "textures/krakula-xl.png")
     private val shader: Shader = Loader.createViaPath(Shader, "shaders/funky.shader")
 
     val world = Matrix4f()
