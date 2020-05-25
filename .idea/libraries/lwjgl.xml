@@ -1,0 +1,43 @@
+<component name="libraryTable">
+  <library name="lwjgl">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/lwjgl/joml-1.9.24.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl-assimp-natives-windows.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl-assimp.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl-glfw-natives-windows.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl-glfw.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl-natives-windows.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl-openal-natives-windows.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl-openal.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl-opengl-natives-windows.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl-opengl.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl-stb-natives-windows.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl-stb.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl-tinyfd-natives-windows.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl-tinyfd.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/lwjgl/lwjglx-debug-1.0.0.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/lib/lwjgl/joml-1.9.24-javadoc.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl-assimp-javadoc.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl-glfw-javadoc.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl-javadoc.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl-openal-javadoc.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl-opengl-javadoc.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl-stb-javadoc.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl-tinyfd-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/lib/lwjgl/joml-1.9.24-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl-assimp-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl-glfw-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl-openal-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl-opengl-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl-stb-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl-tinyfd-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/lwjgl/lwjglx-debug-1.0.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
