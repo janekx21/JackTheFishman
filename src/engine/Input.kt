@@ -9,6 +9,7 @@ object Input {
     fun update() {
         Keyboard.update()
         Mouse.update()
+        Controller.update()
     }
 
     object Keyboard {
@@ -66,4 +67,72 @@ object Input {
             leftMouseButton = glfwGetMouseButton(Window.pointer, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS
         }
     }
+
+
+    object Controller {
+        val leftStick = Vector2f(0f, 0f) // TODO: replace with Vector2fconst.zero
+        val rightStick = Vector2f(0f, 0f) // TODO: "
+
+        private val buttonArray = arrayOf<Button>(
+                Button(Buttonnames.A),
+                Button(Buttonnames.B),
+                Button(Buttonnames.X),
+                Button(Buttonnames.Y),
+                Button(Buttonnames.LB),
+                Button(Buttonnames.RB),
+                Button(Buttonnames.BACK),
+                Button(Buttonnames.START),
+                Button(Buttonnames.LEFT_STICK_BUTTON),
+                Button(Buttonnames.RIGHT_STICK_BUTTON),
+                Button(Buttonnames.D_PAD_UP),
+                Button(Buttonnames.D_PAD_RIGHT),
+                Button(Buttonnames.D_PAD_DOWN),
+                Button(Buttonnames.D_PAD_LEFT)
+        )
+
+        data class Button(var bname: Buttonnames) {
+            var name = bname
+            var pressed = false
+        }
+
+        enum class Buttonnames {
+            A,
+            B,
+            X,
+            Y,
+            LB,
+            RB,
+            BACK,
+            START,
+            LEFT_STICK_BUTTON,
+            RIGHT_STICK_BUTTON,
+            D_PAD_UP,
+            D_PAD_RIGHT,
+            D_PAD_DOWN,
+            D_PAD_LEFT
+        }
+
+        fun down(key: Int): Boolean {
+            return buttonArray[key].pressed
+        }
+
+        fun up(key: Int): Boolean = !down(key)
+
+        fun update() {
+            if (glfwJoystickPresent(GLFW_JOYSTICK_1)) {
+                // button inputs
+                val inputbuttons = glfwGetJoystickButtons(GLFW_JOYSTICK_1)!!.array()
+                for (i in 0..buttonArray.size) {
+                    buttonArray[i].pressed = inputbuttons[i].toInt() == GLFW_PRESS
+                }
+                // stick inputs
+                val inputaxes = glfwGetJoystickAxes(GLFW_JOYSTICK_1)!!.array()
+                leftStick.x = inputaxes[0] // TODO: Needs test! Correct implementation?
+                leftStick.y = inputaxes[1]
+                rightStick.x = inputaxes[2]
+                rightStick.y = inputaxes[3]
+            }
+        }
+    }
+
 }
