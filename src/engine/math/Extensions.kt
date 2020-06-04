@@ -1,6 +1,7 @@
 package engine.math
 
 import org.joml.Matrix4f
+import org.joml.Vector2f
 import org.joml.Vector3f
 import org.lwjgl.assimp.AIMatrix4x4
 
@@ -13,10 +14,21 @@ fun Vector3f.clamp(value: Float) {
     }
 }
 
+fun Vector2f.clamp(value: Float) {
+    if (lengthSquared() > 0) {
+        val length = length().coerceAtMost(value)
+        normalize()
+        mul(length)
+    }
+}
+
 operator fun Vector3f.times(other: Vector3f): Vector3f {
     return Vector3f(this).mul(other)
 }
 
+operator fun Vector2f.times(other: Vector2f): Vector2f {
+    return Vector2f(this).mul(other)
+}
 
 fun AIMatrix4x4.toMatrix4f(): Matrix4f {
     return Matrix4f(
