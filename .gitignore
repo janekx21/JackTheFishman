@@ -24,7 +24,7 @@ build/
 !**/src/**/build
 !**/test/**/build
 # just why
-# *.iml
+*.iml
 !**/testData/**/*.iml
 .idea/libraries/Gradle*.xml
 .idea/libraries/Maven*.xml
@@ -34,8 +34,8 @@ build/
 .idea/runConfigurations/JPS_*.xml
 .idea/runConfigurations/PILL_*.xml
 # Uploading the Project Lib Structure
-# .idea/libraries
-# .idea/modules.xml
+.idea/libraries
+.idea/modules.xml
 .idea/gradle.xml
 .idea/compiler.xml
 .idea/inspectionProfiles/profiles_settings.xml
