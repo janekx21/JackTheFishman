@@ -1,5 +1,6 @@
 package engine
 
+import Vector2fCopy
 import engine.util.DoublePointer
 import org.joml.Vector2f
 import org.lwjgl.glfw.GLFW.*
@@ -70,24 +71,24 @@ object Input {
 
 
     object Controller {
-        val leftStick = Vector2f(0f, 0f) // TODO: replace with Vector2fconst.zero
-        val rightStick = Vector2f(0f, 0f) // TODO: "
+        val leftStick = Vector2fCopy.zero
+        val rightStick = Vector2fCopy.zero
 
         private val buttonArray = arrayOf<Button>(
-                Button(Buttonnames.A),
-                Button(Buttonnames.B),
-                Button(Buttonnames.X),
-                Button(Buttonnames.Y),
-                Button(Buttonnames.LB),
-                Button(Buttonnames.RB),
-                Button(Buttonnames.BACK),
-                Button(Buttonnames.START),
-                Button(Buttonnames.LEFT_STICK_BUTTON),
-                Button(Buttonnames.RIGHT_STICK_BUTTON),
-                Button(Buttonnames.D_PAD_UP),
-                Button(Buttonnames.D_PAD_RIGHT),
-                Button(Buttonnames.D_PAD_DOWN),
-                Button(Buttonnames.D_PAD_LEFT)
+            Button(Buttonnames.A),
+            Button(Buttonnames.B),
+            Button(Buttonnames.X),
+            Button(Buttonnames.Y),
+            Button(Buttonnames.LB),
+            Button(Buttonnames.RB),
+            Button(Buttonnames.BACK),
+            Button(Buttonnames.START),
+            Button(Buttonnames.LEFT_STICK_BUTTON),
+            Button(Buttonnames.RIGHT_STICK_BUTTON),
+            Button(Buttonnames.D_PAD_UP),
+            Button(Buttonnames.D_PAD_RIGHT),
+            Button(Buttonnames.D_PAD_DOWN),
+            Button(Buttonnames.D_PAD_LEFT)
         )
 
         data class Button(var bname: Buttonnames) {
@@ -127,7 +128,7 @@ object Input {
                 }
                 // stick inputs
                 val inputaxes = glfwGetJoystickAxes(GLFW_JOYSTICK_1)!!.array()
-                leftStick.x = inputaxes[0] // TODO: Needs test! Correct implementation?
+                leftStick.x = inputaxes[0]
                 leftStick.y = inputaxes[1]
                 rightStick.x = inputaxes[2]
                 rightStick.y = inputaxes[3]
