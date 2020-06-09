@@ -1,0 +1,35 @@
+class Scene {
+    private val allGameObjects = arrayListOf<GameObject>()
+
+    fun spawn(go: GameObject) {
+        allGameObjects.add(go)
+    }
+
+    fun destroy(go: GameObject) {
+        allGameObjects.remove(go)
+    }
+
+    fun update() {
+        for (gameObject in ArrayList(allGameObjects)) {
+            gameObject.update()
+        }
+    }
+
+    fun draw() {
+        for (gameObject in ArrayList(allGameObjects)) {
+            gameObject.draw()
+        }
+    }
+
+    fun findViaName(name: String): GameObject? {
+        return allGameObjects.find { it.name == name }
+    }
+
+    fun find(predicate: (GameObject) -> Boolean): GameObject? {
+        return allGameObjects.find(predicate)
+    }
+
+    companion object {
+        val active = Scene()
+    }
+}
