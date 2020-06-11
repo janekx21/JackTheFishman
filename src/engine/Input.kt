@@ -4,6 +4,7 @@ import Vector2fCopy
 import engine.util.DoublePointer
 import org.joml.Vector2f
 import org.lwjgl.glfw.GLFW.*
+import org.lwjgl.glfw.GLFWGamepadState
 
 object Input {
 
@@ -69,69 +70,77 @@ object Input {
         }
     }
 
-
     object Controller {
-        val leftStick = Vector2fCopy.zero
-        val rightStick = Vector2fCopy.zero
-
-        private val buttonArray = arrayOf<Button>(
-            Button(Buttonnames.A),
-            Button(Buttonnames.B),
-            Button(Buttonnames.X),
-            Button(Buttonnames.Y),
-            Button(Buttonnames.LB),
-            Button(Buttonnames.RB),
-            Button(Buttonnames.BACK),
-            Button(Buttonnames.START),
-            Button(Buttonnames.LEFT_STICK_BUTTON),
-            Button(Buttonnames.RIGHT_STICK_BUTTON),
-            Button(Buttonnames.D_PAD_UP),
-            Button(Buttonnames.D_PAD_RIGHT),
-            Button(Buttonnames.D_PAD_DOWN),
-            Button(Buttonnames.D_PAD_LEFT)
-        )
-
-        data class Button(var bname: Buttonnames) {
-            var name = bname
-            var pressed = false
+        enum class Button(val glfwKeyCode: Int) {
+            A(GLFW_GAMEPAD_BUTTON_A),
+            B(GLFW_GAMEPAD_BUTTON_B),
+            X(GLFW_GAMEPAD_BUTTON_X),
+            Y(GLFW_GAMEPAD_BUTTON_Y),
+            LB(GLFW_GAMEPAD_BUTTON_LEFT_BUMPER),
+            RB(GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER),
+            BACK(GLFW_GAMEPAD_BUTTON_BACK),
+            START(GLFW_GAMEPAD_BUTTON_START),
+            //LEFT_STICK_BUTTON(GLFW_GAMEPAD_BUTTON_),
+            //RIGHT_STICK_BUTTON(),
+            D_PAD_UP(GLFW_GAMEPAD_BUTTON_DPAD_UP),
+            D_PAD_RIGHT(GLFW_GAMEPAD_BUTTON_DPAD_RIGHT),
+            D_PAD_DOWN(GLFW_GAMEPAD_BUTTON_DPAD_DOWN),
+            D_PAD_LEFT(GLFW_GAMEPAD_BUTTON_DPAD_LEFT)
         }
 
-        enum class Buttonnames {
-            A,
-            B,
-            X,
-            Y,
-            LB,
-            RB,
-            BACK,
-            START,
-            LEFT_STICK_BUTTON,
-            RIGHT_STICK_BUTTON,
-            D_PAD_UP,
-            D_PAD_RIGHT,
-            D_PAD_DOWN,
-            D_PAD_LEFT
+        data class ButtonState(val isDown: Boolean, val changed: Boolean)
+
+        var leftStick = Vector2fCopy.zero
+
+        var rightStick = Vector2fCopy.zero
+
+        // der button state, der allen buttons beim konstruieren gegeben wird
+        private val _initialButtonState = ButtonState(isDown = false, changed = false)
+
+        // die button states der einzelnen buttons nach dem letzten update
+        private val buttonStates = enumValues<Button>()
+            .map { Pair(it, _initialButtonState) }
+            .toMap().toMutableMap()
+
+
+        fun isDown(button: Button): Boolean {
+            return buttonStates.getValue(button).isDown
         }
 
-        fun down(key: Int): Boolean {
-            return buttonArray[key].pressed
+        fun isUp(button: Button): Boolean {
+            return !isDown(button)
         }
 
-        fun up(key: Int): Boolean = !down(key)
+        fun didButtonChange(button: Button): Boolean {
+            return buttonStates.getValue(button).changed
+        }
 
         fun update() {
-            if (glfwJoystickPresent(GLFW_JOYSTICK_1)) {
-                // button inputs
-                val inputbuttons = glfwGetJoystickButtons(GLFW_JOYSTICK_1)!!.array()
-                for (i in 0..buttonArray.size) {
-                    buttonArray[i].pressed = inputbuttons[i].toInt() == GLFW_PRESS
+            if (glfwJoystickPresent(GLFW_JOYSTICK_1) && glfwJoystickIsGamepad(GLFW_JOYSTICK_1)) {
+                val state = GLFWGamepadState.create()
+                glfwGetGamepadState(GLFW_JOYSTICK_1, state)
+
+                // Button Inputs
+                buttonStates.keys.forEach {
+                    val before = isDown(it)
+                    val now = state.buttons(it.glfwKeyCode).toInt() != GLFW_RELEASE
+
+                    buttonStates[it] = ButtonState(
+                        isDown = before,
+                        changed = before != now
+                    )
                 }
-                // stick inputs
-                val inputaxes = glfwGetJoystickAxes(GLFW_JOYSTICK_1)!!.array()
-                leftStick.x = inputaxes[0]
-                leftStick.y = inputaxes[1]
-                rightStick.x = inputaxes[2]
-                rightStick.y = inputaxes[3]
+
+                // Stick Inputs
+                leftStick = Vector2f(
+                    state.axes(GLFW_GAMEPAD_AXIS_LEFT_X),
+                    state.axes(GLFW_GAMEPAD_AXIS_LEFT_Y)
+                )
+
+                rightStick = Vector2f(
+                    state.axes(GLFW_GAMEPAD_AXIS_RIGHT_X),
+                    state.axes(GLFW_GAMEPAD_AXIS_RIGHT_Y)
+                )
             }
         }
     }
