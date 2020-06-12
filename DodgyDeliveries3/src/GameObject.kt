@@ -2,6 +2,8 @@ import kotlin.reflect.full.primaryConstructor
 
 class GameObject(val name: String) {
     val components = arrayListOf<Component>()
+    val transform: Transform
+        get() = getComponent()
 
     fun update() {
         for (component in components) {
