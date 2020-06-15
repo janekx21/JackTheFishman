@@ -8,7 +8,10 @@ import org.lwjgl.glfw.GLFWGamepadState
 
 object Input {
 
-    data class ButtonState(val isDown: Boolean, val changed: Boolean)
+    data class ButtonState(val isDown: Boolean, val changed: Boolean) {
+        val justDown = isDown && changed
+        val justUp = !isDown && changed
+    }
 
     fun update() {
         Keyboard.update()
@@ -92,7 +95,7 @@ object Input {
             RB(GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER),
             BACK(GLFW_GAMEPAD_BUTTON_BACK),
             START(GLFW_GAMEPAD_BUTTON_START),
-            //LEFT_STICK_BUTTON(GLFW_GAMEPAD_BUTTON_),
+            //LEFT_STICK_BUTTON(),
             //RIGHT_STICK_BUTTON(),
             D_PAD_UP(GLFW_GAMEPAD_BUTTON_DPAD_UP),
             D_PAD_RIGHT(GLFW_GAMEPAD_BUTTON_DPAD_RIGHT),
@@ -100,18 +103,16 @@ object Input {
             D_PAD_LEFT(GLFW_GAMEPAD_BUTTON_DPAD_LEFT)
         }
 
-        //data class ButtonState(val isDown: Boolean, val changed: Boolean)
-
         var leftStick = Vector2fCopy.zero
 
         var rightStick = Vector2fCopy.zero
 
         // der button state, der allen buttons beim konstruieren gegeben wird
-        private val _initialButtonState = ButtonState(isDown = false, changed = false)
+        private val initialButtonState = ButtonState(isDown = false, changed = false)
 
         // die button states der einzelnen buttons nach dem letzten update
         private val buttonStates = enumValues<Button>()
-            .map { Pair(it, _initialButtonState) }
+            .map { Pair(it, initialButtonState) }
             .toMap().toMutableMap()
 
 
@@ -126,6 +127,10 @@ object Input {
         fun didButtonChange(button: Button): Boolean {
             return buttonStates.getValue(button).changed
         }
+
+        fun justDown(button: Button): Boolean = buttonStates.getValue(button).justDown
+
+        fun justUp(button: Button): Boolean = buttonStates.getValue(button).justUp
 
         fun update() {
             if (glfwJoystickPresent(GLFW_JOYSTICK_1) && glfwJoystickIsGamepad(GLFW_JOYSTICK_1)) {
