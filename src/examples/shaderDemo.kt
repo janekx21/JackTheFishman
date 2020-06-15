@@ -65,7 +65,7 @@ class Game3 : Game() {
         val move = Vector3fCopy.zero
         val speed = 6f
 
-        if (Input.Mouse.leftMouseButton) {
+        if (Input.Mouse.left.justDown) {
             Input.Mouse.setMode(GLFW.GLFW_CURSOR_DISABLED)
         }
 
