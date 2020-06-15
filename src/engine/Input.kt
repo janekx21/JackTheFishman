@@ -8,6 +8,8 @@ import org.lwjgl.glfw.GLFWGamepadState
 
 object Input {
 
+    data class ButtonState(val isDown: Boolean, val changed: Boolean)
+
     fun update() {
         Keyboard.update()
         Mouse.update()
@@ -51,22 +53,32 @@ object Input {
     }
 
     object Mouse {
-        val position = Vector2f()
-        val deltaPosition = Vector2f()
-        var leftMouseButton = false
+        var position = Vector2fCopy.zero
+        var deltaPosition = Vector2fCopy.zero
+
+        var left = ButtonState(isDown = false, changed = false)
+        var right = ButtonState(isDown = false, changed = false)
 
         fun setMode(mode: Int) {
             glfwSetInputMode(Window.pointer, GLFW_CURSOR, mode)
         }
 
         fun update() {
-            deltaPosition.set(position)
+            deltaPosition = Vector2f(position)
+
             val x = DoublePointer()
             val y = DoublePointer()
+
             glfwGetCursorPos(Window.pointer, x.buffer, y.buffer)
-            position.set(x.value.toFloat(), y.value.toFloat())
+
+            position = Vector2f(x.value.toFloat(), y.value.toFloat())
             deltaPosition.sub(position).mul(-1f)
-            leftMouseButton = glfwGetMouseButton(Window.pointer, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS
+
+            val leftDown = glfwGetMouseButton(Window.pointer, GLFW_MOUSE_BUTTON_LEFT) != GLFW_RELEASE
+            val rightDown = glfwGetMouseButton(Window.pointer, GLFW_MOUSE_BUTTON_RIGHT) != GLFW_RELEASE
+
+            left = ButtonState(isDown = leftDown, changed = leftDown != left.isDown)
+            right = ButtonState(isDown = rightDown, changed = rightDown != right.isDown)
         }
     }
 
@@ -88,7 +100,7 @@ object Input {
             D_PAD_LEFT(GLFW_GAMEPAD_BUTTON_DPAD_LEFT)
         }
 
-        data class ButtonState(val isDown: Boolean, val changed: Boolean)
+        //data class ButtonState(val isDown: Boolean, val changed: Boolean)
 
         var leftStick = Vector2fCopy.zero
 
@@ -126,7 +138,7 @@ object Input {
                     val now = state.buttons(it.glfwKeyCode).toInt() != GLFW_RELEASE
 
                     buttonStates[it] = ButtonState(
-                        isDown = before,
+                        isDown = now,
                         changed = before != now
                     )
                 }
@@ -141,6 +153,19 @@ object Input {
                     state.axes(GLFW_GAMEPAD_AXIS_RIGHT_X),
                     state.axes(GLFW_GAMEPAD_AXIS_RIGHT_Y)
                 )
+            } else {
+                // wenn kein Controller angeschlossen ist bzw. der Controller getrennt wurde,
+                // ist das so als würden wir null-input vom Controller erhalten, also
+                // keine Knöpfe gedrückt (changed wird entsprechend gesetzt), und die Joysticks bei (0, 0)
+                buttonStates.keys.forEach {
+                    buttonStates[it] = ButtonState(
+                        isDown = false,
+                        changed = buttonStates[it]!!.isDown != false
+                    )
+                }
+
+                leftStick = Vector2fCopy.zero
+                rightStick = Vector2fCopy.zero
             }
         }
     }
