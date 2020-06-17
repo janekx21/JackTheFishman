@@ -21,8 +21,10 @@ class Scene {
         }
     }
 
-    fun findViaName(name: String): GameObject? {
-        return allGameObjects.find { it.name == name }
+    fun findViaName(name: String): GameObject {
+        val gameObject = allGameObjects.find { it.name == name }
+        check(gameObject != null) { "GameObject not found" }
+        return gameObject
     }
 
     fun find(predicate: (GameObject) -> Boolean): GameObject? {
