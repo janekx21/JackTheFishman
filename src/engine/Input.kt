@@ -30,11 +30,8 @@ object Input {
         fun click(key: Int): Boolean = justDown.contains(key)
 
         fun updateKeyState(
-            window: Window,
             key: Int,
-            scanCode: Int,
-            action: Int,
-            mods: Int
+            action: Int
         ) {
             when (action) {
                 GLFW_PRESS -> {
@@ -56,14 +53,23 @@ object Input {
     }
 
     object Mouse {
+        enum class CursorMode {
+            DISABLED, HIDDEN, NORMAL
+        }
+
         var position = Vector2fCopy.zero
         var deltaPosition = Vector2fCopy.zero
 
         var left = ButtonState(isDown = false, changed = false)
         var right = ButtonState(isDown = false, changed = false)
 
-        fun setMode(mode: Int) {
-            glfwSetInputMode(Window.pointer, GLFW_CURSOR, mode)
+        fun setMode(mode: CursorMode) {
+            val index = when (mode) {
+                CursorMode.NORMAL -> GLFW_CURSOR_NORMAL
+                CursorMode.DISABLED -> GLFW_CURSOR_DISABLED
+                CursorMode.HIDDEN -> GLFW_CURSOR_HIDDEN
+            }
+            glfwSetInputMode(Window.pointer, GLFW_CURSOR, index)
         }
 
         fun update() {
@@ -95,6 +101,7 @@ object Input {
             RB(GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER),
             BACK(GLFW_GAMEPAD_BUTTON_BACK),
             START(GLFW_GAMEPAD_BUTTON_START),
+
             //LEFT_STICK_BUTTON(),
             //RIGHT_STICK_BUTTON(),
             D_PAD_UP(GLFW_GAMEPAD_BUTTON_DPAD_UP),
