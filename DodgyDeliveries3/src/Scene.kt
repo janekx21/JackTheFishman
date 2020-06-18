@@ -1,8 +1,16 @@
+import kotlin.reflect.full.primaryConstructor
+
 class Scene {
     private val allGameObjects = arrayListOf<GameObject>()
 
     fun spawn(go: GameObject) {
         allGameObjects.add(go)
+    }
+
+    inline fun <reified T : GameObject> spawn(name: String): T {
+        val gameObject = T::class.primaryConstructor!!.call(name)
+        spawn(gameObject)
+        return gameObject
     }
 
     fun destroy(go: GameObject) {
@@ -21,8 +29,10 @@ class Scene {
         }
     }
 
-    fun findViaName(name: String): GameObject? {
-        return allGameObjects.find { it.name == name }
+    fun findViaName(name: String): GameObject {
+        val gameObject = allGameObjects.find { it.name == name }
+        check(gameObject != null) { "GameObject not found" }
+        return gameObject
     }
 
     fun find(predicate: (GameObject) -> Boolean): GameObject? {
