@@ -27,7 +27,7 @@ class PhysicsComponent(gameObject: GameObject, startPos: Vector2f, pos: Transfor
 
     //setter for velocity takes Vector2fc and converts it to box2d vector
     public fun setVel(vec: Vector2fc){
-        definition.linearVelocity.set(vec.x(), vec.y())
+        definition.linearVelocity.set(vec.x() * .015f, vec.y() * .015f)
     }
 
     //getter for collider
@@ -43,6 +43,7 @@ class PhysicsComponent(gameObject: GameObject, startPos: Vector2f, pos: Transfor
 
         //set position to transforms position
         col.m_p.set(tr.position.x(), tr.position.y())
+        tr.position.set(tr.position.x + definition.linearVelocity.x, tr.position.y + definition.linearVelocity.y, tr.position.z)
     }
 
     override fun draw() {
