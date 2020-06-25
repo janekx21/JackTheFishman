@@ -4,23 +4,24 @@ import org.jbox2d.dynamics.BodyDef
 import org.jbox2d.collision.shapes.CircleShape
 import org.joml.Vector2f
 import org.joml.Vector2fc
-import kotlin.system.measureTimeMillis
 
 class PhysicsComponent(gameObject: GameObject, startPos: Vector2f, pos: Transform) : Component(gameObject) {
 
     //Body
     var definition: BodyDef = BodyDef()
-    val tp: BodyType = BodyType.DYNAMIC
+    val dynamics: BodyType = BodyType.DYNAMIC
 
     //Collider is Circle cuz there is no box (maybe im just stupid and didnt find it)
-    var col: CircleShape = CircleShape()
+    var collisionCircle: CircleShape = CircleShape()
 
     //need a transform to attach the colliders position to
-    var tr: Transform = pos
+    var physicsTransform: Transform = pos
 
     init {
-        definition.type = tp
-        definition.gravityScale = 0f //we be fly so no need for that
+        definition.type = dynamics
+        definition.gravityScale = 0f
+        //we be fly so no need for that
+
         definition.position.set(startPos.x(), startPos.y())
     }
 
@@ -33,22 +34,19 @@ class PhysicsComponent(gameObject: GameObject, startPos: Vector2f, pos: Transfor
     }
 
     //getter for collider
-    public val getCollider get() = col
+    public val getCollider get() = collisionCircle
 
     //change collider size (size is the radius of the circle)
     public fun SetColliderSize(r: Float){
-        col.radius = r
+        collisionCircle.radius = r
     }
 
     override fun update() {
-        //To Do: apply body position to transform which is currently impossible due to transform.position protection level
-
         //set position to transforms position
-        col.m_p.set(tr.position.x(), tr.position.y())
-        tr.position.set(tr.position.x + definition.linearVelocity.x, tr.position.y + definition.linearVelocity.y, tr.position.z)
+        collisionCircle.m_p.set(physicsTransform.position.x(), physicsTransform.position.y())
+        physicsTransform.position.set(physicsTransform.position.x + definition.linearVelocity.x, physicsTransform.position.y + definition.linearVelocity.y, physicsTransform.position.z)
     }
 
     override fun draw() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }
