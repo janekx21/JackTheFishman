@@ -59,7 +59,7 @@ class Game2 : Game() {
         val speed = 6f
 
         if (Input.Mouse.left.justDown) {
-            Input.Mouse.setMode(GLFW.GLFW_CURSOR_DISABLED)
+            Input.Mouse.setMode(Input.Mouse.CursorMode.DISABLED)
         }
 
         if (Input.Keyboard.down(GLFW.GLFW_KEY_W)) {

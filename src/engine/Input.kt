@@ -20,29 +20,41 @@ object Input {
     }
 
     object Keyboard {
-        private val keyState = HashMap<Int, Boolean>()
-        private val justDown = arrayListOf<Int>()
+        private var keyStates = (0 .. GLFW_KEY_LAST).map {
+            Pair(it, ButtonState(isDown = false, changed = false))
+        }.toMap()
 
-        fun down(key: Int): Boolean = keyState.getOrDefault(key, false)
+        // Die gesammelten key-states, beim nächsten update angewendet werden.
+        private var nextKeyStates = keyStates.toMutableMap()
+
+        // Super inkonsistent mit Mouse und Controller. Egal!
+        fun down(key: Int): Boolean = keyStates.getValue(key).isDown
 
         fun up(key: Int): Boolean = !down(key)
 
-        fun click(key: Int): Boolean = justDown.contains(key)
+        fun changed(key: Int): Boolean = keyStates.getValue(key).changed
 
-        fun updateKeyState(
-            window: Window,
+        fun justDown(key: Int): Boolean = keyStates.getValue(key).justDown
+
+        fun justUp(key: Int): Boolean = keyStates.getValue(key).justUp
+
+        // Wird von GLFW aufgerufen wenn sich der State von einem key geändert hat.
+        fun onKeyChanged(
             key: Int,
-            scanCode: Int,
-            action: Int,
-            mods: Int
+            action: Int
         ) {
             when (action) {
                 GLFW_PRESS -> {
-                    justDown.add(key)
-                    keyState[key] = true
+                    nextKeyStates[key] = ButtonState(
+                        isDown = true,
+                        changed = !keyStates.getValue(key).isDown
+                    )
                 }
                 GLFW_RELEASE -> {
-                    keyState[key] = false
+                    nextKeyStates[key] = ButtonState(
+                        isDown = false,
+                        changed = keyStates.getValue(key).isDown
+                    )
                 }
                 else -> {
                     check(action == GLFW_REPEAT)
@@ -50,20 +62,39 @@ object Input {
             }
         }
 
+        // onKeyChanged verändert nichts an den Rückgabewerten von changed, justDown, justUp etc.
+        // Erst wenn nach onKeyChanged die update-Funktion aufgerufen wird, werden die Änderungen wirksam gemacht.
         fun update() {
-            justDown.clear()
+            keyStates = nextKeyStates.toMap()
+
+            nextKeyStates = keyStates.mapValues {
+                if (it.value.changed) {
+                    ButtonState(isDown = it.value.isDown, changed = false)
+                } else {
+                    it.value
+                }
+            }.toMutableMap()
         }
     }
 
     object Mouse {
+        enum class CursorMode {
+            DISABLED, HIDDEN, NORMAL
+        }
+
         var position = Vector2fCopy.zero
         var deltaPosition = Vector2fCopy.zero
 
         var left = ButtonState(isDown = false, changed = false)
         var right = ButtonState(isDown = false, changed = false)
 
-        fun setMode(mode: Int) {
-            glfwSetInputMode(Window.pointer, GLFW_CURSOR, mode)
+        fun setMode(mode: CursorMode) {
+            val index = when (mode) {
+                CursorMode.NORMAL -> GLFW_CURSOR_NORMAL
+                CursorMode.DISABLED -> GLFW_CURSOR_DISABLED
+                CursorMode.HIDDEN -> GLFW_CURSOR_HIDDEN
+            }
+            glfwSetInputMode(Window.pointer, GLFW_CURSOR, index)
         }
 
         fun update() {
@@ -95,6 +126,7 @@ object Input {
             RB(GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER),
             BACK(GLFW_GAMEPAD_BUTTON_BACK),
             START(GLFW_GAMEPAD_BUTTON_START),
+
             //LEFT_STICK_BUTTON(),
             //RIGHT_STICK_BUTTON(),
             D_PAD_UP(GLFW_GAMEPAD_BUTTON_DPAD_UP),
@@ -174,5 +206,4 @@ object Input {
             }
         }
     }
-
 }

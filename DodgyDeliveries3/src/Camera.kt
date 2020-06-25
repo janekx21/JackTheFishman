@@ -2,7 +2,7 @@ import engine.Window
 import org.joml.Matrix4f
 
 class Camera(gameObject: GameObject) : Component(gameObject) {
-    private val matrix = Matrix4f().perspective(90f, Window.aspect, .1f, 100f)
+    private val matrix = Matrix4f().perspective(Math.toRadians(90.0).toFloat(), Window.aspect, .1f, 100f)
     private var hash = 0
     private val cached = Matrix4f()
 
