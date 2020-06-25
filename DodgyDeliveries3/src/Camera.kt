@@ -1,10 +1,12 @@
 import engine.Window
+import engine.math.fromJson
+import engine.math.toJson
 import org.joml.Matrix4f
 
 class Camera(gameObject: GameObject) : Component(gameObject) {
-    private val matrix = Matrix4f().perspective(90f, Window.aspect, .1f, 100f)
+    private var matrix = Matrix4f().perspective(90f, Window.aspect, .1f, 100f)
     private var hash = 0
-    private val cached = Matrix4f()
+    private var cached = Matrix4f()
 
     override fun update() {}
 
@@ -29,5 +31,14 @@ class Camera(gameObject: GameObject) : Component(gameObject) {
 
     companion object {
         var main: Camera? = null
+    }
+
+    override fun toJson(): Any? {
+        return matrix.toJson()
+    }
+
+    override fun fromJson(json: Any?) {
+        this.matrix = Matrix4f().also { it.fromJson(json) }
+        generateViewMatrix()
     }
 }

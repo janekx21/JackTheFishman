@@ -1,3 +1,5 @@
+import com.beust.klaxon.JsonArray
+import com.beust.klaxon.JsonObject
 import kotlin.reflect.full.primaryConstructor
 
 class Scene {
@@ -41,5 +43,24 @@ class Scene {
 
     companion object {
         val active = Scene()
+
+        fun fromJson(json: Any?): Scene {
+            val map = json as Map<*, *>
+            val array = map["gameObjects"] as List<*>
+
+            return Scene().also { scene ->
+                array.forEach {
+                    scene.spawn(GameObject.fromJson(it))
+                }
+            }
+        }
+    }
+
+    fun toJson(): Any? {
+        return mapOf(
+            "gameObjects" to allGameObjects.map {
+                it.toJson()
+            }
+        )
     }
 }

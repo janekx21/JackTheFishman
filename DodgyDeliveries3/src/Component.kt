@@ -4,4 +4,7 @@ abstract class Component(val gameObject: GameObject) {
 
     val transform: Component
         get() = gameObject.getComponent()
+
+    abstract fun fromJson(json: Any?)
+    abstract fun toJson(): Any?
 }

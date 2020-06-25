@@ -29,9 +29,6 @@ open class GameObject(val name: String) {
     inline fun <reified T : Component> addComponent(): T {
         val component = T::class.primaryConstructor!!.call(this)
         addComponent(component)
-        if (component is Transform) {
-            cachedTransform = component
-        }
         return component
     }
 
@@ -54,5 +51,43 @@ open class GameObject(val name: String) {
 
     inline fun <reified T : Component> getComponents(): List<T> {
         return components.filterIsInstance<T>()
+    }
+
+    fun toJson(): Any? {
+        return mapOf(
+            "name" to name,
+            "components" to components.map {
+                mapOf(
+                    "className" to it::class.java.name,
+                    "serialization" to it.toJson()
+                )
+            }
+        )
+    }
+
+    companion object {
+        fun fromJson(json: Any?): GameObject {
+            val map = json as Map<*, *>
+
+            val list = map["components"] as List<*>
+            val name = map["name"] as String
+
+            return GameObject(name).also { gameObject ->
+                list.forEach {
+                    @Suppress("NAME_SHADOWING")
+                    val map = it as Map<*, *>
+
+                    val component = Class
+                        .forName(map["className"] as String)
+                        .kotlin
+                        .primaryConstructor!!
+                        .call(gameObject) as Component
+
+                    component.fromJson(map["serialization"])
+
+                    gameObject.addComponent(component)
+                }
+            }
+        }
     }
 }

@@ -11,5 +11,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="KotlinJavaRuntime" level="project" />
     <orderEntry type="module" module-name="JackTheFishman" exported="" />
+    <orderEntry type="library" name="klaxon-5.2" level="project" />
   </component>
 </module>
