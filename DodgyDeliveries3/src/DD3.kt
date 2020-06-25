@@ -17,10 +17,21 @@ class DD3 : Game() {
         Loader.root = "DodgyDeliveries3/assets"
     }
 
-    private val testshader = Loader.createViaPath(Shader, "shaders/test.shader")
     private val diffuseshader = Loader.createViaPath(Shader, "shaders/diffuse.shader")
     private val cam = GameObject("Camera")
-    private val player = GameObject("Player") // Change to playerclass when ready
+    private val player = GameObject("Player") // TODO: Change to playerclass when ready
+
+    /*
+    CAMERA CONTROL:
+    UP: SPACE
+    DOWN: LEFT CONTROL
+    LEFT: A
+    RIGHT: D
+    FORWARD: W
+    BACKWARD: S
+
+    PRESS SHIFT FOR SPEED BOOST
+     */
 
 
     init {
@@ -29,9 +40,10 @@ class DD3 : Game() {
         // GameObject: Player
         player.addComponent<Transform>()
         player.addComponent<ModelRenderer>().also {
-            it.mesh = Loader.createViaPath(Mesh, "models/monkey.fbx")
-            it.shader = testshader
+            it.mesh = Loader.createViaPath(Mesh, "models/monkey.fbx") // TODO: add player mesh
+            it.shader = diffuseshader
         }
+        // TODO: add player controller when ready
         player.transform.scale.mul(0.1f)
         player.transform.position.x += 5f
         Scene.active.spawn(player)
@@ -40,7 +52,7 @@ class DD3 : Game() {
         val tunnel = GameObject("Tunnel")
         tunnel.addComponent<Transform>()
         tunnel.addComponent<ModelRenderer>().also {
-            it.mesh = Loader.createViaPath(Mesh, "models/cube.fbx")
+            it.mesh = Loader.createViaPath(Mesh, "models/cube.fbx") // TODO: add tunnel mesh
             it.shader = diffuseshader
         }
         tunnel.transform.scale.mul(0.1f)
@@ -50,6 +62,7 @@ class DD3 : Game() {
         // GameObject: Camera
         cam.addComponent<Transform>()
         Camera.main = cam.addComponent()
+        // TODO: add audio component
         cam.transform.position.z = 0.5f
         Scene.active.spawn(cam)
 
@@ -72,20 +85,7 @@ class DD3 : Game() {
             cam.transform.position.y += speed
         if (Input.Keyboard.down(GLFW_KEY_LEFT_CONTROL))
             cam.transform.position.y -= speed
-/*
-        if(Input.Keyboard.click(GLFW_KEY_D))
-            cam.transform.position.x += speed
-        if(Input.Keyboard.click(GLFW_KEY_A))
-            cam.transform.position.x -= speed
-        if(Input.Keyboard.click(GLFW_KEY_S))
-            cam.transform.position.z += speed
-        if(Input.Keyboard.click(GLFW_KEY_W))
-            cam.transform.position.z -= speed
-        if(Input.Keyboard.click(GLFW_KEY_SPACE))
-            cam.transform.position.y += speed
-        if(Input.Keyboard.click(GLFW_KEY_LEFT_CONTROL))
-            cam.transform.position.y -= speed
-*/
+
     }
 
     override fun draw() {
