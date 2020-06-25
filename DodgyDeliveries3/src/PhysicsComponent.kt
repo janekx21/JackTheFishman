@@ -1,8 +1,10 @@
+import engine.Time
 import org.jbox2d.dynamics.BodyType
 import org.jbox2d.dynamics.BodyDef
 import org.jbox2d.collision.shapes.CircleShape
 import org.joml.Vector2f
 import org.joml.Vector2fc
+import kotlin.system.measureTimeMillis
 
 class PhysicsComponent(gameObject: GameObject, startPos: Vector2f, pos: Transform) : Component(gameObject) {
 
@@ -27,7 +29,7 @@ class PhysicsComponent(gameObject: GameObject, startPos: Vector2f, pos: Transfor
 
     //setter for velocity takes Vector2fc and converts it to box2d vector
     public fun setVel(vec: Vector2fc){
-        definition.linearVelocity.set(vec.x() * .015f, vec.y() * .015f)
+        definition.linearVelocity.set(vec.x() * Time.deltaTime, vec.y() * Time.deltaTime)
     }
 
     //getter for collider
