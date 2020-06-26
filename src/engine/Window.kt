@@ -43,7 +43,7 @@ object Window : Closeable {
             if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
                 glfwSetWindowShouldClose(window, true)
             }
-            Input.Keyboard.updateKeyState(key, action)
+            Input.Keyboard.onKeyChanged(key, action)
         }
 
         glfwSetFramebufferSizeCallback(pointer) { _, width, height ->
