@@ -39,11 +39,11 @@ object Window : Closeable {
     }
 
     private fun configEvents() {
-        glfwSetKeyCallback(pointer) { window, key, scanCode, action, mods ->
+        glfwSetKeyCallback(pointer) { window, key, _, action, _ ->
             if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
                 glfwSetWindowShouldClose(window, true)
             }
-            Input.Keyboard.updateKeyState(this, key, scanCode, action, mods)
+            Input.Keyboard.onKeyChanged(key, action)
         }
 
         glfwSetFramebufferSizeCallback(pointer) { _, width, height ->

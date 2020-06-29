@@ -27,7 +27,7 @@ class Transform(gameObject: GameObject) : Component(gameObject) {
         }.also { cached.set(matrix) }
     }
 
-    private fun getMatrixHash(): Int {
+    fun getMatrixHash(): Int {
         return position.hashCode() + rotation.hashCode() + scale.hashCode()
     }
 }

@@ -4,8 +4,14 @@ import Vector2fCopy
 import engine.util.DoublePointer
 import org.joml.Vector2f
 import org.lwjgl.glfw.GLFW.*
+import org.lwjgl.glfw.GLFWGamepadState
 
 object Input {
+
+    data class ButtonState(val isDown: Boolean, val changed: Boolean) {
+        val justDown = isDown && changed
+        val justUp = !isDown && changed
+    }
 
     fun update() {
         Keyboard.update()
@@ -14,29 +20,41 @@ object Input {
     }
 
     object Keyboard {
-        private val keyState = HashMap<Int, Boolean>()
-        private val justDown = arrayListOf<Int>()
+        private var keyStates = (0 .. GLFW_KEY_LAST).map {
+            Pair(it, ButtonState(isDown = false, changed = false))
+        }.toMap()
 
-        fun down(key: Int): Boolean = keyState.getOrDefault(key, false)
+        // Die gesammelten key-states, beim nächsten update angewendet werden.
+        private var nextKeyStates = keyStates.toMutableMap()
+
+        // Super inkonsistent mit Mouse und Controller. Egal!
+        fun down(key: Int): Boolean = keyStates.getValue(key).isDown
 
         fun up(key: Int): Boolean = !down(key)
 
-        fun click(key: Int): Boolean = justDown.contains(key)
+        fun changed(key: Int): Boolean = keyStates.getValue(key).changed
 
-        fun updateKeyState(
-            window: Window,
+        fun justDown(key: Int): Boolean = keyStates.getValue(key).justDown
+
+        fun justUp(key: Int): Boolean = keyStates.getValue(key).justUp
+
+        // Wird von GLFW aufgerufen wenn sich der State von einem key geändert hat.
+        fun onKeyChanged(
             key: Int,
-            scanCode: Int,
-            action: Int,
-            mods: Int
+            action: Int
         ) {
             when (action) {
                 GLFW_PRESS -> {
-                    justDown.add(key)
-                    keyState[key] = true
+                    nextKeyStates[key] = ButtonState(
+                        isDown = true,
+                        changed = !keyStates.getValue(key).isDown
+                    )
                 }
                 GLFW_RELEASE -> {
-                    keyState[key] = false
+                    nextKeyStates[key] = ButtonState(
+                        isDown = false,
+                        changed = keyStates.getValue(key).isDown
+                    )
                 }
                 else -> {
                     check(action == GLFW_REPEAT)
@@ -44,96 +62,148 @@ object Input {
             }
         }
 
+        // onKeyChanged verändert nichts an den Rückgabewerten von changed, justDown, justUp etc.
+        // Erst wenn nach onKeyChanged die update-Funktion aufgerufen wird, werden die Änderungen wirksam gemacht.
         fun update() {
-            justDown.clear()
+            keyStates = nextKeyStates.toMap()
+
+            nextKeyStates = keyStates.mapValues {
+                if (it.value.changed) {
+                    ButtonState(isDown = it.value.isDown, changed = false)
+                } else {
+                    it.value
+                }
+            }.toMutableMap()
         }
     }
 
     object Mouse {
-        val position = Vector2f()
-        val deltaPosition = Vector2f()
-        var leftMouseButton = false
+        enum class CursorMode {
+            DISABLED, HIDDEN, NORMAL
+        }
 
-        fun setMode(mode: Int) {
-            glfwSetInputMode(Window.pointer, GLFW_CURSOR, mode)
+        var position = Vector2fCopy.zero
+        var deltaPosition = Vector2fCopy.zero
+
+        var left = ButtonState(isDown = false, changed = false)
+        var right = ButtonState(isDown = false, changed = false)
+
+        fun setMode(mode: CursorMode) {
+            val index = when (mode) {
+                CursorMode.NORMAL -> GLFW_CURSOR_NORMAL
+                CursorMode.DISABLED -> GLFW_CURSOR_DISABLED
+                CursorMode.HIDDEN -> GLFW_CURSOR_HIDDEN
+            }
+            glfwSetInputMode(Window.pointer, GLFW_CURSOR, index)
         }
 
         fun update() {
-            deltaPosition.set(position)
+            deltaPosition = Vector2f(position)
+
             val x = DoublePointer()
             val y = DoublePointer()
+
             glfwGetCursorPos(Window.pointer, x.buffer, y.buffer)
-            position.set(x.value.toFloat(), y.value.toFloat())
+
+            position = Vector2f(x.value.toFloat(), y.value.toFloat())
             deltaPosition.sub(position).mul(-1f)
-            leftMouseButton = glfwGetMouseButton(Window.pointer, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS
+
+            val leftDown = glfwGetMouseButton(Window.pointer, GLFW_MOUSE_BUTTON_LEFT) != GLFW_RELEASE
+            val rightDown = glfwGetMouseButton(Window.pointer, GLFW_MOUSE_BUTTON_RIGHT) != GLFW_RELEASE
+
+            left = ButtonState(isDown = leftDown, changed = leftDown != left.isDown)
+            right = ButtonState(isDown = rightDown, changed = rightDown != right.isDown)
         }
     }
 
-
     object Controller {
-        val leftStick = Vector2fCopy.zero
-        val rightStick = Vector2fCopy.zero
+        enum class Button(val glfwKeyCode: Int) {
+            A(GLFW_GAMEPAD_BUTTON_A),
+            B(GLFW_GAMEPAD_BUTTON_B),
+            X(GLFW_GAMEPAD_BUTTON_X),
+            Y(GLFW_GAMEPAD_BUTTON_Y),
+            LB(GLFW_GAMEPAD_BUTTON_LEFT_BUMPER),
+            RB(GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER),
+            BACK(GLFW_GAMEPAD_BUTTON_BACK),
+            START(GLFW_GAMEPAD_BUTTON_START),
 
-        private val buttonArray = arrayOf<Button>(
-            Button(Buttonnames.A),
-            Button(Buttonnames.B),
-            Button(Buttonnames.X),
-            Button(Buttonnames.Y),
-            Button(Buttonnames.LB),
-            Button(Buttonnames.RB),
-            Button(Buttonnames.BACK),
-            Button(Buttonnames.START),
-            Button(Buttonnames.LEFT_STICK_BUTTON),
-            Button(Buttonnames.RIGHT_STICK_BUTTON),
-            Button(Buttonnames.D_PAD_UP),
-            Button(Buttonnames.D_PAD_RIGHT),
-            Button(Buttonnames.D_PAD_DOWN),
-            Button(Buttonnames.D_PAD_LEFT)
-        )
-
-        data class Button(var bname: Buttonnames) {
-            var name = bname
-            var pressed = false
+            //LEFT_STICK_BUTTON(),
+            //RIGHT_STICK_BUTTON(),
+            D_PAD_UP(GLFW_GAMEPAD_BUTTON_DPAD_UP),
+            D_PAD_RIGHT(GLFW_GAMEPAD_BUTTON_DPAD_RIGHT),
+            D_PAD_DOWN(GLFW_GAMEPAD_BUTTON_DPAD_DOWN),
+            D_PAD_LEFT(GLFW_GAMEPAD_BUTTON_DPAD_LEFT)
         }
 
-        enum class Buttonnames {
-            A,
-            B,
-            X,
-            Y,
-            LB,
-            RB,
-            BACK,
-            START,
-            LEFT_STICK_BUTTON,
-            RIGHT_STICK_BUTTON,
-            D_PAD_UP,
-            D_PAD_RIGHT,
-            D_PAD_DOWN,
-            D_PAD_LEFT
+        var leftStick = Vector2fCopy.zero
+
+        var rightStick = Vector2fCopy.zero
+
+        // der button state, der allen buttons beim konstruieren gegeben wird
+        private val initialButtonState = ButtonState(isDown = false, changed = false)
+
+        // die button states der einzelnen buttons nach dem letzten update
+        private val buttonStates = enumValues<Button>()
+            .map { Pair(it, initialButtonState) }
+            .toMap().toMutableMap()
+
+
+        fun isDown(button: Button): Boolean {
+            return buttonStates.getValue(button).isDown
         }
 
-        fun down(key: Int): Boolean {
-            return buttonArray[key].pressed
+        fun isUp(button: Button): Boolean {
+            return !isDown(button)
         }
 
-        fun up(key: Int): Boolean = !down(key)
+        fun didButtonChange(button: Button): Boolean {
+            return buttonStates.getValue(button).changed
+        }
+
+        fun justDown(button: Button): Boolean = buttonStates.getValue(button).justDown
+
+        fun justUp(button: Button): Boolean = buttonStates.getValue(button).justUp
 
         fun update() {
-            if (glfwJoystickPresent(GLFW_JOYSTICK_1)) {
-                // button inputs
-                val inputbuttons = glfwGetJoystickButtons(GLFW_JOYSTICK_1)!!.array()
-                for (i in 0..buttonArray.size) {
-                    buttonArray[i].pressed = inputbuttons[i].toInt() == GLFW_PRESS
+            if (glfwJoystickPresent(GLFW_JOYSTICK_1) && glfwJoystickIsGamepad(GLFW_JOYSTICK_1)) {
+                val state = GLFWGamepadState.create()
+                glfwGetGamepadState(GLFW_JOYSTICK_1, state)
+
+                // Button Inputs
+                buttonStates.keys.forEach {
+                    val before = isDown(it)
+                    val now = state.buttons(it.glfwKeyCode).toInt() != GLFW_RELEASE
+
+                    buttonStates[it] = ButtonState(
+                        isDown = now,
+                        changed = before != now
+                    )
                 }
-                // stick inputs
-                val inputaxes = glfwGetJoystickAxes(GLFW_JOYSTICK_1)!!.array()
-                leftStick.x = inputaxes[0]
-                leftStick.y = inputaxes[1]
-                rightStick.x = inputaxes[2]
-                rightStick.y = inputaxes[3]
+
+                // Stick Inputs
+                leftStick = Vector2f(
+                    state.axes(GLFW_GAMEPAD_AXIS_LEFT_X),
+                    state.axes(GLFW_GAMEPAD_AXIS_LEFT_Y)
+                )
+
+                rightStick = Vector2f(
+                    state.axes(GLFW_GAMEPAD_AXIS_RIGHT_X),
+                    state.axes(GLFW_GAMEPAD_AXIS_RIGHT_Y)
+                )
+            } else {
+                // wenn kein Controller angeschlossen ist bzw. der Controller getrennt wurde,
+                // ist das so als würden wir null-input vom Controller erhalten, also
+                // keine Knöpfe gedrückt (changed wird entsprechend gesetzt), und die Joysticks bei (0, 0)
+                buttonStates.keys.forEach {
+                    buttonStates[it] = ButtonState(
+                        isDown = false,
+                        changed = buttonStates[it]!!.isDown != false
+                    )
+                }
+
+                leftStick = Vector2fCopy.zero
+                rightStick = Vector2fCopy.zero
             }
         }
     }
-
 }
