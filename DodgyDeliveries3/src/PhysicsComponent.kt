@@ -5,7 +5,7 @@ import org.jbox2d.collision.shapes.CircleShape
 import org.joml.Vector2f
 import org.joml.Vector2fc
 
-class PhysicsComponent(gameObject: GameObject, startPos: Vector2f, pos: Transform) : Component(gameObject) {
+class PhysicsComponent(gameObject: GameObject) : Component(gameObject) {
 
     //Body
     var definition: BodyDef = BodyDef()
@@ -15,18 +15,16 @@ class PhysicsComponent(gameObject: GameObject, startPos: Vector2f, pos: Transfor
     var collisionCircle: CircleShape = CircleShape()
 
     //need a transform to attach the colliders position to
-    var physicsTransform: Transform = pos
+    var physicsTransform: Transform = Transform(gameObject)
 
     init {
         definition.type = dynamics
         definition.gravityScale = 0f
         //we be fly so no need for that
-
-        definition.position.set(startPos.x(), startPos.y())
     }
 
     //getter for velocity
-    public val getSpeed get() = definition.linearVelocity
+    public val Speed get() = definition.linearVelocity
 
     //setter for velocity takes Vector2fc and converts it to box2d vector
     public fun setVel(vec: Vector2fc){
@@ -34,7 +32,7 @@ class PhysicsComponent(gameObject: GameObject, startPos: Vector2f, pos: Transfor
     }
 
     //getter for collider
-    public val getCollider get() = collisionCircle
+    public val Collider get() = collisionCircle
 
     //change collider size (size is the radius of the circle)
     public fun SetColliderSize(r: Float){
