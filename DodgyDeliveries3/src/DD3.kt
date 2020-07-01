@@ -1,8 +1,10 @@
 import engine.Game
 import engine.Input
 import engine.Loader
+import engine.Window
 import engine.graphics.Mesh
 import engine.graphics.Shader
+import engine.graphics.Texture2D
 import org.joml.Vector3f
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.opengl.GL11
@@ -18,6 +20,8 @@ class DD3 : Game() {
     }
 
     private val diffuseshader = Loader.createViaPath(Shader, "shaders/diffuse.shader")
+    private val logo = Texture2D.createViaPath("assets/engine/logo.png")
+
 
     /*
     CAMERA CONTROL:
@@ -34,6 +38,14 @@ class DD3 : Game() {
 
     init {
         diffuseshader.setUniform("LightDirection", Vector3f(-1f, -1f, -1f))
+
+        Window.onResize = {
+            Camera.main?.getProjectionMatrix()?.identity()
+            Camera.main?.getProjectionMatrix()?.perspective(Math.toRadians(80.0).toFloat(), it.aspect, .1f, 10f)
+        }
+        Window.onResize(Window)
+        Window.setIcon(logo)
+
 
         // GameObject: Player
         GameObject("Player").also { gameObject ->
