@@ -44,9 +44,6 @@ class Game2 : Game() {
         }
         Window.onResize(Window)
         Window.setIcon(logo)
-
-        // world.translate(0f, 0f, -3f)
-        Audio.playExample()
     }
 
 
