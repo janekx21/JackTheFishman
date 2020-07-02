@@ -1,6 +1,20 @@
 package engine.math
 
+import engine.util.IJsonUnserializable
 import org.joml.Matrix4f
+
+object Matrix4fExt : IJsonUnserializable<Matrix4f> {
+    override fun fromJson(json: Any?): Matrix4f {
+        val array = json as List<*>
+
+        val result = Matrix4f()
+        (0 .. 15).forEach {
+            result[it % 4, it / 4] = (array[it] as Double).toFloat()
+        }
+
+        return result
+    }
+}
 
 fun Matrix4f.toJson(): Any? {
     return arrayOf(
@@ -11,9 +25,3 @@ fun Matrix4f.toJson(): Any? {
     )
 }
 
-fun Matrix4f.fromJson(json: Any?) {
-    val array = json as List<*>
-    (0 .. 15).forEach {
-        this[it % 4, it / 4] = (array[it] as Double).toFloat()
-    }
-}

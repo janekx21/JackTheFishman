@@ -1,5 +1,6 @@
 package engine.math
 
+import engine.util.IJsonUnserializable
 import org.joml.Vector3f
 
 fun Vector3f.clamp(value: Float) {
@@ -44,9 +45,13 @@ fun Vector3f.toJson(): Any? {
     )
 }
 
-/// Gibt leider keine statischen extension-methods. Deswegen müssen wir hier
-/// [this] mutieren (Anstatt einen neuen Vektor mit den JSON-Daten in [json] zu erzeugen)
-fun Vector3f.fromJson(json: Any?) {
-    val list = json as List<*>
-    this.set(list[0] as Double, list[1] as Double, list[2] as Double)
+object Vector3fExt : IJsonUnserializable<Vector3f> {
+    override fun fromJson(json: Any?): Vector3f {
+        val list = json as List<*>
+        return Vector3f(
+            (list[0] as Double).toFloat(),
+            (list[1] as Double).toFloat(),
+            (list[2] as Double).toFloat()
+        )
+    }
 }

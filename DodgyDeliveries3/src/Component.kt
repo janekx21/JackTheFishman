@@ -1,4 +1,6 @@
-abstract class Component(val gameObject: GameObject) {
+import engine.util.IJsonSerializable
+
+abstract class Component(val gameObject: GameObject) : IJsonSerializable {
     abstract fun update()
     abstract fun draw()
 
@@ -6,5 +8,4 @@ abstract class Component(val gameObject: GameObject) {
         get() = gameObject.getComponent()
 
     abstract fun fromJson(json: Any?)
-    abstract fun toJson(): Any?
 }

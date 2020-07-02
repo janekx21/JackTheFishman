@@ -1,4 +1,5 @@
 import engine.Window
+import engine.math.Matrix4fExt
 import engine.math.fromJson
 import engine.math.toJson
 import org.joml.Matrix4f
@@ -38,7 +39,8 @@ class Camera(gameObject: GameObject) : Component(gameObject) {
     }
 
     override fun fromJson(json: Any?) {
-        this.matrix = Matrix4f().also { it.fromJson(json) }
+        val map = json as Map<*, *>
+        this.matrix = Matrix4fExt.fromJson(map["matrix"])
         generateViewMatrix()
     }
 }

@@ -1,6 +1,11 @@
+import engine.Game
+import engine.util.IJsonSerializable
+import engine.util.IJsonUnserializable
+import kotlin.reflect.full.companionObject
+import kotlin.reflect.full.companionObjectInstance
 import kotlin.reflect.full.primaryConstructor
 
-open class GameObject(val name: String) {
+open class GameObject(val name: String) : IJsonSerializable {
     val components = arrayListOf<Component>()
     val transform: Transform
         get() = getComponent()
@@ -53,7 +58,7 @@ open class GameObject(val name: String) {
         return components.filterIsInstance<T>()
     }
 
-    fun toJson(): Any? {
+    override fun toJson(): Any? {
         return mapOf(
             "name" to name,
             "components" to components.map {
@@ -65,8 +70,8 @@ open class GameObject(val name: String) {
         )
     }
 
-    companion object {
-        fun fromJson(json: Any?): GameObject {
+    companion object : IJsonUnserializable<GameObject> {
+        override fun fromJson(json: Any?): GameObject {
             val map = json as Map<*, *>
 
             val list = map["components"] as List<*>
