@@ -66,6 +66,7 @@ class DD3 : Game() {
         // GameObject: Camera
         GameObject("Camera").also { gameObject ->
             gameObject.addComponent<Transform>()
+            gameObject.addComponent<AudioListener>()
             gameObject.transform.position.z = 0.5f
             Camera.main = gameObject.addComponent()
             Scene.active.spawn(gameObject)
