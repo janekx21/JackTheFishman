@@ -39,14 +39,6 @@ class DD3 : Game() {
     init {
         diffuseshader.setUniform("LightDirection", Vector3f(-1f, -1f, -1f))
 
-        Window.onResize = {
-            Camera.main?.getProjectionMatrix()?.identity()
-            Camera.main?.getProjectionMatrix()?.perspective(Math.toRadians(80.0).toFloat(), it.aspect, .1f, 10f)
-        }
-        Window.onResize(Window)
-        Window.setIcon(logo)
-
-
         // GameObject: Player
         GameObject("Player").also { gameObject ->
             gameObject.addComponent<Transform>()
@@ -81,6 +73,13 @@ class DD3 : Game() {
             Scene.active.spawn(gameObject)
             // TODO: add audio listener component
         }
+
+        Window.onResize = {
+            Camera.main?.getProjectionMatrix()?.identity()
+            Camera.main?.getProjectionMatrix()?.perspective(Math.toRadians(80.0).toFloat(), it.aspect, .1f, 10f)
+        }
+        Window.onResize(Window)
+        Window.setIcon(logo)
     }
 
     override fun update() {
