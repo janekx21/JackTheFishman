@@ -52,10 +52,8 @@ class DD3 : Game() {
         // GameObject: Tunnel
         GameObject("Tunnel").also { gameObject ->
             gameObject.addComponent<Transform>()
-            gameObject.transform.scale.mul(0.1f)
-            gameObject.transform.position.x -= 5f
             gameObject.addComponent<ModelRenderer>().also {
-                it.mesh = Loader.createViaPath(Mesh, "models/cube.fbx") // TODO: add tunnel mesh
+                it.mesh = Loader.createViaPath(Mesh, "models/tunnel.fbx")
                 it.shader = diffuseshader
             }
             Scene.active.spawn(gameObject)
