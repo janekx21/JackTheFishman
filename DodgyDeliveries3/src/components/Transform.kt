@@ -1,3 +1,7 @@
+package components
+
+import Component
+import GameObject
 import engine.math.Vector3fCopy
 import org.joml.Matrix4f
 import org.joml.Quaternionf

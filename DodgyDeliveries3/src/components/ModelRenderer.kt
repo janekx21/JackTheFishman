@@ -1,3 +1,6 @@
+package components
+
+import GameObject
 import engine.graphics.Mesh
 import engine.graphics.Shader
 

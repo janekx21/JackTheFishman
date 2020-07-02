@@ -10,6 +10,8 @@ open class Game {
         // Configure GLFW
         GLFW.glfwDefaultWindowHints() // optional, the current window hints are already the default
         Window // init window
+        Audio
+        Physics
     }
 
     open fun update() {}

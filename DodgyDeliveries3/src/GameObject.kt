@@ -1,3 +1,4 @@
+import components.Transform
 import kotlin.reflect.full.primaryConstructor
 
 open class GameObject(val name: String) {
