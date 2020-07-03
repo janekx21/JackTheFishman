@@ -1,33 +1,33 @@
 import engine.Input
-import engine.math.Vector3fCopy
-import engine.math.clamp
-import org.lwjgl.glfw.GLFW.*
+import org.joml.Vector2f
 
 class PlayerController(gameObject: GameObject) : Component(gameObject) {
     override fun update() {
         controller()
+        friction()
     }
 
     override fun draw() {
     }
 
-    var speed = 1f
+    private val speed = 1f
 
+    // provisionally only supports mouse -- TODO: add keyboard and controller
     fun controller() {
-        var transform = gameObject.getComponent<Transform>()
-        val change = Vector3fCopy.zero
-        change.add(Input.Mouse.deltaPosition.x * speed, Input.Mouse.deltaPosition.y * speed, 0f)
-        change.add(Input.Controller.leftStick.x * speed, Input.Controller.leftStick.y * speed, 0f)
-        if (Input.Keyboard.down(GLFW_KEY_W))
-            change.add(0f, speed, 0f)
-        if (Input.Keyboard.down(GLFW_KEY_S))
-            change.add(0f, -speed, 0f)
-        if (Input.Keyboard.down(GLFW_KEY_A))
-            change.add(-speed, 0f, 0f)
-        if (Input.Keyboard.down(GLFW_KEY_D))
-            change.add(speed, 0f, 0f)
-        change.clamp(1f) // Clampvalue
-        transform.position.add(change)
+        val col = gameObject.getComponent<ColliderComponent>()
+        col.velocity = Vector2f(col.velocity.x() + Input.Mouse.deltaPosition.x * speed, col.velocity.y())
+    }
+
+    // provisionally friction -- very bad code
+    fun friction() {
+        val col = gameObject.getComponent<ColliderComponent>()
+        col.velocity = Vector2f(col.velocity.x() * 0.9f, col.velocity.y() * 0.9f)
+        if (col.velocity.x() < 0.01f && col.velocity.x() > -0.01f) {
+            col.velocity = Vector2f(0f, col.velocity.y())
+        }
+        if (col.velocity.y() < 0.01f && col.velocity.y() > -0.01f) {
+            col.velocity = Vector2f(col.velocity.x(), 0f)
+        }
     }
 
 }

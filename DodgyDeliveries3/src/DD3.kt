@@ -36,18 +36,11 @@ class DD3 : Game() {
         diffuseshader.setUniform("LightDirection", Vector3f(-1f, -1f, -1f))
 
         // GameObject: Player
-        GameObject("Player").also { gameObject ->
-            gameObject.addComponent<Transform>()
-            gameObject.addComponent<ModelRenderer>().also {
-                it.mesh = Loader.createViaPath(Mesh, "models/monkey.fbx") // TODO: add player mesh
-                it.shader = diffuseshader
-            }
-            // TODO: add player controller when ready
+        Player.also { gameObject ->
             gameObject.transform.scale.mul(0.1f)
             gameObject.transform.position.x += 5f
             Scene.active.spawn(gameObject)
         }
-
 
         // GameObject: Tunnel
         GameObject("Tunnel").also { gameObject ->
@@ -76,7 +69,7 @@ class DD3 : Game() {
             speed = 0.01f
         }
         if (Input.Keyboard.down(GLFW_KEY_D)) {
-            Scene.active.findViaName("Camera").transform.position.x += speed
+            Camera.main?.transform?.position?.x = Camera.main?.transform?.position?.x?.plus(speed)
         }
         if (Input.Keyboard.down(GLFW_KEY_A)) {
             Scene.active.findViaName("Camera").transform.position.x -= speed
