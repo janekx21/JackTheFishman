@@ -1,44 +1,42 @@
 package components
 
-import Component
 import GameObject
 import engine.Physics
-import engine.math.toVec2
-import engine.math.toVector2fc
 import org.jbox2d.collision.shapes.PolygonShape
 import org.jbox2d.common.Vec2
-import org.jbox2d.dynamics.Body
 import org.jbox2d.dynamics.BodyDef
 import org.jbox2d.dynamics.BodyType
+import org.jbox2d.dynamics.Fixture
 import org.jbox2d.dynamics.FixtureDef
+import org.joml.Vector2f
 import org.joml.Vector2fc
 import org.joml.Vector3f
+import util.Debug
 
-class BoxCollider(gameObject: GameObject) : Component(gameObject) {
-    private val body: Body = Physics.world.createBody(BodyDef().apply {
+class BoxCollider(gameObject: GameObject) : Collider(gameObject) {
+    override val fixture: Fixture = Physics.world.createBody(BodyDef().apply {
         type = BodyType.DYNAMIC
-        position = Vec2(1f, 0f)
-    })
-    private val shape = PolygonShape().apply {
-        setAsBox(50f, 10f)
-    }
-    private val fixture = body.createFixture(FixtureDef().apply {
+        position = Vec2(transform.position.x, transform.position.z)
+    }).createFixture(FixtureDef().apply {
         friction = .3f
         density = 1f
-        shape = this@BoxCollider.shape
+        shape = PolygonShape().apply {
+            setAsBox(1f, 1f)
+        }
     })
 
-    var velocity: Vector2fc
-        get() = body.linearVelocity.toVector2fc()
+    var size: Vector2fc = Vector2f(1f, 1f)
         set(value) {
-            body.linearVelocity.set(value.toVec2())
+            field = value
+            fixture.m_shape = PolygonShape().apply {
+                setAsBox(value.x(), value.y())
+            }
         }
 
-    override fun update() {
-        val bodyPosition = fixture.body.position.toVector2fc()
-        transform.position.set(Vector3f(bodyPosition.x(), 0f, bodyPosition.y()))
-    }
-
     override fun draw() {
+        if (Debug.active) {
+            super.draw()
+            Debug.drawWiredCube(transform.position, Vector3f(size.x(), 0f, size.y()), Vector3f(1f, 0f, 1f))
+        }
     }
 }

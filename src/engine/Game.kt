@@ -21,6 +21,7 @@ open class Game {
         while (!Window.shouldClose) {
             Window.update()
             Input.update()
+            Physics.update()
 
             update()
             draw()

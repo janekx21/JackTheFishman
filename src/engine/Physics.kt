@@ -10,6 +10,7 @@ object Physics {
     var velocityIterations = 6
     var positionIterations = 2
 
+    //we be fly so no need gravity
     val world = World(Vec2(0f, 0f))
 
     fun update() {
