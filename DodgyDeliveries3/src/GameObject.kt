@@ -29,6 +29,7 @@ open class GameObject(val name: String) {
     }
 
     inline fun <reified T : Component> addComponent(): T {
+        check(T::class.primaryConstructor != null) { "you need a primary constructor" }
         val component = T::class.primaryConstructor!!.call(this)
         addComponent(component)
         if (component is Transform) {

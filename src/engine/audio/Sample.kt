@@ -1,6 +1,7 @@
 package engine.audio
 
 import engine.util.ICreateViaPath
+import engine.util.IntPointer
 import org.lwjgl.openal.AL10.*
 import org.lwjgl.stb.STBVorbis
 import org.lwjgl.system.MemoryStack
@@ -35,7 +36,11 @@ class Sample(rawAudioBuffer: ShortBuffer, channels: Int, sampleRate: Int) {
             val sampleRateBuffer = MemoryStack.stackMallocInt(1)
             val rawAudioBuffer =
                 STBVorbis.stb_vorbis_decode_filename(path, channelsBuffer, sampleRateBuffer)
-            check(rawAudioBuffer != null) { "audio file could not be loaded at $path" }
+            check(rawAudioBuffer != null) {
+                val error = IntPointer()
+                STBVorbis.stb_vorbis_open_filename(path, error.buffer, null)
+                "audio file could not be loaded at \"$path\". error Nr. ${error.value}"
+            }
 
             // Retrieve the extra information that was stored in the buffers by the function
             val channels = channelsBuffer.get()

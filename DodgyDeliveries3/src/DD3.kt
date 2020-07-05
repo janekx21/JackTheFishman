@@ -3,8 +3,11 @@ import engine.Game
 import engine.Input
 import engine.Loader
 import engine.Time
+import engine.Window
 import engine.graphics.Mesh
 import engine.math.times
+import engine.graphics.Shader
+import engine.graphics.Texture2D
 import org.joml.Vector3f
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.opengl.GL11
@@ -25,6 +28,7 @@ class DD3 : Game() {
     }
 
     // private val diffuseShader = Loader.createViaPath(Shader, "shaders/default.shader")
+    private val logo = Texture2D.createViaPath("assets/engine/logo.png")
 
     /*
     CAMERA CONTROL:
@@ -91,13 +95,21 @@ class DD3 : Game() {
         }
 
         // GameObject: components.Camera
-        GameObject("components.Camera").also { gameObject ->
+        GameObject("Camera").also { gameObject ->
             gameObject.addComponent<Transform>()
+            gameObject.addComponent<AudioListener>()
             gameObject.transform.position.z = 0.5f
             Camera.main = gameObject.addComponent()
             Scene.active.spawn(gameObject)
             // TODO: add audio listener component
         }
+
+        Window.onResize = {
+            Camera.main?.getProjectionMatrix()?.identity()
+            Camera.main?.getProjectionMatrix()?.perspective(Math.toRadians(80.0).toFloat(), it.aspect, .1f, 10f)
+        }
+        Window.onResize(Window)
+        Window.setIcon(logo)
 
         GameObject("Light").also { gameObject ->
             gameObject.addComponent<Transform>()
