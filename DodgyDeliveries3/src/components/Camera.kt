@@ -1,3 +1,7 @@
+package components
+
+import Component
+import GameObject
 import engine.Window
 import org.joml.Matrix4f
 
