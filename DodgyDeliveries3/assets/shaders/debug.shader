@@ -10,7 +10,7 @@ void main() {
     normal = Normal;
 }
 
-    #fragment
+#fragment
 uniform vec3 LightDirection;
 uniform vec3 Color;
 

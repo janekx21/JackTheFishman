@@ -22,6 +22,7 @@ open class GameObject(val name: String) {
 
     fun addComponent(component: Component) {
         components.add(component)
+        component.onEnable()
         if (component is Transform) {
             cachedTransform = component
         }
@@ -38,9 +39,28 @@ open class GameObject(val name: String) {
 
     fun removeComponent(component: Component) {
         components.remove(component)
+        component.onDisable()
         if (component is Transform) {
             cachedTransform = null
         }
+    }
+
+    fun onEnable() {
+        for(component in components) {
+            component.onEnable()
+        }
+    }
+    fun onDisable() {
+        for(component in components) {
+            component.onDisable()
+        }
+    }
+
+    fun destroyAllComponents() {
+        for(component in components) {
+            component.onDisable()
+        }
+        components.clear()
     }
 
     inline fun <reified T : Component> getComponent(): T {
