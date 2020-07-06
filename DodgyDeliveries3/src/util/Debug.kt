@@ -53,8 +53,8 @@ object Debug {
                 for (sphere in spheres) {
                     debugShader.setUniform("Color", Vector3f(sphere.color))
                     val world = Transform(GameObject("tmp")).run {
-                        position.set(Vector3f(sphere.position))
-                        scale.set(Vector3f(sphere.radius))
+                        position = Vector3f(sphere.position)
+                        scale = Vector3f(sphere.radius)
                         generateMatrix()
                     }
                     check(Camera.main != null) { "Debugging needs a Camera" }
@@ -69,8 +69,8 @@ object Debug {
                 for (cube in cubes) {
                     debugShader.setUniform("Color", Vector3f(cube.color))
                     val world = Transform(GameObject("tmp")).run {
-                        position.set(Vector3f(cube.position))
-                        scale.set(Vector3f(cube.size))
+                        position = Vector3f(cube.position)
+                        scale = Vector3f(cube.size)
                         generateMatrix()
                     }
                     check(Camera.main != null) { "Debugging needs a Camera" }

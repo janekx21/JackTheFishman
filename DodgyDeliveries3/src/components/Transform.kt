@@ -2,14 +2,16 @@ package components
 
 import Component
 import GameObject
-import engine.math.Vector3fCopy
+import engine.math.Vector3fConst
 import org.joml.Matrix4f
 import org.joml.Quaternionf
+import org.joml.Quaternionfc
+import org.joml.Vector3fc
 
 class Transform(gameObject: GameObject) : Component(gameObject) {
-    val position = Vector3fCopy.zero
-    val rotation = Quaternionf()
-    val scale = Vector3fCopy.one
+    var position: Vector3fc = Vector3fConst.zero
+    var rotation: Quaternionfc = Quaternionf()
+    var scale: Vector3fc = Vector3fConst.one
     var parent: Transform? = null
 
     private var hash = 0

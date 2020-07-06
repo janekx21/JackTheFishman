@@ -2,6 +2,7 @@ package engine
 
 import engine.graphics.Texture2D
 import org.joml.Vector2i
+import org.joml.Vector2ic
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.glfw.GLFWImage
 import org.lwjgl.opengl.GL.createCapabilities
@@ -12,14 +13,14 @@ import java.io.Closeable
 
 
 object Window : Closeable {
-    val size = Vector2i(680, 460)
+    private var size: Vector2ic = Vector2i(680, 460)
     private const val title = "Jack the Fishman Framework"
     val shouldClose
         get() = glfwWindowShouldClose(pointer)
     val aspect: Float
-        get() = size.x.toFloat() / size.y.toFloat()
+        get() = size.x().toFloat() / size.y().toFloat()
     var onResize: (Window) -> Unit = {}
-    val pointer = glfwCreateWindow(size.x, size.y, title, 0, 0)
+    val pointer = glfwCreateWindow(size.x(), size.y(), title, 0, 0)
 
     private var lastTime = 0.0
 
@@ -47,8 +48,8 @@ object Window : Closeable {
         }
 
         glfwSetFramebufferSizeCallback(pointer) { _, width, height ->
-            size.set(width, height)
-            GL46.glViewport(0, 0, size.x, size.y)
+            size = Vector2i(width, height)
+            GL46.glViewport(0, 0, size.x(), size.y())
             onResize(this)
         }
 
