@@ -1,3 +1,7 @@
+package components
+
+import Component
+import GameObject
 import engine.Window
 import engine.math.Vector3fCopy
 import engine.math.clamp

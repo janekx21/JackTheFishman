@@ -83,7 +83,7 @@ class Game2 : Game() {
         rotation.rotateLocalX(Input.Mouse.deltaPosition.y * sensitivity)
 
         move.clamp(1f)
-        move.mul(Time.deltaTime * speed * -1)
+        move.mul(Time.deltaTime * speed)
         rotation.transformInverse(move)
         position.add(move)
 
