@@ -4,14 +4,15 @@ import engine.util.ICreateViaPath
 import engine.util.IUsable
 import engine.util.IntPointer
 import org.joml.Vector2i
+import org.joml.Vector2ic
 import org.lwjgl.BufferUtils
 import org.lwjgl.glfw.GLFWImage
 import org.lwjgl.opengl.GL46.*
 import org.lwjgl.stb.STBImage.*
 import java.nio.ByteBuffer
 
-class Texture2D(val size: Vector2i) : Texture(), IUsable {
-    private val texture = glGenTextures()
+class Texture2D(val size: Vector2ic) : Texture(), IUsable {
+    val texture = glGenTextures()
     private var internalData = ByteArray(0)
 
     init {
@@ -24,8 +25,8 @@ class Texture2D(val size: Vector2i) : Texture(), IUsable {
                 GL_TEXTURE_2D,
                 0,
                 GL_RGBA,
-                size.x,
-                size.y,
+                size.x(),
+                size.y(),
                 0,
                 GL_RGBA,
                 GL_UNSIGNED_BYTE,
@@ -39,19 +40,50 @@ class Texture2D(val size: Vector2i) : Texture(), IUsable {
         data.rewind()
     }
 
+    fun fillWithNull() {
+        use {
+            val n: ByteBuffer? = null
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, size.x(), size.y(), 0, GL_RGBA, GL_UNSIGNED_BYTE, n)
+        }
+    }
+
+    fun fillWithZeroDepth() {
+        use {
+            val n: ByteBuffer? = null
+            glTexImage2D(
+                GL_TEXTURE_2D,
+                0,
+                GL_DEPTH24_STENCIL8,
+                size.x(),
+                size.y(),
+                0,
+                GL_DEPTH_STENCIL,
+                GL_UNSIGNED_INT_24_8,
+                n
+            )
+        }
+    }
+
+    fun makeLinear() {
+        use {
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
+        }
+    }
+
     fun toGLFWImage(): GLFWImage {
         val image = GLFWImage.create()
-        val bb = BufferUtils.createByteBuffer(size.x * size.y * 4)
+        val bb = BufferUtils.createByteBuffer(size.x() * size.y() * 4)
         // copy and flip the image
-        for (i in 0 until size.x * size.y * 4) {
-            val x = i / 4 % size.x
-            val y = size.y - 1 - i / 4 / size.x // flip y
+        for (i in 0 until size.x() * size.y() * 4) {
+            val x = i / 4 % size.x()
+            val y = size.y() - 1 - i / 4 / size.x() // flip y
             val b = i % 4
 
-            bb.put(i, internalData[(x + y * size.x) * 4 + b])
+            bb.put(i, internalData[(x + y * size.x()) * 4 + b])
         }
 
-        image.set(size.x, size.y, bb)
+        image.set(size.x(), size.y(), bb)
         return image
     }
 
