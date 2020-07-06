@@ -10,10 +10,11 @@ import engine.math.times
 import org.joml.Vector3f
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.opengl.GL11
-import org.lwjgl.opengl.GL11.*
+import org.lwjgl.opengl.GL11.glCullFace
+import org.lwjgl.opengl.GL11.glEnable
 import org.lwjgl.opengl.GL11C.GL_BACK
 import org.lwjgl.opengl.GL11C.GL_CULL_FACE
-import org.lwjgl.opengl.GL46
+import util.ColorPalette
 import util.Debug
 
 fun main() {
@@ -43,18 +44,7 @@ class DD3 : Game() {
 
     init {
         // set default texture color to white
-        glBindTexture(GL_TEXTURE_2D, 0)
-        GL46.glTexImage2D(
-            GL46.GL_TEXTURE_2D,
-            0,
-            GL46.GL_RGB,
-            1,
-            1,
-            0,
-            GL46.GL_RGB,
-            GL46.GL_UNSIGNED_BYTE,
-            intArrayOf(0xffffff)
-        )
+        Texture2D.setDefaultTextureWhite()
 
         glCullFace(GL_BACK)
         glEnable(GL_CULL_FACE)
@@ -118,7 +108,7 @@ class DD3 : Game() {
         GameObject("Light").also { gameObject ->
             gameObject.addComponent<Transform>()
             gameObject.addComponent<PointLight>().apply {
-                color = Vector3f(1f, .5f, .5f) * 2f
+                color = Vector3f(ColorPalette.BLUE) * 2f
             }
             Scene.active.spawn(gameObject)
         }
@@ -129,7 +119,7 @@ class DD3 : Game() {
             }
 
             gameObject.addComponent<PointLight>().apply {
-                color = Vector3f(.5f, 1f, .5f) * 1f
+                color = Vector3f(ColorPalette.ORANGE) * 1f
             }
             Scene.active.spawn(gameObject)
         }
