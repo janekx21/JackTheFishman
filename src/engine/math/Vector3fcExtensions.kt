@@ -25,6 +25,10 @@ operator fun Vector3fc.plus(other: Vector3fc): Vector3fc {
     return Vector3f(this).add(other)
 }
 
+operator fun Vector3fc.minus(other: Vector3fc): Vector3fc {
+    return Vector3f(this).sub(other)
+}
+
 operator fun Vector3fc.unaryMinus(): Vector3fc {
     return Vector3f(this).negate()
 }
