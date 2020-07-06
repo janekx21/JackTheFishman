@@ -53,9 +53,13 @@ void main() {
 
     light += fresnel * FresnelIntensity + AmbientColor;
 
-    float distance = distance(position, CameraPosition) / FogDistance;
-    distance = log(distance);
-    light = mix(light, FogColor, max(min(distance, 1), 0));
+    float distance = distance(position, CameraPosition);
+    distance = clamp(distance / 100, 0, 1);
+    float density = 5;
+    float gradient = 1.5;
+    float fogIntensity = 1 - exp(-pow((distance * density), gradient));
+
+    light = mix(light, FogColor, fogIntensity);
 
     outColor = vec4(light, 1);
 }
