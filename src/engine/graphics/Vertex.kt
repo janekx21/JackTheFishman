@@ -2,23 +2,37 @@ package engine.graphics
 
 import org.joml.Vector2f
 import org.joml.Vector3f
+import org.joml.Vector3fc
 
 import org.lwjgl.opengl.GL46
 import org.lwjgl.opengl.GL46.GL_FLOAT
 
-data class Vertex(val position: Vector3f, val uv: Vector2f, val normal: Vector3f) {
+data class Vertex(val position: Vector3f, val uv: Vector2f, val normal: Vector3f, val tangent: Vector3fc) {
 
     data class Attribute(val name: String, val size: Int, val type: Int)
 
     fun toBuffer(): List<Float> {
-        return listOf(position.x, position.y, position.z, uv.x, uv.y, normal.x, normal.y, normal.z)
+        return listOf(
+            position.x,
+            position.y,
+            position.z,
+            uv.x,
+            uv.y,
+            normal.x,
+            normal.y,
+            normal.z,
+            tangent.x(),
+            tangent.y(),
+            tangent.z()
+        )
     }
 
     companion object {
         private val attributes = arrayOf(
             Attribute("Position", 3, GL_FLOAT),
             Attribute("UV", 2, GL_FLOAT),
-            Attribute("Normal", 3, GL_FLOAT)
+            Attribute("Normal", 3, GL_FLOAT),
+            Attribute("Tangent", 3, GL_FLOAT)
         )
         private const val floatSize = 4
 

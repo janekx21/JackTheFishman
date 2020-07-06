@@ -1,6 +1,7 @@
 package engine.graphics
 
 import engine.math.toMatrix4f
+import engine.math.toVector3f
 import engine.util.ICreateViaPath
 import engine.util.IDrawable
 import engine.util.IUsable
@@ -44,7 +45,7 @@ class Mesh(private val data: Array<Vertex>) : IDrawable, IUsable {
     companion object : ICreateViaPath<Mesh> {
         override fun createViaPath(path: String): Mesh {
             val scene =
-                Assimp.aiImportFile(path, Assimp.aiProcess_Triangulate or Assimp.aiProcess_GenNormals)
+                Assimp.aiImportFile(path, Assimp.aiProcess_Triangulate or Assimp.aiProcess_GenNormals or Assimp.aiProcess_CalcTangentSpace)
             check(scene != null) { Assimp.aiGetErrorString()!! }
 
             val root = scene.mRootNode()!!
@@ -73,11 +74,14 @@ class Mesh(private val data: Array<Vertex>) : IDrawable, IUsable {
                             val uv = mesh.mTextureCoords(0)?.get(index)
                             check(uv != null) { "no uv provided" }
                             val normal = mesh.mNormals()?.get(index)
+                            val tangent = mesh.mTangents()?.get(index)
                             check(normal != null) { "no normal provided" }
+                            check(tangent != null) { "no tangent provided" }
                             val vertex = Vertex(
                                 Vector3f(vec.x(), vec.y(), vec.z()),
                                 Vector2f(uv.x(), uv.y()),
-                                Vector3f(normal.x(), normal.y(), normal.z())
+                                Vector3f(normal.x(), normal.y(), normal.z()),
+                                Vector3f(tangent.toVector3f()).mulTransposeDirection(mat)
                             )
                             vertex.position.mulTransposePosition(mat)
                             vertex.normal.mulTransposeDirection(mat)
