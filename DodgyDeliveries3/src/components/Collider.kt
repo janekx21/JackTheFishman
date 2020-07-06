@@ -23,7 +23,7 @@ abstract class Collider(gameObject: GameObject) : Component(gameObject) {
     override fun update() {
         //set position to transforms position
         val bodyPosition = fixture.body.position.toVector2fc()
-        transform.position.set(Vector3f(bodyPosition.x(), 0f, bodyPosition.y()))
+        transform.position = Vector3f(bodyPosition.x(), 0f, bodyPosition.y())
     }
 
     override fun draw() {

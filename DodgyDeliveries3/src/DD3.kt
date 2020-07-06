@@ -3,10 +3,7 @@ import components.*
 import engine.*
 import engine.graphics.Mesh
 import engine.graphics.Texture2D
-import engine.math.Vector3fConst
-import engine.math.Vector3fCopy
-import engine.math.plusAssign
-import engine.math.times
+import engine.math.*
 import org.joml.Vector3f
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.opengl.GL11
@@ -61,7 +58,7 @@ class DD3 : Game() {
         // GameObject: Player
         GameObject("Object").also { gameObject ->
             gameObject.addComponent<Transform>().apply {
-                position.set(Vector3f(-10f, 0f, .5f))
+                position = Vector3f(-10f, 0f, .5f)
             }
             gameObject.addComponent<ModelRenderer>().apply {
                 mesh = Loader.createViaPath(Mesh, "models/monkey.fbx") // TODO: add player mesh
@@ -86,7 +83,7 @@ class DD3 : Game() {
         // GameObject: components.Camera
         GameObject("Camera").also { gameObject ->
             gameObject.addComponent<Transform>().apply {
-                position.z = .5f
+                position = Vector3f(0f, 0f, .5f)
             }
             gameObject.addComponent<AudioListener>()
             Camera.main = gameObject.addComponent()
@@ -95,8 +92,7 @@ class DD3 : Game() {
         }
 
         Window.onResize = {
-            Camera.main?.getProjectionMatrix()?.identity()
-            Camera.main?.getProjectionMatrix()?.perspective(Math.toRadians(90.0).toFloat(), it.aspect, .1f, 100f)
+            Camera.main!!.updateProjectionMatrix()
         }
         Window.onResize(Window)
         Window.setIcon(logo)
@@ -111,7 +107,7 @@ class DD3 : Game() {
 
         GameObject("Light").also { gameObject ->
             gameObject.addComponent<Transform>().apply {
-                position.set(Vector3f(0f, 0f, 10f))
+                position = Vector3f(0f, 0f, 10f)
             }
 
             gameObject.addComponent<PointLight>().apply {
@@ -145,7 +141,7 @@ class DD3 : Game() {
         if (move.lengthSquared() > 0) {
             move.normalize()
         }
-        Camera.main!!.transform.position += move * speed
+        Camera.main!!.transform.position = Camera.main!!.transform.position + move * speed
 
         Scene.active.update()
     }

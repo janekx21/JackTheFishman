@@ -14,7 +14,7 @@ import util.Debug
 class CircleCollider(gameObject: GameObject) : Collider(gameObject) {
     override val fixture: Fixture = Physics.world.createBody(BodyDef().apply {
         type = BodyType.DYNAMIC
-        position = Vec2(transform.position.x, transform.position.z)
+        position = Vec2(transform.position.x(), transform.position.z())
     }).createFixture(FixtureDef().apply {
         friction = .3f
         density = 1f
