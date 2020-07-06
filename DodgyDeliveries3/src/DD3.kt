@@ -10,10 +10,10 @@ import engine.math.times
 import org.joml.Vector3f
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.opengl.GL11
-import org.lwjgl.opengl.GL11.glCullFace
-import org.lwjgl.opengl.GL11.glEnable
+import org.lwjgl.opengl.GL11.*
 import org.lwjgl.opengl.GL11C.GL_BACK
 import org.lwjgl.opengl.GL11C.GL_CULL_FACE
+import org.lwjgl.opengl.GL46
 import util.Debug
 
 fun main() {
@@ -42,6 +42,20 @@ class DD3 : Game() {
 
 
     init {
+        // set default texture color to white
+        glBindTexture(GL_TEXTURE_2D, 0)
+        GL46.glTexImage2D(
+            GL46.GL_TEXTURE_2D,
+            0,
+            GL46.GL_RGB,
+            1,
+            1,
+            0,
+            GL46.GL_RGB,
+            GL46.GL_UNSIGNED_BYTE,
+            intArrayOf(0xffffff)
+        )
+
         glCullFace(GL_BACK)
         glEnable(GL_CULL_FACE)
 
@@ -151,7 +165,7 @@ class DD3 : Game() {
     }
 
     override fun draw() {
-        GL11.glClearColor(.5f, .5f, .5f, 1f)
+        GL11.glClearColor(.1f, .1f, .15f, 1f)
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT or GL11.GL_DEPTH_BUFFER_BIT)
 
         Scene.active.draw()
