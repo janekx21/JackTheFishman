@@ -1,12 +1,8 @@
 class HealthComponent(gameObject: GameObject) : Component(gameObject) {
 
-    var hp: Float
-        get() = hp
-        set(value) {hp = value}
+    var hp: Float = 0F
 
-    var maxHp: Float
-        get() = maxHp
-        set(value) {maxHp = value}
+    var maxHp: Float = 0F
 
     public fun takeDamage(dmg: Float){
         if (hp > 0){
@@ -17,10 +13,10 @@ class HealthComponent(gameObject: GameObject) : Component(gameObject) {
         }
     }
 
-    public fun heal(heal: Float){
-        if(hp < maxHp){
+    public fun heal(heal: Float) {
+        if(hp < maxHp) {
             hp += heal
-            if(hp > maxHp){
+            if(hp > maxHp) {
                 hp = maxHp
             }
         }
