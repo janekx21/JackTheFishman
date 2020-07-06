@@ -10,6 +10,7 @@ open class Game {
         GLFW.glfwDefaultWindowHints() // optional, the current window hints are already the default
         Window // init window
         Audio
+        Physics
     }
 
     open fun update() {}
@@ -20,6 +21,7 @@ open class Game {
             while (!Window.shouldClose) {
                 Window.update()
                 Input.update()
+            Physics.update()
 
                 update()
                 draw()
