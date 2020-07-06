@@ -3,13 +3,23 @@ package components
 import Component
 import GameObject
 import engine.Window
-import org.joml.Matrix4f
-import org.joml.Matrix4fc
+import engine.math.Vector3fCopy
+import engine.math.minus
+import engine.math.plus
+import engine.math.times
+import org.joml.*
 
 class Camera(gameObject: GameObject) : Component(gameObject) {
     private var matrix: Matrix4fc = Matrix4f().perspective(Math.toRadians(90.0).toFloat(), Window.aspect, .1f, 100f)
     private var hash = 0
     private var cached: Matrix4fc = Matrix4f()
+
+    var follow: Transform? = null
+
+    var distance: Float = 0F
+
+    var relativeRotation: Vector3f = Vector3f().zero()
+    var smoothAmount: Float = 0F
 
     override fun update() {}
 
@@ -34,6 +44,14 @@ class Camera(gameObject: GameObject) : Component(gameObject) {
 
     private fun getMatrixHash(): Int {
         return gameObject.transform.getMatrixHash()
+    }
+
+    private fun smoothFollow() {
+        if(follow != null){
+            val pointToFollow = follow!!.position + relativeRotation.normalize(1F) * distance
+            transform.position = Vector3f(transform.position).lerp(pointToFollow, smoothAmount)
+            transform.rotation = (Quaternionf().identity().lookAlong((follow!!.position - transform.position), Vector3fCopy.up))
+        }
     }
 
     companion object {
