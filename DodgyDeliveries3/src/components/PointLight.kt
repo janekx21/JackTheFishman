@@ -4,6 +4,7 @@ import Component
 import GameObject
 import org.joml.Vector3f
 import org.joml.Vector3fc
+import util.Debug
 
 class PointLight(gameObject: GameObject) : Component(gameObject) {
 
@@ -13,6 +14,9 @@ class PointLight(gameObject: GameObject) : Component(gameObject) {
     }
 
     override fun draw() {
+        if(Debug.active) {
+            Debug.drawWiredSphere(transform.position, .1f, color)
+        }
     }
 
     override fun onEnable() {
