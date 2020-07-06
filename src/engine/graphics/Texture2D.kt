@@ -7,12 +7,13 @@ import org.joml.Vector2i
 import org.joml.Vector2ic
 import org.lwjgl.BufferUtils
 import org.lwjgl.glfw.GLFWImage
+import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL46.*
 import org.lwjgl.stb.STBImage.*
 import java.nio.ByteBuffer
 
 class Texture2D(val size: Vector2ic) : Texture(), IUsable {
-    private val texture = glGenTextures()
+    val texture = glGenTextures()
     private var internalData = ByteArray(0)
 
     init {
@@ -38,6 +39,37 @@ class Texture2D(val size: Vector2ic) : Texture(), IUsable {
         internalData = ByteArray(data.remaining())
         data.get(internalData)
         data.rewind()
+    }
+
+    fun fillWithNull() {
+        use {
+            val n: ByteBuffer? = null
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, size.x(), size.y(), 0, GL_RGBA, GL_UNSIGNED_BYTE, n)
+        }
+    }
+
+    fun fillWithZeroDepth() {
+        use {
+            val n: ByteBuffer? = null
+            glTexImage2D(
+                GL_TEXTURE_2D,
+                0,
+                GL_DEPTH24_STENCIL8,
+                size.x(),
+                size.y(),
+                0,
+                GL_DEPTH_STENCIL,
+                GL_UNSIGNED_INT_24_8,
+                n
+            )
+        }
+    }
+
+    fun makeLinear() {
+        use {
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
+        }
     }
 
     fun toGLFWImage(): GLFWImage {
@@ -87,6 +119,22 @@ class Texture2D(val size: Vector2ic) : Texture(), IUsable {
 
             stbi_image_free(data)
             return texture
+        }
+
+        fun setDefaultTextureWhite() {
+            GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0)
+            glTexImage2D(
+                GL_TEXTURE_2D,
+                0,
+                GL_RGB,
+                1,
+                1,
+                0,
+                GL_RGB,
+                GL_UNSIGNED_BYTE,
+                intArrayOf(0xffffff)
+            )
+
         }
     }
 }
