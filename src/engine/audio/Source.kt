@@ -1,12 +1,16 @@
 package engine.audio
 
 import engine.math.Vector3fCopy
+import engine.math.Vector3fExt
+import engine.math.toJson
+import engine.util.IJsonSerializable
+import engine.util.IJsonUnserializable
 import org.joml.Vector3f
 import org.lwjgl.openal.AL10.*
 import org.lwjgl.openal.AL11.AL_SEC_OFFSET
 import java.io.Closeable
 
-class Source(sample: Sample? = null) : Closeable, IPlayable {
+class Source(sample: Sample? = null) : Closeable, IPlayable, IJsonSerializable {
     private val sourcePointer = alGenSources()
     var sample: Sample? = sample
         set(value) {
@@ -58,12 +62,66 @@ class Source(sample: Sample? = null) : Closeable, IPlayable {
         alSourceStop(sourcePointer)
     }
 
-    override val time: Float
+    override var time: Float
+        set(value) = alSourcef(sourcePointer, AL_SEC_OFFSET, value)
         get() = alGetSourcef(sourcePointer, AL_SEC_OFFSET)
+
+    private val alState: Int
+        get() = alGetSourcei(sourcePointer, AL_SOURCE_STATE)
+
     override val playing: Boolean
-        get() = alGetSourcei(sourcePointer, AL_SOURCE_STATE) == AL_PLAYING
+        get() = alState == AL_PLAYING
 
     override fun close() {
         alDeleteSources(sourcePointer)
+    }
+
+    override fun toJson(): Any? {
+        return mapOf(
+            "sample" to sample?.toJson(),
+            "pitch" to pitch,
+            "gain" to gain,
+            "position" to position.toJson(),
+            "velocity" to velocity.toJson(),
+            "looping" to looping,
+            "time" to time,
+            "alState" to alState
+        )
+    }
+
+    companion object : IJsonUnserializable<Source> {
+        override fun fromJson(json: Any?): Source {
+            val map = json as Map<*, *>
+
+            val source = Source(
+                if (map["sample"] != null) {
+                    Sample.fromJson(map["sample"])
+                } else {
+                    null
+                }
+            )
+
+            source.pitch = (map["pitch"] as Double).toFloat()
+            source.gain = (map["gain"] as Double).toFloat()
+            source.position = Vector3fExt.fromJson(map["position"])
+            source.velocity = Vector3fExt.fromJson(map["velocity"])
+            source.looping = map["looping"] as Boolean
+
+            when {
+                map["alState"] == AL_PLAYING -> {
+                    source.time = (map["time"] as Double).toFloat()
+                    source.play()
+                }
+                map["alState"] == AL_PAUSED -> {
+                    source.pause()
+                    source.time = (map["time"] as Double).toFloat()
+                }
+                map["alState"] == AL_STOPPED -> {
+                    source.stop()
+                }
+            }
+
+            return source
+        }
     }
 }

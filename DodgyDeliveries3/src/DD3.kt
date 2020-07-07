@@ -101,7 +101,6 @@ class DD3 : Game() {
             gameObject.transform.position.z = 0.5f
             Camera.main = gameObject.addComponent()
             Scene.active.spawn(gameObject)
-            // TODO: add audio listener component
         }
 
         Window.onResize = {
@@ -138,22 +137,22 @@ class DD3 : Game() {
             speed *= 5f
         }
         if (Input.Keyboard.down(GLFW_KEY_D)) {
-            Scene.active.findViaName("components.Camera").transform.position.x += speed
+            Scene.active.findViaName("Camera").transform.position.x += speed
         }
         if (Input.Keyboard.down(GLFW_KEY_A)) {
-            Scene.active.findViaName("components.Camera").transform.position.x -= speed
+            Scene.active.findViaName("Camera").transform.position.x -= speed
         }
         if (Input.Keyboard.down(GLFW_KEY_S)) {
-            Scene.active.findViaName("components.Camera").transform.position.z += speed
+            Scene.active.findViaName("Camera").transform.position.z += speed
         }
         if (Input.Keyboard.down(GLFW_KEY_W)) {
-            Scene.active.findViaName("components.Camera").transform.position.z -= speed
+            Scene.active.findViaName("Camera").transform.position.z -= speed
         }
         if (Input.Keyboard.down(GLFW_KEY_SPACE)) {
-            Scene.active.findViaName("components.Camera").transform.position.y += speed
+            Scene.active.findViaName("Camera").transform.position.y += speed
         }
         if (Input.Keyboard.down(GLFW_KEY_LEFT_CONTROL)) {
-            Scene.active.findViaName("components.Camera").transform.position.y -= speed
+            Scene.active.findViaName("Camera").transform.position.y -= speed
         }
 
         // val player = Scene.active.findViaName("Player")
