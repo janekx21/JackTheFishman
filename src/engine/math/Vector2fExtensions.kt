@@ -43,10 +43,6 @@ fun Vector2f.toJson(): Any? {
     return arrayOf(this.x, this.y)
 }
 
-fun Vector2fc.toJson(): Any? {
-    return arrayOf(this.x(), this.y())
-}
-
 /// Gibt leider keine statischen extension-methods. Deswegen müssen wir hier
 /// [this] mutieren (Anstatt einen neuen Vektor mit den JSON-Daten in [json] zu erzeugen)
 fun Vector2f.fromJson(json: Any?) {

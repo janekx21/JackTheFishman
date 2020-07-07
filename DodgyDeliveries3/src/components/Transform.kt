@@ -3,7 +3,6 @@ package components
 import Component
 import GameObject
 import engine.math.QuaternionfExt
-import engine.math.Vector3fCopy
 import engine.math.Vector3fExt
 import engine.math.toJson
 import engine.math.Vector3fConst

@@ -51,10 +51,6 @@ fun Vector3f.toJson(): Any? {
     )
 }
 
-fun Vector3fc.toJson(): Any? {
-    return arrayOf(this.x(), this.y(), this.z())
-}
-
 object Vector3fExt : IJsonUnserializable<Vector3f> {
     override fun fromJson(json: Any?): Vector3f {
         val list = json as List<*>
