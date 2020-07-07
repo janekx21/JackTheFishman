@@ -3,10 +3,10 @@ package engine.graphics
 import engine.util.ICreateViaPath
 import engine.util.IUsable
 import engine.util.IntPointer
-
 import org.joml.Matrix4f
-import org.joml.Vector3f
-import org.joml.Vector4f
+import org.joml.Matrix4fc
+import org.joml.Vector3fc
+import org.joml.Vector4fc
 import org.lwjgl.opengl.GL20
 import org.lwjgl.opengl.GL46.*
 import java.io.File
@@ -25,18 +25,18 @@ class Shader(val vertexCode: String, val fragmentCode: String, private val path:
         glUseProgram(0)
     }
 
-    fun setUniform(name: String, value: Vector3f) {
-        glProgramUniform3f(program, getUniformLocation(name), value.x, value.y, value.z)
+    fun setUniform(name: String, value: Vector3fc) {
+        glProgramUniform3f(program, getUniformLocation(name), value.x(), value.y(), value.z())
     }
 
-    fun setUniform(name: String, value: Matrix4f) {
+    fun setUniform(name: String, value: Matrix4fc) {
         val buffer = FloatArray(16)
         value.get(buffer)
         glProgramUniformMatrix4fv(program, getUniformLocation(name), false, buffer)
     }
 
-    fun setUniform(name: String, value: Vector4f) {
-        glProgramUniform4f(program, getUniformLocation(name), value.x, value.y, value.z, value.w)
+    fun setUniform(name: String, value: Vector4fc) {
+        glProgramUniform4f(program, getUniformLocation(name), value.x(), value.y(), value.z(), value.w())
     }
 
     fun setUniform(name: String, value: Texture) {
@@ -52,7 +52,7 @@ class Shader(val vertexCode: String, val fragmentCode: String, private val path:
         return uniformLocations.getOrDefault(name, GL20.glGetUniformLocation(program, name))
     }
 
-    fun setMatrix(world: Matrix4f, view: Matrix4f, projection: Matrix4f) {
+    fun setMatrix(world: Matrix4fc, view: Matrix4fc, projection: Matrix4fc) {
         val mvp = Matrix4f(projection).mul(view).mul(world)
         setUniform(worldAttributeName, world)
         setUniform(viewAttributeName, view)

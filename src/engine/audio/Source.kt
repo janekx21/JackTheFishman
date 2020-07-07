@@ -3,14 +3,18 @@ package engine.audio
 import engine.math.Vector3fCopy
 import org.joml.Vector3f
 import org.lwjgl.openal.AL10.*
+import org.lwjgl.openal.AL11.AL_SEC_OFFSET
 import java.io.Closeable
 
-class Source(sample: Sample) : Closeable {
+class Source(sample: Sample? = null) : Closeable, IPlayable {
     private val sourcePointer = alGenSources()
-
-    init {
-        alSourcei(sourcePointer, AL_BUFFER, sample.bufferPointer)
-    }
+    var sample: Sample? = sample
+        set(value) {
+            if (value != null) {
+                alSourcei(sourcePointer, AL_BUFFER, value.bufferPointer)
+            }
+            field = value
+        }
 
     var pitch: Float = 1.0f
         set(value) {
@@ -42,9 +46,22 @@ class Source(sample: Sample) : Closeable {
             field = value
         }
 
-    fun play() {
+    override fun play() {
         alSourcePlay(sourcePointer)
     }
+
+    override fun pause() {
+        alSourcePause(sourcePointer)
+    }
+
+    override fun stop() {
+        alSourceStop(sourcePointer)
+    }
+
+    override val time: Float
+        get() = alGetSourcef(sourcePointer, AL_SEC_OFFSET)
+    override val playing: Boolean
+        get() = alGetSourcei(sourcePointer, AL_SOURCE_STATE) == AL_PLAYING
 
     override fun close() {
         alDeleteSources(sourcePointer)

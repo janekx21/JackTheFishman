@@ -1,7 +1,9 @@
 package engine.math
 
 import engine.util.IJsonUnserializable
+import org.joml.Vector2fc
 import org.joml.Vector3f
+import org.joml.Vector3fc
 
 fun Vector3f.clamp(value: Float) {
     if (lengthSquared() > 0) {
@@ -43,6 +45,10 @@ fun Vector3f.toJson(): Any? {
     return arrayOf(
         this.x, this.y, this.z
     )
+}
+
+fun Vector3fc.toJson(): Any? {
+    return arrayOf(this.x(), this.y(), this.z())
 }
 
 object Vector3fExt : IJsonUnserializable<Vector3f> {

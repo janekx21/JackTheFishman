@@ -1,7 +1,9 @@
 package engine.math
 
 import org.joml.Vector2f
+import org.joml.Vector2fc
 import org.joml.Vector3f
+import org.joml.Vector3fc
 
 fun Vector2f.clamp(value: Float) {
     if (lengthSquared() > 0) {
@@ -40,9 +42,11 @@ operator fun Vector2f.unaryMinus(): Vector2f {
 }
 
 fun Vector2f.toJson(): Any? {
-    return arrayOf(
-        this.x, this.y
-    )
+    return arrayOf(this.x, this.y)
+}
+
+fun Vector2fc.toJson(): Any? {
+    return arrayOf(this.x(), this.y())
 }
 
 /// Gibt leider keine statischen extension-methods. Deswegen müssen wir hier

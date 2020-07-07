@@ -6,6 +6,7 @@ class Scene {
     private val allGameObjects = arrayListOf<GameObject>()
 
     fun spawn(go: GameObject) {
+        go.onEnable()
         allGameObjects.add(go)
     }
 
@@ -16,6 +17,8 @@ class Scene {
     }
 
     fun destroy(go: GameObject) {
+        go.destroyAllComponents()
+        go.onDisable()
         allGameObjects.remove(go)
     }
 

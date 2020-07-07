@@ -64,7 +64,7 @@ object Window : Closeable {
         val time = glfwGetTime()
         glfwSwapBuffers(pointer)
         glfwPollEvents()
-        Time.update((lastTime - time).toFloat())
+        Time.update((time - lastTime).toFloat())
         lastTime = time
     }
 

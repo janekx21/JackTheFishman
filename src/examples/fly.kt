@@ -44,9 +44,6 @@ class Game2 : Game() {
         }
         Window.onResize(Window)
         Window.setIcon(logo)
-
-        // world.translate(0f, 0f, -3f)
-        Audio.playExample()
     }
 
 
@@ -86,7 +83,7 @@ class Game2 : Game() {
         rotation.rotateLocalX(Input.Mouse.deltaPosition.y * sensitivity)
 
         move.clamp(1f)
-        move.mul(Time.deltaTime * speed * -1)
+        move.mul(Time.deltaTime * speed)
         rotation.transformInverse(move)
         position.add(move)
 

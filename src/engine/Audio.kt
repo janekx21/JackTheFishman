@@ -1,6 +1,5 @@
 package engine
 
-import engine.audio.Sample
 import engine.math.Vector3fCopy
 import engine.util.IFinalized
 import org.joml.Quaternionf
@@ -37,13 +36,6 @@ object Audio : IFinalized {
         alListener3f(AL_POSITION, 0f, 0f, 1f)
         alListener3f(AL_VELOCITY, 0f, 0f, 0f)
         alListenerfv(AL_ORIENTATION, floatArrayOf(0f, 0f, 1f, 0f, 1f, 0f))
-    }
-
-    fun playExample() {
-        val sample = Sample.createViaPath("assets/examples/sounds/ghost.ogg")
-        sample.position = Vector3fCopy.zero
-        sample.looping = true
-        sample.play()
     }
 
     override fun finalize() {

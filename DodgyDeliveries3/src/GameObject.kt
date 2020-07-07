@@ -1,8 +1,7 @@
 import engine.Game
 import engine.util.IJsonSerializable
 import engine.util.IJsonUnserializable
-import kotlin.reflect.full.companionObject
-import kotlin.reflect.full.companionObjectInstance
+import components.Transform
 import kotlin.reflect.full.primaryConstructor
 
 open class GameObject(val name: String) : IJsonSerializable {
@@ -26,12 +25,14 @@ open class GameObject(val name: String) : IJsonSerializable {
 
     fun addComponent(component: Component) {
         components.add(component)
+        component.onEnable()
         if (component is Transform) {
             cachedTransform = component
         }
     }
 
     inline fun <reified T : Component> addComponent(): T {
+        check(T::class.primaryConstructor != null) { "you need a primary constructor" }
         val component = T::class.primaryConstructor!!.call(this)
         addComponent(component)
         return component
@@ -39,9 +40,28 @@ open class GameObject(val name: String) : IJsonSerializable {
 
     fun removeComponent(component: Component) {
         components.remove(component)
+        component.onDisable()
         if (component is Transform) {
             cachedTransform = null
         }
+    }
+
+    fun onEnable() {
+        for(component in components) {
+            component.onEnable()
+        }
+    }
+    fun onDisable() {
+        for(component in components) {
+            component.onDisable()
+        }
+    }
+
+    fun destroyAllComponents() {
+        for(component in components) {
+            component.onDisable()
+        }
+        components.clear()
     }
 
     inline fun <reified T : Component> getComponent(): T {
