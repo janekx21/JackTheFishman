@@ -27,6 +27,13 @@ class ModelRenderer(gameObject: GameObject) : Renderer(gameObject) {
                 shader.setUniform("LightPositions[$index]", light.transform.position)
                 shader.setUniform("LightColors[$index]", Vector3f(light.color))
             }
+            shader.setUniform("CameraPosition", Camera.main!!.transform.position)
+            shader.setUniform("SpecularIntensity", .5f)
+            shader.setUniform("SpecularRoughness", 40f)
+            shader.setUniform("FresnelIntensity", .6f)
+            shader.setUniform("FogDistance", 10f)
+            shader.setUniform("FogColor", Vector3f(.1f, .1f, .15f))
+            shader.setUniform("AmbientColor", Vector3f(.1f, .1f, .1f))
             shader.use {
                 mesh?.draw()
             }

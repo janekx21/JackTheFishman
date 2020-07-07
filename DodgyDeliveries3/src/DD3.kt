@@ -1,13 +1,9 @@
+
 import components.*
-import engine.Game
-import engine.Input
-import engine.Loader
-import engine.Time
-import engine.Window
+import engine.*
 import engine.graphics.Mesh
-import engine.math.times
-import engine.graphics.Shader
 import engine.graphics.Texture2D
+import engine.math.*
 import org.joml.Vector3f
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.opengl.GL11
@@ -15,6 +11,7 @@ import org.lwjgl.opengl.GL11.glCullFace
 import org.lwjgl.opengl.GL11.glEnable
 import org.lwjgl.opengl.GL11C.GL_BACK
 import org.lwjgl.opengl.GL11C.GL_CULL_FACE
+import util.ColorPalette
 import util.Debug
 
 fun main() {
@@ -27,59 +24,53 @@ class DD3 : Game() {
         Loader.root = "DodgyDeliveries3/assets"
     }
 
-    // private val diffuseShader = Loader.createViaPath(Shader, "shaders/default.shader")
     private val logo = Texture2D.createViaPath("assets/engine/logo.png")
 
     /*
-    CAMERA CONTROL:
-    UP: SPACE
-    DOWN: LEFT CONTROL
-    LEFT: A
-    RIGHT: D
-    FORWARD: W
-    BACKWARD: S
+    Camera Control:
+    up: space
+    down: left control
+    left: a
+    right: d
+    forward: w
+    backward: s
 
-    PRESS SHIFT FOR SPEED BOOST
+    press shift for speed boost
      */
 
 
     init {
+        // set default texture color to white
+        Texture2D.setDefaultTextureWhite()
+
         glCullFace(GL_BACK)
         glEnable(GL_CULL_FACE)
-        // diffuseShader.setUniform("LightPositions[0]", Vector3f(0f, 0f, -8f))
-        // diffuseShader.setUniform("LightColors[0]", Vector3f(1f, .6f, .5f) * 5f)
 
         // GameObject: Player
         GameObject("Player").also { gameObject ->
             gameObject.addComponent<Transform>()
-            gameObject.addComponent<ModelRenderer>().also {
-                it.mesh = Loader.createViaPath(Mesh, "models/monkey.fbx") // TODO: add player mesh
-                // it.shader = diffuseShader
+            gameObject.addComponent<ModelRenderer>().apply {
+                mesh = Loader.createViaPath(Mesh, "models/monkey.fbx") // TODO: add player mesh
             }
-            gameObject.addComponent<CircleCollider>().also {
-                it.velocity = Vector2fCopy.left * 1f
+            gameObject.addComponent<CircleCollider>().apply {
+                velocity = Vector2fCopy.left * 1f
             }
             // TODO: add player controller when ready
-            // gameObject.transform.scale.mul(0.1f)
-            // gameObject.transform.position.x += 5f
             Scene.active.spawn(gameObject)
         }
 
         // GameObject: Player
         GameObject("Object").also { gameObject ->
-            gameObject.addComponent<Transform>().also {
-                it.position.set(Vector3f(-10f, 0f, .5f))
+            gameObject.addComponent<Transform>().apply {
+                position = Vector3f(-10f, 0f, .5f)
             }
-            gameObject.addComponent<ModelRenderer>().also {
-                it.mesh = Loader.createViaPath(Mesh, "models/monkey.fbx") // TODO: add player mesh
-                // it.shader = diffuseShader
+            gameObject.addComponent<ModelRenderer>().apply {
+                mesh = Loader.createViaPath(Mesh, "models/monkey.fbx") // TODO: add player mesh
             }
-            gameObject.addComponent<BoxCollider>().also {
-                it.velocity = Vector2fCopy.right * 1f
+            gameObject.addComponent<BoxCollider>().apply {
+                velocity = Vector2fCopy.right * 1f
             }
             // TODO: add player controller when ready
-            // gameObject.transform.scale.mul(0.1f)
-            // gameObject.transform.position.x += 5f
             Scene.active.spawn(gameObject)
         }
 
@@ -87,44 +78,43 @@ class DD3 : Game() {
         // GameObject: Tunnel
         GameObject("Tunnel").also { gameObject ->
             gameObject.addComponent<Transform>()
-            gameObject.addComponent<ModelRenderer>().also {
-                it.mesh = Loader.createViaPath(Mesh, "models/tunnel.fbx")
-                // it.shader = diffuseShader
+            gameObject.addComponent<ModelRenderer>().apply {
+                mesh = Loader.createViaPath(Mesh, "models/tunnel.fbx")
             }
             Scene.active.spawn(gameObject)
         }
 
         // GameObject: components.Camera
         GameObject("Camera").also { gameObject ->
-            gameObject.addComponent<Transform>()
+            gameObject.addComponent<Transform>().apply {
+                position = Vector3f(0f, 0f, .5f)
+            }
             gameObject.addComponent<AudioListener>()
-            gameObject.transform.position.z = 0.5f
             Camera.main = gameObject.addComponent()
             Scene.active.spawn(gameObject)
         }
 
         Window.onResize = {
-            Camera.main?.getProjectionMatrix()?.identity()
-            Camera.main?.getProjectionMatrix()?.perspective(Math.toRadians(80.0).toFloat(), it.aspect, .1f, 10f)
+            Camera.main!!.updateProjectionMatrix()
         }
         Window.onResize(Window)
         Window.setIcon(logo)
 
         GameObject("Light").also { gameObject ->
             gameObject.addComponent<Transform>()
-            gameObject.addComponent<PointLight>().also {
-                it.color = Vector3f(1f, .5f, .5f) * 2f
+            gameObject.addComponent<PointLight>().apply {
+                color = Vector3f(ColorPalette.BLUE) * 2f
             }
             Scene.active.spawn(gameObject)
         }
 
         GameObject("Light").also { gameObject ->
             gameObject.addComponent<Transform>().apply {
-                position.set(Vector3f(0f, 0f, 10f))
+                position = Vector3f(2f, 0f, 10f)
             }
 
-            gameObject.addComponent<PointLight>().also {
-                it.color = Vector3f(.5f, 1f, .5f) * 1f
+            gameObject.addComponent<PointLight>().apply {
+                color = Vector3f(ColorPalette.ORANGE) * 1f
             }
             Scene.active.spawn(gameObject)
         }
@@ -136,33 +126,31 @@ class DD3 : Game() {
         if (Input.Keyboard.down(GLFW_KEY_LEFT_SHIFT)) {
             speed *= 5f
         }
-        if (Input.Keyboard.down(GLFW_KEY_D)) {
-            Scene.active.findViaName("Camera").transform.position.x += speed
-        }
-        if (Input.Keyboard.down(GLFW_KEY_A)) {
-            Scene.active.findViaName("Camera").transform.position.x -= speed
-        }
-        if (Input.Keyboard.down(GLFW_KEY_S)) {
-            Scene.active.findViaName("Camera").transform.position.z += speed
-        }
-        if (Input.Keyboard.down(GLFW_KEY_W)) {
-            Scene.active.findViaName("Camera").transform.position.z -= speed
-        }
-        if (Input.Keyboard.down(GLFW_KEY_SPACE)) {
-            Scene.active.findViaName("Camera").transform.position.y += speed
-        }
-        if (Input.Keyboard.down(GLFW_KEY_LEFT_CONTROL)) {
-            Scene.active.findViaName("Camera").transform.position.y -= speed
-        }
+        val keyToDirection = mapOf(
+            GLFW_KEY_D to Vector3fConst.right,
+            GLFW_KEY_A to Vector3fConst.left,
+            GLFW_KEY_W to Vector3fConst.forward,
+            GLFW_KEY_S to Vector3fConst.backwards,
+            GLFW_KEY_SPACE to Vector3fConst.up,
+            GLFW_KEY_LEFT_CONTROL to Vector3fConst.down
+        )
 
-        // val player = Scene.active.findViaName("Player")
-        // player.transform.position.set(player.getComponent<BoxCollider>().^)
+        val move = Vector3fCopy.zero
+        for ((key, direction) in keyToDirection) {
+            if (Input.Keyboard.down(key)) {
+                move += Vector3f(direction)
+            }
+        }
+        if (move.lengthSquared() > 0) {
+            move.normalize()
+        }
+        Camera.main!!.transform.position = Camera.main!!.transform.position + move * speed
 
         Scene.active.update()
     }
 
     override fun draw() {
-        GL11.glClearColor(.5f, .5f, .5f, 1f)
+        GL11.glClearColor(.1f, .1f, .15f, 1f)
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT or GL11.GL_DEPTH_BUFFER_BIT)
 
         Scene.active.draw()
