@@ -13,13 +13,18 @@ import java.io.Closeable
 
 
 object Window : Closeable {
-    private var size: Vector2ic = Vector2i(680, 460)
     private const val title = "Jack the Fishman Framework"
+
+    var size: Vector2ic = Vector2i(680, 460)
+
     val shouldClose
         get() = glfwWindowShouldClose(pointer)
+
     val aspect: Float
         get() = size.x().toFloat() / size.y().toFloat()
+
     var onResize: (Window) -> Unit = {}
+
     val pointer = glfwCreateWindow(size.x(), size.y(), title, 0, 0)
 
     private var lastTime = 0.0

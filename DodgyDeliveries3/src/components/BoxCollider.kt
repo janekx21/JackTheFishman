@@ -2,6 +2,7 @@ package components
 
 import GameObject
 import engine.Physics
+import engine.math.toJson
 import org.jbox2d.collision.shapes.PolygonShape
 import org.jbox2d.common.Vec2
 import org.jbox2d.dynamics.BodyDef
@@ -38,5 +39,15 @@ class BoxCollider(gameObject: GameObject) : Collider(gameObject) {
             super.draw()
             Debug.drawWiredCube(transform.position, Vector3f(size.x(), 0f, size.y()), Vector3f(1f, 0f, 1f))
         }
+    }
+
+    override fun toJson(): Any? {
+        return mapOf(
+            "size" to size.toJson()
+        )
+    }
+
+    override fun fromJson(json: Any?) {
+        TODO("Not yet implemented")
     }
 }

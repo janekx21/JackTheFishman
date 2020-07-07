@@ -1,3 +1,4 @@
+import engine.util.IJsonSerializable
 import components.Transform
 
 abstract class Component(val gameObject: GameObject) {
@@ -8,4 +9,8 @@ abstract class Component(val gameObject: GameObject) {
 
     val transform: Transform
         get() = gameObject.getComponent()
+
+    abstract fun toJson(): Any?
+
+    abstract fun fromJson(json: Any?)
 }

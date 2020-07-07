@@ -38,4 +38,16 @@ class CircleCollider(gameObject: GameObject) : Collider(gameObject) {
             Debug.drawWiredSphere(transform.position, 1f, Vector3f(1f, 0f, 1f))
         }
     }
+
+    override fun toJson(): Any? {
+        return mapOf(
+            "radius" to radius
+        )
+    }
+
+    override fun fromJson(json: Any?) {
+        val map = json as Map<*, *>
+
+        this.radius = (map["radius"] as Double).toFloat()
+    }
 }

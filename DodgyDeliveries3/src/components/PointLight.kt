@@ -2,6 +2,8 @@ package components
 
 import Component
 import GameObject
+import engine.math.Vector3fExt
+import engine.math.toJson
 import org.joml.Vector3f
 import org.joml.Vector3fc
 import util.Debug
@@ -26,6 +28,18 @@ class PointLight(gameObject: GameObject) : Component(gameObject) {
 
     override fun onDisable() {
         all.remove(this)
+    }
+
+    override fun toJson(): Any? {
+        return mapOf(
+            "color" to color.toJson()
+        )
+    }
+
+    override fun fromJson(json: Any?) {
+        val map = json as Map<*, *>
+
+        color = Vector3fExt.fromJson(map["color"])
     }
 
     companion object {

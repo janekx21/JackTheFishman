@@ -6,6 +6,8 @@ import engine.math.Vector3fCopy
 import org.joml.Vector3f
 
 class AudioComponent(gameObject: GameObject) : Component(gameObject), IPlayable {
+    private var source = Source()
+
     var sample: Sample? = null
         get() = source.sample
         set(value) {
@@ -13,12 +15,16 @@ class AudioComponent(gameObject: GameObject) : Component(gameObject), IPlayable 
             field = value
         }
 
-    private var source = Source()
-
     override fun play() = source.play()
+
     override fun pause() = source.pause()
+
     override fun stop() = source.stop()
-    override val time: Float get() = source.time
+
+    override var time: Float
+        set(value) { source.time = value }
+        get() = source.time
+
     override val playing: Boolean get() = source.playing
 
     override fun update() {
@@ -29,4 +35,16 @@ class AudioComponent(gameObject: GameObject) : Component(gameObject), IPlayable 
     }
 
     override fun draw() {}
+
+    override fun toJson(): Any? {
+        return mapOf(
+            "source" to source.toJson()
+        )
+    }
+
+    override fun fromJson(json: Any?) {
+        val map = json as Map<*, *>
+
+        source = Source.fromJson(map["source"]!!)
+    }
 }

@@ -92,7 +92,6 @@ class DD3 : Game() {
             gameObject.addComponent<AudioListener>()
             Camera.main = gameObject.addComponent()
             Scene.active.spawn(gameObject)
-            // TODO: add audio listener component
         }
 
         Window.onResize = {
