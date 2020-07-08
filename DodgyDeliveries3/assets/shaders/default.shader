@@ -4,15 +4,20 @@ uniform mat4 World;
 
 in vec3 Position;
 in vec3 Normal;
+in vec3 Tangent;
 in vec2 UV;
-out vec3 normal;
 out vec3 position;
 out vec2 uv;
+out mat3 TBN;
 
 void main() {
     gl_Position = MVP * vec4(Position, 1);
     position = vec3(World * vec4(Position, 1));
-    normal = Normal;
+
+    vec3 N = normalize(vec3(World * vec4(Normal, 0.0)));
+    vec3 T = normalize(vec3(World * vec4(Tangent, 0.0)));
+    vec3 B = cross(N, T);
+    TBN = mat3(T, B, N);
     uv = UV;
 }
 
@@ -28,13 +33,19 @@ uniform float FresnelIntensity;
 uniform vec3 FogColor;
 uniform float FogDistance;
 uniform vec3 AmbientColor;
+uniform sampler2D NormalTexture;
+uniform float NormalIntensity;
 
-in vec3 normal;
+in mat3 TBN;
 in vec3 position;
 in vec2 uv;
 out vec4 outColor;
 
 void main() {
+    vec3 normal = texture(NormalTexture, uv).xyz * 2 - 1;
+    normal.xy *= NormalIntensity;
+    normal = normalize(TBN * normal);
+
     vec3 light = vec3(0.0);
     vec3 viewDirection = normalize(position - CameraPosition);
     for (int i = 0; i < MAX_LIGHT_COUNT; i++) {
@@ -53,9 +64,13 @@ void main() {
 
     light += fresnel * FresnelIntensity + AmbientColor;
 
-    float distance = distance(position, CameraPosition) / FogDistance;
-    distance = log(distance);
-    light = mix(light, FogColor, max(min(distance, 1), 0));
+    float distance = distance(position, CameraPosition);
+    distance = clamp(distance / 100, 0, 1);
+    float density = 5;
+    float gradient = 1.5;
+    float fogIntensity = 1 - exp(-pow((distance * density), gradient));
+
+    light = mix(light, FogColor, fogIntensity);
 
     outColor = vec4(light, 1);
 }

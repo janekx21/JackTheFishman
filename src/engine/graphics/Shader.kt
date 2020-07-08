@@ -48,6 +48,10 @@ class Shader(val vertexCode: String, val fragmentCode: String, private val path:
         glProgramUniform1f(program, getUniformLocation(name), value)
     }
 
+    fun setUniform(name: String, value: Int) {
+        glProgramUniform1i(program, getUniformLocation(name), value)
+    }
+
     private fun getUniformLocation(name: String): Int {
         return uniformLocations.getOrDefault(name, GL20.glGetUniformLocation(program, name))
     }

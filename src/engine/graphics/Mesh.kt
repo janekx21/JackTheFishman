@@ -46,7 +46,7 @@ class Mesh(private val data: Array<Vertex>, private val path: String? = null) : 
     companion object : ICreateViaPath<Mesh> {
         override fun createViaPath(path: String): Mesh {
             val scene =
-                Assimp.aiImportFile(path, Assimp.aiProcess_Triangulate or Assimp.aiProcess_GenNormals)
+                Assimp.aiImportFile(path, Assimp.aiProcess_Triangulate or Assimp.aiProcess_GenNormals or Assimp.aiProcess_CalcTangentSpace)
             check(scene != null) { Assimp.aiGetErrorString()!! }
 
             val root = scene.mRootNode()!!
@@ -75,11 +75,14 @@ class Mesh(private val data: Array<Vertex>, private val path: String? = null) : 
                             val uv = mesh.mTextureCoords(0)?.get(index)
                             check(uv != null) { "no uv provided" }
                             val normal = mesh.mNormals()?.get(index)
+                            val tangent = mesh.mTangents()?.get(index)
                             check(normal != null) { "no normal provided" }
+                            check(tangent != null) { "no tangent provided" }
                             val vertex = Vertex(
                                 Vector3f(vec.toVector3fc()).mulTransposePosition(mat),
                                 Vector2f(uv.x(), uv.y()),
-                                Vector3f(normal.toVector3fc()).mulTransposeDirection(mat)
+                                Vector3f(normal.toVector3fc()).mulTransposeDirection(mat),
+                                Vector3f(tangent.toVector3fc()).mulTransposeDirection(mat)
                             )
                             list.add(vertex)
                         }
