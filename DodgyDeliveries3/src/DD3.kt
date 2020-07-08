@@ -53,6 +53,16 @@ class DD3 : Game() {
         // GameObject: Player
         Player
 
+        GameObject("Grid").also { gameObject ->
+            gameObject.addComponent<Transform>().apply {
+                position = Vector3f(0f, -0.5f, 0f)
+            }
+            gameObject.addComponent<ModelRenderer>().apply {
+                mesh = Loader.createViaPath<Mesh>("models/grid.fbx")
+            }
+            Scene.active.spawn(gameObject)
+        }
+
         GameObject("Object").also { gameObject ->
             gameObject.addComponent<Transform>().apply {
                 position = Vector3f(-10f, 0f, .5f)
@@ -70,7 +80,9 @@ class DD3 : Game() {
 
         // GameObject: Tunnel
         GameObject("Tunnel").also { gameObject ->
-            gameObject.addComponent<Transform>()
+            gameObject.addComponent<Transform>().apply {
+                position = Vector3f(0f, 0f, 50f)
+            }
             gameObject.addComponent<ModelRenderer>().apply {
                 mesh = Loader.createViaPath(Mesh, "models/tunnel.fbx")
             }

@@ -1,6 +1,8 @@
 #vertex
 uniform mat4 MVP;
 uniform mat4 World;
+uniform float curveWorldX;
+uniform float curveWorldY;
 
 in vec3 Position;
 in vec3 Normal;
@@ -9,15 +11,23 @@ out vec3 normal;
 out vec3 position;
 out vec2 uv;
 
+vec4 bend(vec4 position) {
+    position.x = position.x + (position.z * position.z * curveWorldX);
+    position.y = position.y + (position.z * position.z * curveWorldY);
+    return position;
+}
+
 void main() {
-    gl_Position = MVP * vec4(Position, 1);
-    position = vec3(World * vec4(Position, 1));
+    gl_Position = (MVP * vec4(Position, 1));
+    position = ((World * vec4(Position, 1))).xyz;
+    //gl_Position = bend(MVP * vec4(Position, 1));
+    //position = bend((World * vec4(Position, 1))).xyz;
     normal = Normal;
     uv = UV;
 }
 
-#fragment
-#define MAX_LIGHT_COUNT 32
+    #fragment
+    #define MAX_LIGHT_COUNT 32
 uniform vec3 LightPositions[MAX_LIGHT_COUNT];
 uniform vec3 LightColors[MAX_LIGHT_COUNT];
 uniform sampler2D AlbedoTexture;
