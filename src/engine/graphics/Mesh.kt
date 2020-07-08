@@ -16,7 +16,7 @@ import org.lwjgl.assimp.Assimp
 import org.lwjgl.opengl.GL46.*
 
 
-class Mesh(private val data: Array<Vertex>) : IDrawable, IUsable {
+class Mesh(private val data: Array<Vertex>, private val path: String? = null) : IDrawable, IUsable {
     private val vbo: Int = glGenBuffers()
     private val vao: Int = glGenVertexArrays()
 
@@ -101,5 +101,15 @@ class Mesh(private val data: Array<Vertex>) : IDrawable, IUsable {
             }
             return list
         }
+
+        fun fromJson(json: Any?): Mesh {
+            val map = json as Map<*, *>
+            return createViaPath(map["path"] as String)
+        }
+    }
+
+    fun toJson(): Any? {
+        check(path != null)
+        return mapOf("path" to path)
     }
 }

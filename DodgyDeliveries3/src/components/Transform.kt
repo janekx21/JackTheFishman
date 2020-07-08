@@ -2,6 +2,9 @@ package components
 
 import Component
 import GameObject
+import engine.math.QuaternionfExt
+import engine.math.Vector3fExt
+import engine.math.toJson
 import engine.math.Vector3fConst
 import org.joml.Matrix4f
 import org.joml.Quaternionf
@@ -35,5 +38,23 @@ class Transform(gameObject: GameObject) : Component(gameObject) {
 
     fun getMatrixHash(): Int {
         return position.hashCode() + rotation.hashCode() + scale.hashCode()
+    }
+
+    override fun toJson(): Any? {
+        return mapOf(
+            "position" to position.toJson(),
+            "rotation" to rotation.toJson(),
+            "scale" to scale.toJson()
+        )
+    }
+
+    override fun fromJson(json: Any?) {
+        val map = json as Map<*, *>
+
+        position = Vector3fExt.fromJson(map["position"])
+        rotation = QuaternionfExt.fromJson(map["rotation"])
+        scale = Vector3fExt.fromJson(map["scale"])
+
+        generateMatrix()
     }
 }

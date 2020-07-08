@@ -1,5 +1,7 @@
 package engine.math
 
+import engine.util.IJsonUnserializable
+import org.joml.Vector2fc
 import org.joml.Vector3f
 import org.joml.Vector3fc
 
@@ -41,4 +43,21 @@ operator fun Vector3f.plusAssign(other: Vector3fc) {
 
 operator fun Vector3f.unaryMinus(): Vector3fc {
     return Vector3f(this).mul(-1f)
+}
+
+fun Vector3f.toJson(): Any? {
+    return arrayOf(
+        this.x, this.y, this.z
+    )
+}
+
+object Vector3fExt : IJsonUnserializable<Vector3f> {
+    override fun fromJson(json: Any?): Vector3f {
+        val list = json as List<*>
+        return Vector3f(
+            (list[0] as Double).toFloat(),
+            (list[1] as Double).toFloat(),
+            (list[2] as Double).toFloat()
+        )
+    }
 }

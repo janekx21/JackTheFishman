@@ -12,7 +12,7 @@ import org.lwjgl.opengl.GL46.*
 import java.io.File
 import java.nio.file.Path
 
-class Shader(vertexCode: String, fragmentCode: String) : IUsable {
+class Shader(val vertexCode: String, val fragmentCode: String, private val path: String? = null) : IUsable {
     private val program = compileProgram(vertexCode, fragmentCode)
     private val uniformLocations = HashMap<String, Int>()
     private val textureUniforms = arrayListOf<Texture>()
@@ -58,6 +58,14 @@ class Shader(vertexCode: String, fragmentCode: String) : IUsable {
         setUniform(viewAttributeName, view)
         setUniform(projectionAttributeName, projection)
         setUniform(mvpAttributeName, mvp)
+    }
+
+    fun toJson(): Any? {
+        return if (path != null) {
+            mapOf("path" to path)
+        } else {
+            mapOf("vertexCode" to vertexCode, "fragmentCode" to fragmentCode)
+        }
     }
 
     companion object : ICreateViaPath<Shader> {
@@ -159,6 +167,16 @@ class Shader(vertexCode: String, fragmentCode: String) : IUsable {
             }
 
             return Shader(prefixShader(vertex), prefixShader(fragment))
+        }
+
+        fun fromJson(json: Any?): Shader {
+            val map = json as Map<*, *>
+
+            return if (map["path"] != null) {
+                createViaPath(map["path"] as String)
+            } else {
+                Shader(map["vertexCode"] as String, map["fragmentCode"] as String)
+            }
         }
     }
 }
