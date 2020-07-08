@@ -61,7 +61,7 @@ class ModelRenderer(gameObject: GameObject) : Renderer(gameObject) {
     override fun toJson(): Any? {
         return mapOf(
             "mesh" to mesh?.toJson(),
-            "shader" to shader?.toJson()
+            "material" to material
         )
     }
 
@@ -83,6 +83,6 @@ class ModelRenderer(gameObject: GameObject) : Renderer(gameObject) {
         }
 
         this.mesh = mesh
-        this.shader = shader!!
+        this.material = map["material"] as Material
     }
 }
