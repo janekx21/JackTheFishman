@@ -1,8 +1,8 @@
 package engine.graphics
 
 import engine.math.times
-import engine.math.toMatrix4f
-import engine.math.toVector3f
+import engine.math.toMatrix4fc
+import engine.math.toVector3fc
 import engine.util.ICreateViaPath
 import engine.util.IDrawable
 import engine.util.IUsable
@@ -82,7 +82,7 @@ class Mesh(private val data: Array<Vertex>, private val path: String? = null) : 
                                 Vector3f(vec.toVector3fc()).mulTransposePosition(mat),
                                 Vector2f(uv.x(), uv.y()),
                                 Vector3f(normal.toVector3fc()).mulTransposeDirection(mat),
-                                Vector3f(tangent.toVector3f()).mulTransposeDirection(mat)
+                                Vector3f(tangent.toVector3fc()).mulTransposeDirection(mat)
                             )
                             list.add(vertex)
                         }
