@@ -79,8 +79,8 @@ class Game2 : Game() {
         }
 
         val sensitivity = .006f
-        rotation.rotateAxis(Input.Mouse.deltaPosition.x * sensitivity, Vector3fConst.up)
-        rotation.rotateLocalX(Input.Mouse.deltaPosition.y * sensitivity)
+        rotation.rotateAxis(Input.Mouse.previousPosition.x() * sensitivity, Vector3fConst.up)
+        rotation.rotateLocalX(Input.Mouse.previousPosition.y() * sensitivity)
 
         move.clamp(1f)
         move.mul(Time.deltaTime * speed)

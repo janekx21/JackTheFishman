@@ -1,8 +1,10 @@
 package engine
 
 import Vector2fCopy
+import engine.math.minus
 import engine.util.DoublePointer
 import org.joml.Vector2f
+import org.joml.Vector2fc
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.glfw.GLFWGamepadState
 
@@ -20,7 +22,7 @@ object Input {
     }
 
     object Keyboard {
-        private var keyStates = (0 .. GLFW_KEY_LAST).map {
+        private var keyStates = (0..GLFW_KEY_LAST).map {
             Pair(it, ButtonState(isDown = false, changed = false))
         }.toMap()
 
@@ -82,8 +84,8 @@ object Input {
             DISABLED, HIDDEN, NORMAL
         }
 
-        var position = Vector2fCopy.zero
-        var deltaPosition = Vector2fCopy.zero
+        var position: Vector2fc = getMousePosition()
+        var previousPosition: Vector2fc = position
 
         var left = ButtonState(isDown = false, changed = false)
         var right = ButtonState(isDown = false, changed = false)
@@ -97,16 +99,19 @@ object Input {
             glfwSetInputMode(Window.pointer, GLFW_CURSOR, index)
         }
 
-        fun update() {
-            deltaPosition = Vector2f(position)
-
+        private fun getMousePosition(): Vector2fc {
             val x = DoublePointer()
             val y = DoublePointer()
 
             glfwGetCursorPos(Window.pointer, x.buffer, y.buffer)
+            return Vector2f(x.value.toFloat(), y.value.toFloat())
+        }
 
-            position = Vector2f(x.value.toFloat(), y.value.toFloat())
-            deltaPosition.sub(position).mul(-1f)
+        fun update() {
+            previousPosition = Vector2f(position)
+
+            position = getMousePosition()
+            previousPosition = position - previousPosition
 
             val leftDown = glfwGetMouseButton(Window.pointer, GLFW_MOUSE_BUTTON_LEFT) != GLFW_RELEASE
             val rightDown = glfwGetMouseButton(Window.pointer, GLFW_MOUSE_BUTTON_RIGHT) != GLFW_RELEASE

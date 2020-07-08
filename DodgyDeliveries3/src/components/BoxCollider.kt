@@ -18,6 +18,7 @@ class BoxCollider(gameObject: GameObject) : Collider(gameObject) {
         type = BodyType.DYNAMIC
         position = Vec2(transform.position.x(), transform.position.z())
     }).createFixture(FixtureDef().apply {
+        userData = this@BoxCollider
         friction = .3f
         density = 1f
         shape = PolygonShape().apply {

@@ -1,35 +1,41 @@
 import components.Collider
 import engine.Input
 import org.joml.Vector2f
+import kotlin.math.pow
 
 class PlayerController(gameObject: GameObject) : Component(gameObject) {
 
     override fun update() {
-        controller()
-        friction()
+        handleMovement()
     }
 
     override fun draw() {
     }
 
-    private val speed = 0.001f
+    private val speed = 1f
+    private val bounceBack = 20f
 
     // provisionally only supports mouse -- TODO: add keyboard and controller
-    fun controller() {
+    private fun handleMovement() {
         val col = gameObject.getComponent<Collider>()
-        col.velocity = Vector2f(col.velocity.x() + Input.Mouse.deltaPosition.x * speed, col.velocity.y())
-    }
+        col.velocity = Vector2f(col.velocity.x(), 0f)
+        col.applyForceToCenter(Vector2f(Input.Mouse.previousPosition.x() * speed, 0f))
 
-    // provisionally friction -- very bad code
-    fun friction() {
-        val col = gameObject.getComponent<Collider>()
-        col.velocity = Vector2f(col.velocity.x() * 0.9f, col.velocity.y() * 0.9f)
-        if (col.velocity.x() < 0.01f && col.velocity.x() > -0.01f) {
-            col.velocity = Vector2f(0f, col.velocity.y())
+        if (transform.position.x() > 4f) {
+            col.applyForceToCenter(
+                Vector2f(
+                    -((transform.position.x() - 4f) * bounceBack).toDouble().pow(2.0).toFloat(),
+                    0f
+                )
+            )
         }
-        if (col.velocity.y() < 0.01f && col.velocity.y() > -0.01f) {
-            col.velocity = Vector2f(col.velocity.x(), 0f)
+        if (transform.position.x() < -4f) {
+            col.applyForceToCenter(
+                Vector2f(
+                    ((transform.position.x() + 4f) * bounceBack).toDouble().pow(2.0).toFloat(),
+                    0f
+                )
+            )
         }
     }
-
 }

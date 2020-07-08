@@ -11,8 +11,14 @@ object Player : GameObject("player") {
         addComponent<ModelRenderer>().also {
             it.mesh = Loader.createViaPath(Mesh, "models/monkey.fbx") // TODO: add player mesh
         }
-        addComponent<BoxCollider>()
+        addComponent<BoxCollider>().also {
+            it.linearDamping = 3f
+        }
         addComponent<PlayerController>()
+        addComponent<HealthComponent>().also {
+            it.maxHp = 100f
+            it.hp = it.maxHp
+        }
         Scene.active.spawn(Player)
     }
 }

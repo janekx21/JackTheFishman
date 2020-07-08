@@ -1,9 +1,11 @@
 
 import components.*
+import enemies.StandardEnemy
 import engine.*
 import engine.graphics.Mesh
 import engine.graphics.Texture2D
 import engine.math.*
+import org.joml.Quaternionf
 import org.joml.Vector3f
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.opengl.GL11
@@ -46,20 +48,11 @@ class DD3 : Game() {
         glCullFace(GL_BACK)
         glEnable(GL_CULL_FACE)
 
-        // GameObject: Player
-        GameObject("Player").also { gameObject ->
-            gameObject.addComponent<Transform>()
-            gameObject.addComponent<ModelRenderer>().apply {
-                mesh = Loader.createViaPath(Mesh, "models/monkey.fbx") // TODO: add player mesh
-            }
-            gameObject.addComponent<CircleCollider>().apply {
-                velocity = Vector2fCopy.left * 1f
-            }
-            // TODO: add player controller when ready
-            Scene.active.spawn(gameObject)
-        }
+        Physics.world.setContactListener(ContactListener)
 
         // GameObject: Player
+        Player
+
         GameObject("Object").also { gameObject ->
             gameObject.addComponent<Transform>().apply {
                 position = Vector3f(-10f, 0f, .5f)
@@ -87,12 +80,12 @@ class DD3 : Game() {
         // GameObject: components.Camera
         GameObject("Camera").also { gameObject ->
             gameObject.addComponent<Transform>().apply {
-                position = Vector3f(0f, 0f, .5f)
+                position = Vector3f(0f, 2f, 5f)
+                rotation.rotateX(Math.toRadians(-15.0).toFloat(), rotation as Quaternionf?)
             }
             gameObject.addComponent<AudioListener>()
             Camera.main = gameObject.addComponent()
             Scene.active.spawn(gameObject)
-            // TODO: add audio listener component
         }
 
         Window.onResize = {
@@ -102,16 +95,20 @@ class DD3 : Game() {
         Window.setIcon(logo)
 
         GameObject("Light").also { gameObject ->
-            gameObject.addComponent<Transform>()
+            gameObject.addComponent<Transform>().also {
+                it.position = Vector3f(0f, 0f, 2f)
+            }
             gameObject.addComponent<PointLight>().apply {
                 color = Vector3f(ColorPalette.BLUE) * 2f
             }
             Scene.active.spawn(gameObject)
         }
 
+        Scene.active.spawn(StandardEnemy())
+
         GameObject("Light").also { gameObject ->
             gameObject.addComponent<Transform>().apply {
-                position = Vector3f(2f, 0f, 10f)
+                position = Vector3f(0f, 0f, -10f)
             }
 
             gameObject.addComponent<PointLight>().apply {
@@ -127,6 +124,11 @@ class DD3 : Game() {
         if (Input.Keyboard.down(GLFW_KEY_LEFT_SHIFT)) {
             speed *= 5f
         }
+
+        if (Input.Mouse.left.justDown) {
+            Input.Mouse.setMode(Input.Mouse.CursorMode.DISABLED)
+        }
+
         val keyToDirection = mapOf(
             GLFW_KEY_D to Vector3fConst.right,
             GLFW_KEY_A to Vector3fConst.left,

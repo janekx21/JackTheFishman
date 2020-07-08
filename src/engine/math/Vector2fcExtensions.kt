@@ -25,6 +25,10 @@ operator fun Vector2fc.plus(other: Vector2fc): Vector2fc {
     return Vector2f(this).add(other)
 }
 
+operator fun Vector2fc.minus(other: Vector2fc): Vector2fc {
+    return Vector2f(this).sub(other)
+}
+
 operator fun Vector2fc.unaryMinus(): Vector2fc {
     return Vector2f(this).negate()
 }

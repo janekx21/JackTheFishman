@@ -9,13 +9,13 @@ open class GameObject(val name: String) {
     var cachedTransform: Transform? = null
 
     fun update() {
-        for (component in components) {
+        for (component in ArrayList(components)) {
             component.update()
         }
     }
 
     fun draw() {
-        for (component in components) {
+        for (component in ArrayList(components)) {
             component.draw()
         }
     }
