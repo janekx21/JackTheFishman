@@ -57,4 +57,32 @@ class ModelRenderer(gameObject: GameObject) : Renderer(gameObject) {
             }
         }
     }
+
+    override fun toJson(): Any? {
+        return mapOf(
+            "mesh" to mesh?.toJson(),
+            "shader" to shader?.toJson()
+        )
+    }
+
+    override fun fromJson(json: Any?) {
+        val map = json as Map<*, *>
+        val mesh: Mesh?
+        val shader: Shader?
+
+        mesh = if (map["mesh"] != null) {
+            Mesh.fromJson(map["mesh"] as String)
+        } else {
+            null
+        }
+
+        shader = if (map["shader"] != null) {
+            Shader.fromJson(map["shader"] as String)
+        } else {
+            null
+        }
+
+        this.mesh = mesh
+        this.shader = shader!!
+    }
 }

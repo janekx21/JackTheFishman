@@ -14,7 +14,7 @@ import util.Debug
 class CircleCollider(gameObject: GameObject) : Collider(gameObject) {
     override val fixture: Fixture = Physics.world.createBody(BodyDef().apply {
         type = BodyType.DYNAMIC
-        position = Vec2(transform.position.x, transform.position.z)
+        position = Vec2(transform.position.x(), transform.position.z())
     }).createFixture(FixtureDef().apply {
         friction = .3f
         density = 1f
@@ -37,5 +37,17 @@ class CircleCollider(gameObject: GameObject) : Collider(gameObject) {
             super.draw()
             Debug.drawWiredSphere(transform.position, 1f, Vector3f(1f, 0f, 1f))
         }
+    }
+
+    override fun toJson(): Any? {
+        return mapOf(
+            "radius" to radius
+        )
+    }
+
+    override fun fromJson(json: Any?) {
+        val map = json as Map<*, *>
+
+        this.radius = (map["radius"] as Double).toFloat()
     }
 }

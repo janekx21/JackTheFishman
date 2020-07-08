@@ -1,5 +1,6 @@
 package engine.graphics
 
+import engine.math.times
 import engine.math.toMatrix4f
 import engine.math.toVector3f
 import engine.util.ICreateViaPath
@@ -15,7 +16,7 @@ import org.lwjgl.assimp.Assimp
 import org.lwjgl.opengl.GL46.*
 
 
-class Mesh(private val data: Array<Vertex>) : IDrawable, IUsable {
+class Mesh(private val data: Array<Vertex>, private val path: String? = null) : IDrawable, IUsable {
     private val vbo: Int = glGenBuffers()
     private val vao: Int = glGenVertexArrays()
 
@@ -58,7 +59,7 @@ class Mesh(private val data: Array<Vertex>) : IDrawable, IUsable {
 
         private fun nodeToVertices(scene: AIScene, node: AINode): ArrayList<Vertex> {
             val list = arrayListOf<Vertex>()
-            val mat = node.mTransformation().toMatrix4f().mul(constantScale)
+            val mat = node.mTransformation().toMatrix4fc() * constantScale
 
             for (i in 0 until node.mNumMeshes()) {
                 val meshIndex = node.mMeshes()?.get(i)!!
@@ -78,13 +79,11 @@ class Mesh(private val data: Array<Vertex>) : IDrawable, IUsable {
                             check(normal != null) { "no normal provided" }
                             check(tangent != null) { "no tangent provided" }
                             val vertex = Vertex(
-                                Vector3f(vec.x(), vec.y(), vec.z()),
+                                Vector3f(vec.toVector3fc()).mulTransposePosition(mat),
                                 Vector2f(uv.x(), uv.y()),
-                                Vector3f(normal.x(), normal.y(), normal.z()),
+                                Vector3f(normal.toVector3fc()).mulTransposeDirection(mat),
                                 Vector3f(tangent.toVector3f()).mulTransposeDirection(mat)
                             )
-                            vertex.position.mulTransposePosition(mat)
-                            vertex.normal.mulTransposeDirection(mat)
                             list.add(vertex)
                         }
                     }
@@ -105,5 +104,15 @@ class Mesh(private val data: Array<Vertex>) : IDrawable, IUsable {
             }
             return list
         }
+
+        fun fromJson(json: Any?): Mesh {
+            val map = json as Map<*, *>
+            return createViaPath(map["path"] as String)
+        }
+    }
+
+    fun toJson(): Any? {
+        check(path != null)
+        return mapOf("path" to path)
     }
 }

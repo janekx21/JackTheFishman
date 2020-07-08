@@ -9,4 +9,12 @@ class AudioListener(gameObject: GameObject) : Component(gameObject) {
     }
 
     override fun draw() {}
+
+    override fun toJson(): Any? {
+        return mapOf<String, Any?>()
+    }
+
+    override fun fromJson(json: Any?) {
+        check(json is Map<*, *>)
+    }
 }

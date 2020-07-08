@@ -1,26 +1,24 @@
 package engine.graphics
 
-import org.joml.Vector2f
-import org.joml.Vector3f
+import org.joml.Vector2fc
 import org.joml.Vector3fc
-
 import org.lwjgl.opengl.GL46
 import org.lwjgl.opengl.GL46.GL_FLOAT
 
-data class Vertex(val position: Vector3f, val uv: Vector2f, val normal: Vector3f, val tangent: Vector3fc) {
+data class Vertex(val position: Vector3fc, val uv: Vector2fc, val normal: Vector3fc, val tangent: Vector3fc) {
 
     data class Attribute(val name: String, val size: Int, val type: Int)
 
     fun toBuffer(): List<Float> {
         return listOf(
-            position.x,
-            position.y,
-            position.z,
-            uv.x,
-            uv.y,
-            normal.x,
-            normal.y,
-            normal.z,
+            position.x(),
+            position.y(),
+            position.z(),
+            uv.x(),
+            uv.y(),
+            normal.x(),
+            normal.y(),
+            normal.z(),
             tangent.x(),
             tangent.y(),
             tangent.z()

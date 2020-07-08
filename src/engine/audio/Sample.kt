@@ -1,13 +1,15 @@
 package engine.audio
 
 import engine.util.ICreateViaPath
+import engine.util.IJsonSerializable
+import engine.util.IJsonUnserializable
 import engine.util.IntPointer
 import org.lwjgl.openal.AL10.*
 import org.lwjgl.stb.STBVorbis
 import org.lwjgl.system.MemoryStack
 import java.nio.ShortBuffer
 
-class Sample(rawAudioBuffer: ShortBuffer, channels: Int, sampleRate: Int) {
+class Sample(rawAudioBuffer: ShortBuffer, channels: Int, sampleRate: Int, private val path: String? = null) : IJsonSerializable {
 
     // Find the correct OpenAL format
     private val format = formats[channels]
@@ -21,8 +23,15 @@ class Sample(rawAudioBuffer: ShortBuffer, channels: Int, sampleRate: Int) {
         alBufferData(bufferPointer, format, rawAudioBuffer, sampleRate)
     }
 
+    override fun toJson(): Any? {
+        checkNotNull(path)
 
-    companion object : ICreateViaPath<Sample> {
+        return mapOf(
+            "path" to path
+        )
+    }
+
+    companion object : ICreateViaPath<Sample>, IJsonUnserializable<Sample> {
         val formats = mapOf(1 to AL_FORMAT_MONO16, 2 to AL_FORMAT_STEREO16)
 
         override fun createViaPath(path: String): Sample {
@@ -51,6 +60,14 @@ class Sample(rawAudioBuffer: ShortBuffer, channels: Int, sampleRate: Int) {
             MemoryStack.stackPop()
 
             return Sample(rawAudioBuffer, channels, sampleRate)
+        }
+
+        override fun fromJson(json: Any?): Sample {
+            val map = json as Map<*, *>
+
+            checkNotNull(map["path"])
+
+            return createViaPath(map["path"] as String)
         }
     }
 }
