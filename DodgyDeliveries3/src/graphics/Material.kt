@@ -1,7 +1,7 @@
 package graphics
 
-import engine.graphics.Shader
-import engine.graphics.Texture
+import jackTheFishman.engine.graphics.Shader
+import jackTheFishman.engine.graphics.Texture
 import org.joml.Vector3fc
 
 data class Material(

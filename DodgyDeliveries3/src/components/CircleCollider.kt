@@ -1,7 +1,7 @@
 package components
 
 import GameObject
-import engine.Physics
+import jackTheFishman.engine.Physics
 import org.jbox2d.collision.shapes.CircleShape
 import org.jbox2d.common.Vec2
 import org.jbox2d.dynamics.BodyDef

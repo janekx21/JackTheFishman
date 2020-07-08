@@ -1,9 +1,8 @@
-
 import components.*
-import engine.*
-import engine.graphics.Mesh
-import engine.graphics.Texture2D
-import engine.math.*
+import jackTheFishman.engine.*
+import jackTheFishman.engine.graphics.Mesh
+import jackTheFishman.engine.graphics.Texture2D
+import jackTheFishman.engine.math.*
 import org.joml.Vector3f
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.opengl.GL11
@@ -21,10 +20,10 @@ fun main() {
 class DD3 : Game() {
 
     init {
-        Loader.root = "DodgyDeliveries3/assets"
+        Loader.rootPath = "DodgyDeliveries3/assets"
     }
 
-    private val logo = Texture2D.createViaPath("assets/engine/logo.png")
+    private val logo = Texture2D.createViaPath("assets/jackTheFishman/engine/logo.png")
 
     /*
     Camera Control:

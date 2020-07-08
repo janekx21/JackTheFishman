@@ -1,8 +1,8 @@
 package components
 
 import GameObject
-import engine.Physics
-import engine.math.toJson
+import jackTheFishman.engine.Physics
+import jackTheFishman.engine.math.toJson
 import org.jbox2d.collision.shapes.PolygonShape
 import org.jbox2d.common.Vec2
 import org.jbox2d.dynamics.BodyDef

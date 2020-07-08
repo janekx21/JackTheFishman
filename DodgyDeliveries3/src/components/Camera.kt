@@ -2,8 +2,8 @@ package components
 
 import Component
 import GameObject
-import engine.Window
-import engine.math.*
+import jackTheFishman.engine.Window
+import jackTheFishman.engine.math.*
 import org.joml.*
 
 class Camera(gameObject: GameObject) : Component(gameObject) {

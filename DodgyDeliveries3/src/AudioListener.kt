@@ -1,5 +1,5 @@
-import engine.Audio
-import engine.math.Vector3fCopy
+import jackTheFishman.engine.Audio
+import jackTheFishman.engine.math.Vector3fCopy
 import org.joml.Quaternionf
 
 class AudioListener(gameObject: GameObject) : Component(gameObject) {

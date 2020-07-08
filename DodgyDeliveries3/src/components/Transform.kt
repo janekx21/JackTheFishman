@@ -2,10 +2,10 @@ package components
 
 import Component
 import GameObject
-import engine.math.QuaternionfExt
-import engine.math.Vector3fExt
-import engine.math.toJson
-import engine.math.Vector3fConst
+import jackTheFishman.engine.math.QuaternionfExt
+import jackTheFishman.engine.math.Vector3fConst
+import jackTheFishman.engine.math.Vector3fExt
+import jackTheFishman.engine.math.toJson
 import org.joml.Matrix4f
 import org.joml.Quaternionf
 import org.joml.Quaternionfc

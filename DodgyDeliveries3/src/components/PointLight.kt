@@ -2,8 +2,8 @@ package components
 
 import Component
 import GameObject
-import engine.math.Vector3fExt
-import engine.math.toJson
+import jackTheFishman.engine.math.Vector3fExt
+import jackTheFishman.engine.math.toJson
 import org.joml.Vector3f
 import org.joml.Vector3fc
 import util.Debug

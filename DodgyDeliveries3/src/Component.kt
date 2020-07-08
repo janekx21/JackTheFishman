@@ -1,4 +1,3 @@
-import engine.util.IJsonSerializable
 import components.Transform
 
 abstract class Component(val gameObject: GameObject) {

@@ -1,6 +1,6 @@
-import engine.audio.IPlayable
-import engine.audio.Sample
-import engine.audio.Source
+import jackTheFishman.engine.audio.IPlayable
+import jackTheFishman.engine.audio.Sample
+import jackTheFishman.engine.audio.Source
 
 class Music(gameObject: GameObject) : Component(gameObject), IPlayable {
 

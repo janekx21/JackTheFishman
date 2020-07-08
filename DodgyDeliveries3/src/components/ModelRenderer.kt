@@ -1,11 +1,11 @@
 package components
 
 import GameObject
-import engine.Loader
-import engine.graphics.Mesh
-import engine.graphics.Shader
-import engine.graphics.Texture2D
 import graphics.Material
+import jackTheFishman.engine.Loader
+import jackTheFishman.engine.graphics.Mesh
+import jackTheFishman.engine.graphics.Shader
+import jackTheFishman.engine.graphics.Texture2D
 import org.joml.Vector3f
 
 class ModelRenderer(gameObject: GameObject) : Renderer(gameObject) {
@@ -68,16 +68,9 @@ class ModelRenderer(gameObject: GameObject) : Renderer(gameObject) {
     override fun fromJson(json: Any?) {
         val map = json as Map<*, *>
         val mesh: Mesh?
-        val shader: Shader?
 
         mesh = if (map["mesh"] != null) {
             Mesh.fromJson(map["mesh"] as String)
-        } else {
-            null
-        }
-
-        shader = if (map["shader"] != null) {
-            Shader.fromJson(map["shader"] as String)
         } else {
             null
         }

@@ -1,6 +1,6 @@
 package util
 
-import engine.math.times
+import jackTheFishman.engine.math.times
 import org.joml.Vector3f
 import org.joml.Vector3fc
 

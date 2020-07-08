@@ -1,7 +1,6 @@
-import engine.Game
-import engine.util.IJsonSerializable
-import engine.util.IJsonUnserializable
 import components.Transform
+import jackTheFishman.engine.util.IJsonSerializable
+import jackTheFishman.engine.util.IJsonUnserializable
 import kotlin.reflect.full.primaryConstructor
 
 open class GameObject(val name: String) : IJsonSerializable {

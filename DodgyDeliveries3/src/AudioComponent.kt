@@ -1,9 +1,7 @@
-import engine.audio.IPlayable
-import engine.audio.Sample
-import engine.audio.Source
-import engine.math.Vector3fConst
-import engine.math.Vector3fCopy
-import org.joml.Vector3f
+import jackTheFishman.engine.audio.IPlayable
+import jackTheFishman.engine.audio.Sample
+import jackTheFishman.engine.audio.Source
+import jackTheFishman.engine.math.Vector3fCopy
 
 class AudioComponent(gameObject: GameObject) : Component(gameObject), IPlayable {
     private var source = Source()

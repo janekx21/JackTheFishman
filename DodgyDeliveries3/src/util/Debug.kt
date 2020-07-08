@@ -3,9 +3,9 @@ package util
 import GameObject
 import components.Camera
 import components.Transform
-import engine.Loader
-import engine.graphics.Mesh
-import engine.graphics.Shader
+import jackTheFishman.engine.Loader
+import jackTheFishman.engine.graphics.Mesh
+import jackTheFishman.engine.graphics.Shader
 import org.joml.Vector3f
 import org.joml.Vector3fc
 import java.lang.management.ManagementFactory
