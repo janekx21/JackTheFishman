@@ -11,7 +11,5 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="KotlinJavaRuntime" level="project" />
     <orderEntry type="module" module-name="JackTheFishman" exported="" />
-    <orderEntry type="library" name="klaxon-5.2" level="project" />
-    <orderEntry type="library" exported="" name="jbox2d-library-2.2.1.1" level="project" />
   </component>
 </module>
