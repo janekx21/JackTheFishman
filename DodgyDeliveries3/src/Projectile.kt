@@ -31,4 +31,15 @@ class Projectile(gameObject: GameObject) : Component(gameObject) {
     override fun draw() {
     }
 
+    override fun toJson(): Any? {
+        return mapOf(
+            "damage" to damage
+        )
+    }
+
+    override fun fromJson(json: Any?) {
+        val map = json as Map<*, *>
+
+        damage = (map["damage"] as Double).toFloat()
+    }
 }

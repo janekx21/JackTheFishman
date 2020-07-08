@@ -12,8 +12,8 @@ class PlayerController(gameObject: GameObject) : Component(gameObject) {
     override fun draw() {
     }
 
-    private val speed = 1f
-    private val bounceBack = 20f
+    private var speed = 1f
+    private var bounceBack = 20f
 
     // provisionally only supports mouse -- TODO: add keyboard and controller
     private fun handleMovement() {
@@ -37,5 +37,19 @@ class PlayerController(gameObject: GameObject) : Component(gameObject) {
                 )
             )
         }
+    }
+
+    override fun toJson(): Any? {
+        return mapOf(
+            "speed" to speed,
+            "bounceBack" to bounceBack
+        )
+    }
+
+    override fun fromJson(json: Any?) {
+        val map = json as Map<*, *>
+
+        speed = (map["speed"] as Double).toFloat()
+        bounceBack = (map["bounceBack"] as Double).toFloat()
     }
 }

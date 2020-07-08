@@ -51,6 +51,23 @@ class ProjectileSpawner(gameObject: GameObject) : Component(gameObject) {
         }
     }
 
-
     override fun draw() {}
+
+    override fun toJson(): Any? {
+        return mapOf(
+            "shotsPerSecond" to shotsPerSecond,
+            "projectileSpeed" to projectileSpeed,
+            "projectileDamage" to projectileDamage,
+            "timer" to timer
+        )
+    }
+
+    override fun fromJson(json: Any?) {
+        val map = json as Map<*, *>
+
+        shotsPerSecond = (map["shotsPerSecond"] as Double).toFloat()
+        projectileSpeed = (map["projectileSpeed"] as Double).toFloat()
+        projectileDamage = (map["projectileDamage"] as Double).toFloat()
+        timer = (map["timer"] as Double).toFloat()
+    }
 }
