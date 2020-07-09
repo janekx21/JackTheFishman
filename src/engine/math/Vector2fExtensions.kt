@@ -1,7 +1,9 @@
 package engine.math
 
+import engine.util.IJsonUnserializable
 import org.joml.Vector2f
 import org.joml.Vector2fc
+import org.joml.Vector3f
 
 fun Vector2f.clamp(value: Float) {
     if (lengthSquared() > 0) {
@@ -43,9 +45,12 @@ fun Vector2f.toJson(): Any? {
     return arrayOf(this.x, this.y)
 }
 
-/// Gibt leider keine statischen extension-methods. Deswegen müssen wir hier
-/// [this] mutieren (Anstatt einen neuen Vektor mit den JSON-Daten in [json] zu erzeugen)
-fun Vector2f.fromJson(json: Any?) {
-    val array = json as Array<*>
-    this.set(array[0] as Double, array[1] as Double)
+object Vector2fExt : IJsonUnserializable<Vector2f> {
+    override fun fromJson(json: Any?): Vector2f {
+        val array = json as Array<*>
+        return Vector2f(
+            FloatExt.fromJson(array[0]),
+            FloatExt.fromJson(array[1])
+        )
+    }
 }

@@ -2,6 +2,7 @@ package components
 
 import GameObject
 import engine.Physics
+import engine.math.FloatExt
 import org.jbox2d.collision.shapes.CircleShape
 import org.jbox2d.common.Vec2
 import org.jbox2d.dynamics.BodyDef
@@ -48,6 +49,6 @@ class CircleCollider(gameObject: GameObject) : Collider(gameObject) {
     override fun fromJson(json: Any?) {
         val map = json as Map<*, *>
 
-        this.radius = (map["radius"] as Double).toFloat()
+        radius = FloatExt.fromJson(map["radius"])
     }
 }

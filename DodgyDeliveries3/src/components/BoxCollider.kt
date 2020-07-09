@@ -3,6 +3,7 @@ package components
 import GameObject
 import engine.Physics
 import engine.math.toJson
+import engine.math.Vector2fExt
 import org.jbox2d.collision.shapes.PolygonShape
 import org.jbox2d.common.Vec2
 import org.jbox2d.dynamics.BodyDef
@@ -48,6 +49,8 @@ class BoxCollider(gameObject: GameObject) : Collider(gameObject) {
     }
 
     override fun fromJson(json: Any?) {
-        TODO("Not yet implemented")
+        val map = json as Map<*, *>
+
+        size = Vector2fExt.fromJson(map["size"])
     }
 }
