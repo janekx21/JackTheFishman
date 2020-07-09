@@ -1,5 +1,9 @@
 import com.beust.klaxon.JsonArray
 import com.beust.klaxon.JsonObject
+import engine.Json
+import engine.util.ICreateViaPath
+import engine.util.IJsonUnserializable
+import java.io.File
 import kotlin.reflect.full.primaryConstructor
 
 class Scene {
@@ -44,10 +48,15 @@ class Scene {
         return allGameObjects.find(predicate)
     }
 
-    companion object {
+    companion object : ICreateViaPath<Scene>, IJsonUnserializable<Scene> {
         val active = Scene()
 
-        fun fromJson(json: Any?): Scene {
+        override fun createViaPath(path: String): Scene {
+            val text = File(path).readText()
+            return fromJson(Json.decode(text))
+        }
+
+        override fun fromJson(json: Any?): Scene {
             val map = json as Map<*, *>
             val array = map["gameObjects"] as List<*>
 
