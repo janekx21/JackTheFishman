@@ -15,8 +15,8 @@ abstract class ModelRenderer(gameObject: GameObject) : Renderer(gameObject) {
         val defaultAlbedo = Loader.createViaPath<Texture2D>("textures/default.png")
     }
 
-    open var mesh: Mesh? = null
-    open var material = Material(defaultShader, .5f, 40f, .6f, Vector3f(.1f, .1f, .1f), null, null, .1f)
+    abstract val mesh: Mesh?
+    abstract val material: Material
 
     override fun update() {}
 

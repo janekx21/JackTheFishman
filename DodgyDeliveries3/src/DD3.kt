@@ -1,7 +1,6 @@
 
 import components.*
 import engine.*
-import engine.graphics.Mesh
 import engine.graphics.Texture2D
 import engine.math.*
 import org.joml.Vector3f
@@ -49,7 +48,9 @@ class DD3 : Game() {
         // GameObject: Player
         GameObject("Player").also { gameObject ->
             gameObject.addComponent<Transform>()
-            gameObject.addComponent<PlayerModelRenderer>()
+            gameObject.addComponent<AssetModelRenderer>().apply {
+                meshPath = "models/monkey.fbx"
+            }
             gameObject.addComponent<CircleCollider>().apply {
                 velocity = Vector2fCopy.left * 1f
             }
@@ -62,7 +63,9 @@ class DD3 : Game() {
             gameObject.addComponent<Transform>().apply {
                 position = Vector3f(-10f, 0f, .5f)
             }
-            gameObject.addComponent<PlayerModelRenderer>()
+            gameObject.addComponent<AssetModelRenderer>().apply {
+                meshPath = "models/monkey.fbx"
+            }
             gameObject.addComponent<BoxCollider>().apply {
                 velocity = Vector2fCopy.right * 1f
             }
@@ -74,7 +77,9 @@ class DD3 : Game() {
         // GameObject: Tunnel
         GameObject("Tunnel").also { gameObject ->
             gameObject.addComponent<Transform>()
-            gameObject.addComponent<TunnelModelRenderer>()
+            gameObject.addComponent<AssetModelRenderer>().apply {
+                meshPath = "models/tunnel.fbx"
+            }
             Scene.active.spawn(gameObject)
         }
 
