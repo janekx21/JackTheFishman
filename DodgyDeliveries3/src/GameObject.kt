@@ -1,4 +1,3 @@
-import engine.Game
 import engine.util.IJsonSerializable
 import engine.util.IJsonUnserializable
 import components.Transform

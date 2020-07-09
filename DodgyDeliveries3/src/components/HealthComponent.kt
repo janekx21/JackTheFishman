@@ -1,3 +1,9 @@
+package components
+
+import Component
+import GameObject
+import engine.math.FloatExt
+
 class HealthComponent(gameObject: GameObject) : Component(gameObject) {
     var hp: Float = 0F
     var maxHp: Float = 0F
@@ -34,7 +40,7 @@ class HealthComponent(gameObject: GameObject) : Component(gameObject) {
     override fun fromJson(json: Any?) {
         val map = json as Map<*, *>
 
-        hp = (map["hp"] as Double).toFloat()
-        maxHp = (map["maxHp"] as Double).toFloat()
+        hp = FloatExt.fromJson(map["hp"])
+        maxHp = FloatExt.fromJson(map["maxHp"])
     }
 }

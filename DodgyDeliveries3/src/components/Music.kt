@@ -1,8 +1,13 @@
+package components
+
+import Component
+import GameObject
 import engine.audio.IPlayable
 import engine.audio.Sample
 import engine.audio.Source
 
 class Music(gameObject: GameObject) : Component(gameObject), IPlayable {
+    /// TODO: Music state vom Source state trennen (siehe AudioComponent)
 
     var sample: Sample? = null
         get() = source.sample

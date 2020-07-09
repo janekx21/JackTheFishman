@@ -1,3 +1,7 @@
+package components
+
+import Component
+import GameObject
 import engine.Audio
 import engine.math.Vector3fCopy
 import org.joml.Quaternionf

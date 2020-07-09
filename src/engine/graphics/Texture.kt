@@ -16,6 +16,5 @@ abstract class Texture {
                 texture.value.unbindWithIndex(texture.index)
             }
         }
-
     }
 }

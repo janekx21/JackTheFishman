@@ -24,4 +24,3 @@ fun Matrix4f.toJson(): Any? {
         this[0, 3], this[1, 3], this[2, 3], this[3, 3]
     )
 }
-

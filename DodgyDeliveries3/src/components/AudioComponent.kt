@@ -1,9 +1,11 @@
+package components
+
+import Component
+import GameObject
 import engine.audio.IPlayable
 import engine.audio.Sample
 import engine.audio.Source
-import engine.math.Vector3fConst
 import engine.math.Vector3fCopy
-import org.joml.Vector3f
 
 class AudioComponent(gameObject: GameObject) : Component(gameObject), IPlayable {
     private var source = Source()
@@ -14,6 +16,11 @@ class AudioComponent(gameObject: GameObject) : Component(gameObject), IPlayable 
             source.sample = value
             field = value
         }
+
+    // TODO: AudioComponent state vom Source state trennen, da Components jetzt auch deaktiviert sein können
+    // Die States sind zZ nicht getrennt, d.h. wenn play() bei einem deaktivierten components.AudioComponent aufgerufen wird
+    // (das kann uA passieren wenn das Level gerade mit Scene.createViaPath geladen wird, oder gerade ein save-state
+    // geladen wird)
 
     override fun play() = source.play()
 

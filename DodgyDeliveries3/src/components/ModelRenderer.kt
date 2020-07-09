@@ -68,7 +68,7 @@ class ModelRenderer(gameObject: GameObject) : Renderer(gameObject) {
     override fun fromJson(json: Any?) {
         val map = json as Map<*, *>
         val mesh: Mesh?
-        val shader: Shader?
+        val material: Material
 
         mesh = if (map["mesh"] != null) {
             Mesh.fromJson(map["mesh"] as String)
@@ -76,13 +76,9 @@ class ModelRenderer(gameObject: GameObject) : Renderer(gameObject) {
             null
         }
 
-        shader = if (map["shader"] != null) {
-            Shader.fromJson(map["shader"] as String)
-        } else {
-            null
-        }
+        material = Material.fromJson(map["material"])
 
         this.mesh = mesh
-        this.material = map["material"] as Material
+        this.material = material
     }
 }
