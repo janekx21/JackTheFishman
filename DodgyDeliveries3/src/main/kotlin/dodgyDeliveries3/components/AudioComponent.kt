@@ -1,8 +1,14 @@
+package dodgyDeliveries3.components
+
+import dodgyDeliveries3.Component
+import dodgyDeliveries3.GameObject
 import jackTheFishman.engine.audio.IPlayable
 import jackTheFishman.engine.audio.Sample
 import jackTheFishman.engine.audio.Source
+import jackTheFishman.engine.math.Vector3fCopy
 
-class Music(gameObject: GameObject) : Component(gameObject), IPlayable {
+class AudioComponent(gameObject: GameObject) : Component(gameObject), IPlayable {
+    private var source = Source()
 
     var sample: Sample? = null
         get() = source.sample
@@ -11,31 +17,30 @@ class Music(gameObject: GameObject) : Component(gameObject), IPlayable {
             field = value
         }
 
-    var bpm = 100f
-    var offset = 0f
-
-    private var source = Source()
-
     override fun play() = source.play()
+
     override fun pause() = source.pause()
+
     override fun stop() = source.stop()
+
     override var time: Float
         set(value) { source.time = value }
         get() = source.time
+
     override val playing: Boolean get() = source.playing
 
-    override fun update() {}
+    override fun update() {
+        /// An dieser Stelle wäre es falsch, `transform.position` zu benutzen, da das
+        /// nur die Translation eines einzelnen Transform Components wäre.
+        /// Wir wollen aber die Translation aller Transform Componenten zusammengefasst haben.
+        source.position = transform.generateMatrix().getTranslation(Vector3fCopy.zero)
+    }
 
     override fun draw() {}
 
-    val beat: Float
-        get() = (time - offset) / (60f / bpm)
-
     override fun toJson(): Any? {
         return mapOf(
-            "source" to source.toJson(),
-            "bpm" to bpm,
-            "offset" to offset
+            "source" to source.toJson()
         )
     }
 
@@ -43,7 +48,5 @@ class Music(gameObject: GameObject) : Component(gameObject), IPlayable {
         val map = json as Map<*, *>
 
         source = Source.fromJson(map["source"]!!)
-        bpm = (map["bpm"] as Double).toFloat()
-        offset = (map["offset"] as Double).toFloat()
     }
 }

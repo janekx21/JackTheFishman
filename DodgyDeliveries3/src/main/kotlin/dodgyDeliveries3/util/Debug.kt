@@ -1,8 +1,8 @@
-package util
+package dodgyDeliveries3.util
 
-import GameObject
-import components.Camera
-import components.Transform
+import dodgyDeliveries3.GameObject
+import dodgyDeliveries3.components.Camera
+import dodgyDeliveries3.components.Transform
 import jackTheFishman.engine.Loader
 import jackTheFishman.engine.graphics.Mesh
 import jackTheFishman.engine.graphics.Shader

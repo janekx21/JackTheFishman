@@ -1,12 +1,12 @@
-package components
+package dodgyDeliveries3.components
 
-import Component
-import GameObject
+import dodgyDeliveries3.Component
+import dodgyDeliveries3.GameObject
+import dodgyDeliveries3.util.Debug
 import jackTheFishman.engine.math.Vector3fExt
 import jackTheFishman.engine.math.toJson
 import org.joml.Vector3f
 import org.joml.Vector3fc
-import util.Debug
 
 class PointLight(gameObject: GameObject) : Component(gameObject) {
 

@@ -1,7 +1,7 @@
-package components
+package dodgyDeliveries3.components
 
-import Component
-import GameObject
+import dodgyDeliveries3.Component
+import dodgyDeliveries3.GameObject
 import jackTheFishman.engine.math.toVec2
 import jackTheFishman.engine.math.toVector2fc
 import org.jbox2d.dynamics.Fixture

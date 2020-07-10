@@ -1,7 +1,7 @@
-package components
+package dodgyDeliveries3.components
 
-import Component
-import GameObject
+import dodgyDeliveries3.Component
+import dodgyDeliveries3.GameObject
 import jackTheFishman.engine.math.QuaternionfExt
 import jackTheFishman.engine.math.Vector3fConst
 import jackTheFishman.engine.math.Vector3fExt

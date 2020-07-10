@@ -1,4 +1,6 @@
-import components.Transform
+package dodgyDeliveries3
+
+import dodgyDeliveries3.components.Transform
 import jackTheFishman.engine.util.IJsonSerializable
 import jackTheFishman.engine.util.IJsonUnserializable
 import kotlin.reflect.full.primaryConstructor
@@ -69,7 +71,7 @@ open class GameObject(val name: String) : IJsonSerializable {
             return cachedTransform as T
         }
         val component = components.find { component -> component is T } as T?
-        check(component != null) { "Component was not found" }
+        check(component != null) { "dodgyDeliveries3.Component was not found" }
         return component
     }
 
@@ -80,7 +82,7 @@ open class GameObject(val name: String) : IJsonSerializable {
     override fun toJson(): Any? {
         return mapOf(
             "name" to name,
-            "components" to components.map {
+            "dodgyDeliveries3/components" to components.map {
                 mapOf(
                     "className" to it::class.java.name,
                     "serialization" to it.toJson()
@@ -93,7 +95,7 @@ open class GameObject(val name: String) : IJsonSerializable {
         override fun fromJson(json: Any?): GameObject {
             val map = json as Map<*, *>
 
-            val list = map["components"] as List<*>
+            val list = map["dodgyDeliveries3/components"] as List<*>
             val name = map["name"] as String
 
             return GameObject(name).also { gameObject ->

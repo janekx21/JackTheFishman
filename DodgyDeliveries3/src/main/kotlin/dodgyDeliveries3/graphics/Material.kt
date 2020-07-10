@@ -1,4 +1,4 @@
-package graphics
+package dodgyDeliveries3.graphics
 
 import jackTheFishman.engine.graphics.Shader
 import jackTheFishman.engine.graphics.Texture

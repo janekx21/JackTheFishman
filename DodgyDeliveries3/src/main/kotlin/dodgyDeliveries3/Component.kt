@@ -1,4 +1,6 @@
-import components.Transform
+package dodgyDeliveries3
+
+import dodgyDeliveries3.components.Transform
 
 abstract class Component(val gameObject: GameObject) {
     abstract fun update()

@@ -1,4 +1,8 @@
-import components.*
+package dodgyDeliveries3
+
+import dodgyDeliveries3.components.*
+import dodgyDeliveries3.util.ColorPalette
+import dodgyDeliveries3.util.Debug
 import jackTheFishman.engine.*
 import jackTheFishman.engine.graphics.Mesh
 import jackTheFishman.engine.graphics.Texture2D
@@ -10,8 +14,6 @@ import org.lwjgl.opengl.GL11.glCullFace
 import org.lwjgl.opengl.GL11.glEnable
 import org.lwjgl.opengl.GL11C.GL_BACK
 import org.lwjgl.opengl.GL11C.GL_CULL_FACE
-import util.ColorPalette
-import util.Debug
 
 fun main() {
     DD3().run()
@@ -20,10 +22,10 @@ fun main() {
 class DD3 : Game() {
 
     init {
-        Loader.rootPath = "DodgyDeliveries3/assets"
+        Loader.rootPath = "dodgyDeliveries3"
     }
 
-    private val logo = Texture2D.createViaPath("assets/jackTheFishman/engine/logo.png")
+    private val logo = Loader.createViaPath<Texture2D>("../jackTheFishman/engine/logo.png")
 
     /*
     Camera Control:
@@ -45,7 +47,7 @@ class DD3 : Game() {
         glCullFace(GL_BACK)
         glEnable(GL_CULL_FACE)
 
-        // GameObject: Player
+        // dodgyDeliveries3.GameObject: Player
         GameObject("Player").also { gameObject ->
             gameObject.addComponent<Transform>()
             gameObject.addComponent<ModelRenderer>().apply {
@@ -58,7 +60,7 @@ class DD3 : Game() {
             Scene.active.spawn(gameObject)
         }
 
-        // GameObject: Player
+        // dodgyDeliveries3.GameObject: Player
         GameObject("Object").also { gameObject ->
             gameObject.addComponent<Transform>().apply {
                 position = Vector3f(-10f, 0f, .5f)
@@ -74,7 +76,7 @@ class DD3 : Game() {
         }
 
 
-        // GameObject: Tunnel
+        // dodgyDeliveries3.GameObject: Tunnel
         GameObject("Tunnel").also { gameObject ->
             gameObject.addComponent<Transform>()
             gameObject.addComponent<ModelRenderer>().apply {
@@ -83,7 +85,7 @@ class DD3 : Game() {
             Scene.active.spawn(gameObject)
         }
 
-        // GameObject: components.Camera
+        // dodgyDeliveries3.GameObject: components.Camera
         GameObject("Camera").also { gameObject ->
             gameObject.addComponent<Transform>().apply {
                 position = Vector3f(0f, 0f, .5f)

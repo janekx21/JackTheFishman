@@ -1,7 +1,7 @@
-package components
+package dodgyDeliveries3.components
 
-import GameObject
-import graphics.Material
+import dodgyDeliveries3.GameObject
+import dodgyDeliveries3.graphics.Material
 import jackTheFishman.engine.Loader
 import jackTheFishman.engine.graphics.Mesh
 import jackTheFishman.engine.graphics.Shader

@@ -1,53 +1,53 @@
-package components
+package dodgyDeliveries3.components
 
-import GameObject
+import dodgyDeliveries3.GameObject
+import dodgyDeliveries3.util.Debug
 import jackTheFishman.engine.Physics
-import org.jbox2d.collision.shapes.CircleShape
+import jackTheFishman.engine.math.toJson
+import org.jbox2d.collision.shapes.PolygonShape
 import org.jbox2d.common.Vec2
 import org.jbox2d.dynamics.BodyDef
 import org.jbox2d.dynamics.BodyType
 import org.jbox2d.dynamics.Fixture
 import org.jbox2d.dynamics.FixtureDef
+import org.joml.Vector2f
+import org.joml.Vector2fc
 import org.joml.Vector3f
-import util.Debug
 
-class CircleCollider(gameObject: GameObject) : Collider(gameObject) {
+class BoxCollider(gameObject: GameObject) : Collider(gameObject) {
     override val fixture: Fixture = Physics.world.createBody(BodyDef().apply {
         type = BodyType.DYNAMIC
         position = Vec2(transform.position.x(), transform.position.z())
     }).createFixture(FixtureDef().apply {
         friction = .3f
         density = 1f
-        shape = CircleShape().apply {
-            radius = 1f
+        shape = PolygonShape().apply {
+            setAsBox(1f, 1f)
         }
     })
 
-    /**
-     * change collider size (size is the radius of the circle)
-     */
-    var radius: Float = 1f
+    var size: Vector2fc = Vector2f(1f, 1f)
         set(value) {
             field = value
-            fixture.shape.radius = value
+            fixture.m_shape = PolygonShape().apply {
+                setAsBox(value.x(), value.y())
+            }
         }
 
     override fun draw() {
         if (Debug.active) {
             super.draw()
-            Debug.drawWiredSphere(transform.position, 1f, Vector3f(1f, 0f, 1f))
+            Debug.drawWiredCube(transform.position, Vector3f(size.x(), 0f, size.y()), Vector3f(1f, 0f, 1f))
         }
     }
 
     override fun toJson(): Any? {
         return mapOf(
-            "radius" to radius
+            "size" to size.toJson()
         )
     }
 
     override fun fromJson(json: Any?) {
-        val map = json as Map<*, *>
-
-        this.radius = (map["radius"] as Double).toFloat()
+        TODO("Not yet implemented")
     }
 }

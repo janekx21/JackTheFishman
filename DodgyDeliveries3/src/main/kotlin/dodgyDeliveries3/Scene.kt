@@ -1,5 +1,5 @@
-import com.beust.klaxon.JsonArray
-import com.beust.klaxon.JsonObject
+package dodgyDeliveries3
+
 import kotlin.reflect.full.primaryConstructor
 
 class Scene {
@@ -36,7 +36,7 @@ class Scene {
 
     fun findViaName(name: String): GameObject {
         val gameObject = allGameObjects.find { it.name == name }
-        check(gameObject != null) { "GameObject not found" }
+        check(gameObject != null) { "dodgyDeliveries3.GameObject not found" }
         return gameObject
     }
 

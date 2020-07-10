@@ -1,3 +1,8 @@
+package dodgyDeliveries3.components
+
+import dodgyDeliveries3.Component
+import dodgyDeliveries3.GameObject
+
 class HealthComponent(gameObject: GameObject) : Component(gameObject) {
     var hp: Float = 0F
     var maxHp: Float = 0F
