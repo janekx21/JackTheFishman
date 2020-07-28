@@ -1,19 +1,19 @@
 package dodgyDeliveries3
 
-import kotlin.reflect.full.primaryConstructor
-
-class Scene {
-    private val allGameObjects = arrayListOf<GameObject>()
-
-    fun spawn(go: GameObject) {
-        go.onEnable()
-        allGameObjects.add(go)
+data class Scene(val allGameObjects: ArrayList<GameObject> = arrayListOf()) {
+    init {
+        for (go in allGameObjects) {
+            go.setOrigin(this)
+        }
+        for (go in allGameObjects) {
+            go.onEnable()
+        }
     }
 
-    inline fun <reified T : GameObject> spawn(name: String): T {
-        val gameObject = T::class.primaryConstructor!!.call(name)
-        spawn(gameObject)
-        return gameObject
+    fun spawn(go: GameObject) {
+        go.setOrigin(this)
+        allGameObjects.add(go)
+        go.onEnable()
     }
 
     fun destroy(go: GameObject) {
@@ -45,25 +45,6 @@ class Scene {
     }
 
     companion object {
-        val active = Scene()
-
-        fun fromJson(json: Any?): Scene {
-            val map = json as Map<*, *>
-            val array = map["gameObjects"] as List<*>
-
-            return Scene().also { scene ->
-                array.forEach {
-                    scene.spawn(GameObject.fromJson(it))
-                }
-            }
-        }
-    }
-
-    fun toJson(): Any? {
-        return mapOf(
-            "gameObjects" to allGameObjects.map {
-                it.toJson()
-            }
-        )
+        var active = Scene()
     }
 }

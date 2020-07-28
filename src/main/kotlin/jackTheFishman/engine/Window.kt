@@ -62,7 +62,7 @@ object Window : Closeable {
 
     fun setIcon(texture: Texture2D) {
         val buffer = GLFWImage.malloc(1)
-        buffer.put(0, texture.toGLFWImage())
+        buffer.put(0, texture.asGLFWImage())
         glfwSetWindowIcon(pointer, buffer)
     }
 

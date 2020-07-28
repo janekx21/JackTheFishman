@@ -1,16 +1,26 @@
 package dodgyDeliveries3
 
+import com.beust.klaxon.Json
 import dodgyDeliveries3.components.Transform
-import jackTheFishman.engine.util.IJsonSerializable
-import jackTheFishman.engine.util.IJsonUnserializable
+import dodgyDeliveries3.util.IHasOrigin
 import kotlin.reflect.full.primaryConstructor
 
-open class GameObject(val name: String) : IJsonSerializable {
-    val components = arrayListOf<Component>()
+data class GameObject(val name: String, val components: ArrayList<Component> = arrayListOf()) : IHasOrigin<Scene> {
+    @Json(ignored = true)
     val transform: Transform
         get() = getComponent()
 
-    var cachedTransform: Transform? = null
+    @Json(ignored = true)
+    var cachedTransform: Transform? = components.find { component -> component is Transform } as Transform?
+
+    @Json(ignored = true)
+    var scene: Scene? = null
+
+    init {
+        for (component in components) {
+            component.setOrigin(this)
+        }
+    }
 
     fun update() {
         for (component in components) {
@@ -25,16 +35,19 @@ open class GameObject(val name: String) : IJsonSerializable {
     }
 
     fun addComponent(component: Component) {
+        component.gameObject = this
         components.add(component)
         component.onEnable()
+        component.start()
         if (component is Transform) {
             cachedTransform = component
         }
     }
 
     inline fun <reified T : Component> addComponent(): T {
-        check(T::class.primaryConstructor != null) { "you need a primary constructor" }
-        val component = T::class.primaryConstructor!!.call(this)
+        check(T::class.primaryConstructor != null) { "Primary constructor not found" }
+        check(T::class.primaryConstructor!!.parameters.all { it.isOptional }) { "${T::class.simpleName}'s primary constructor needs to have a default value for all parameters" }
+        val component = T::class.primaryConstructor!!.callBy(emptyMap())
         addComponent(component)
         return component
     }
@@ -48,18 +61,19 @@ open class GameObject(val name: String) : IJsonSerializable {
     }
 
     fun onEnable() {
-        for(component in components) {
+        for (component in components) {
             component.onEnable()
         }
     }
+
     fun onDisable() {
-        for(component in components) {
+        for (component in components) {
             component.onDisable()
         }
     }
 
     fun destroyAllComponents() {
-        for(component in components) {
+        for (component in components) {
             component.onDisable()
         }
         components.clear()
@@ -67,6 +81,9 @@ open class GameObject(val name: String) : IJsonSerializable {
 
     inline fun <reified T : Component> getComponent(): T {
         if (T::class == Transform::class) {
+            if (cachedTransform == null) {
+                cachedTransform = components.find { component -> component is Transform } as Transform
+            }
             check(cachedTransform != null) { "Transform was not found" }
             return cachedTransform as T
         }
@@ -79,41 +96,7 @@ open class GameObject(val name: String) : IJsonSerializable {
         return components.filterIsInstance<T>()
     }
 
-    override fun toJson(): Any? {
-        return mapOf(
-            "name" to name,
-            "dodgyDeliveries3/components" to components.map {
-                mapOf(
-                    "className" to it::class.java.name,
-                    "serialization" to it.toJson()
-                )
-            }
-        )
-    }
-
-    companion object : IJsonUnserializable<GameObject> {
-        override fun fromJson(json: Any?): GameObject {
-            val map = json as Map<*, *>
-
-            val list = map["dodgyDeliveries3/components"] as List<*>
-            val name = map["name"] as String
-
-            return GameObject(name).also { gameObject ->
-                list.forEach {
-                    @Suppress("NAME_SHADOWING")
-                    val map = it as Map<*, *>
-
-                    val component = Class
-                        .forName(map["className"] as String)
-                        .kotlin
-                        .primaryConstructor!!
-                        .call(gameObject) as Component
-
-                    component.fromJson(map["serialization"])
-
-                    gameObject.addComponent(component)
-                }
-            }
-        }
+    override fun setOrigin(origin: Scene) {
+        scene = origin
     }
 }

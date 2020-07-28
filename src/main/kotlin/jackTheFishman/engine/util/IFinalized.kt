@@ -5,6 +5,7 @@ package jackTheFishman.engine.util
  **/
 interface IFinalized {
     fun finalize()
+
     companion object {
         private val shouldBeFinalize = arrayListOf<IFinalized>()
         fun push(obj: IFinalized) {
@@ -12,7 +13,7 @@ interface IFinalized {
         }
 
         fun finalizeAll() {
-            for(obj in shouldBeFinalize) {
+            for (obj in shouldBeFinalize) {
                 obj.finalize()
             }
             shouldBeFinalize.clear()

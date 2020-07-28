@@ -8,7 +8,7 @@ object Matrix4fExt : IJsonUnserializable<Matrix4f> {
         val array = json as List<*>
 
         val result = Matrix4f()
-        (0 .. 15).forEach {
+        (0..15).forEach {
             result[it % 4, it / 4] = (array[it] as Double).toFloat()
         }
 

@@ -6,7 +6,6 @@ import jackTheFishman.engine.graphics.Shader
 import jackTheFishman.engine.graphics.Texture2D
 import org.joml.Matrix4f
 import org.joml.Vector3f
-
 import org.joml.Vector4f
 import org.lwjgl.glfw.GLFW
 import org.lwjgl.opengl.GL46

@@ -1,6 +1,5 @@
 package dodgyDeliveries3.util
 
-import dodgyDeliveries3.GameObject
 import dodgyDeliveries3.components.Camera
 import dodgyDeliveries3.components.Transform
 import jackTheFishman.engine.Loader
@@ -52,7 +51,7 @@ object Debug {
             debugShader.use {
                 for (sphere in spheres) {
                     debugShader.setUniform("Color", Vector3f(sphere.color))
-                    val world = Transform(GameObject("tmp")).run {
+                    val world = Transform().run {
                         position = Vector3f(sphere.position)
                         scale = Vector3f(sphere.radius)
                         generateMatrix()
@@ -68,7 +67,7 @@ object Debug {
 
                 for (cube in cubes) {
                     debugShader.setUniform("Color", Vector3f(cube.color))
-                    val world = Transform(GameObject("tmp")).run {
+                    val world = Transform().run {
                         position = Vector3f(cube.position)
                         scale = Vector3f(cube.size)
                         generateMatrix()

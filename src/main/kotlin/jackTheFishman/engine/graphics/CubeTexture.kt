@@ -1,9 +1,11 @@
 package jackTheFishman.engine.graphics
 
+import com.beust.klaxon.Json
 import jackTheFishman.engine.util.ICreateViaPath
 import jackTheFishman.engine.util.IUsable
 import jackTheFishman.engine.util.IntPointer
 import org.joml.Vector2i
+import org.joml.Vector2ic
 import org.lwjgl.opengl.GL46.*
 import org.lwjgl.stb.STBImage
 import org.lwjgl.stb.STBImage.stbi_load
@@ -11,14 +13,16 @@ import org.lwjgl.stb.STBImage.stbi_set_flip_vertically_on_load
 import java.io.File
 import java.nio.ByteBuffer
 
-class CubeTexture(val size: Vector2i) : Texture(), IUsable {
-    private val texture = glGenTextures()
+class CubeTexture : Texture(), IUsable {
+    @Json(ignored = true)
+    override val pointer = glGenTextures()
+    private var internalSize: Vector2ic = Vector2i(0, 0)
 
     init {
         glEnable(GL_TEXTURE_CUBE_MAP)
     }
 
-    fun setData(data: Array<ByteBuffer>) {
+    fun setData(data: Array<ByteBuffer>, size: Vector2ic) {
         check(data.size == 6) { "CubeTexture needs 6 images" }
         use {
             for (i in 0..5) {
@@ -26,8 +30,8 @@ class CubeTexture(val size: Vector2i) : Texture(), IUsable {
                     GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
                     0,
                     GL_RGBA,
-                    size.x,
-                    size.y,
+                    size.x(),
+                    size.y(),
                     0,
                     GL_RGBA,
                     GL_UNSIGNED_BYTE,
@@ -36,11 +40,12 @@ class CubeTexture(val size: Vector2i) : Texture(), IUsable {
             }
             glGenerateMipmap(GL_TEXTURE_CUBE_MAP)
         }
+        internalSize = Vector2i(size)
     }
 
     override fun bindWithIndex(index: Int) {
         glActiveTexture(GL_TEXTURE0 + index)
-        glBindTexture(GL_TEXTURE_CUBE_MAP, texture)
+        glBindTexture(GL_TEXTURE_CUBE_MAP, pointer)
     }
 
     override fun unbindWithIndex(index: Int) {
@@ -79,8 +84,8 @@ class CubeTexture(val size: Vector2i) : Texture(), IUsable {
                 size = Vector2i(width.value, height.value)
                 list.add(data)
             }
-            val texture = CubeTexture(size!!)
-            texture.setData(list.toTypedArray())
+            val texture = CubeTexture()
+            texture.setData(list.toTypedArray(), size!!)
 
             for (data in list) {
                 STBImage.stbi_image_free(data)

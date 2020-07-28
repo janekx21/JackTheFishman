@@ -20,7 +20,7 @@ object Input {
     }
 
     object Keyboard {
-        private var keyStates = (0 .. GLFW_KEY_LAST).map {
+        private var keyStates = (0..GLFW_KEY_LAST).map {
             Pair(it, ButtonState(isDown = false, changed = false))
         }.toMap()
 

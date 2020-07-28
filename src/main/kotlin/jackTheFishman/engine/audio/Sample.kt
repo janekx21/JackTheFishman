@@ -1,40 +1,35 @@
 package jackTheFishman.engine.audio
 
+import com.beust.klaxon.Json
+import com.beust.klaxon.TypeFor
 import jackTheFishman.engine.util.ICreateViaPath
-import jackTheFishman.engine.util.IJsonSerializable
-import jackTheFishman.engine.util.IJsonUnserializable
 import jackTheFishman.engine.util.IntPointer
+import jackTheFishman.engine.util.typeAdapter.SampleTypeAdapter
 import org.lwjgl.openal.AL10.*
 import org.lwjgl.stb.STBVorbis
 import org.lwjgl.system.MemoryStack
-import java.nio.ShortBuffer
 
-class Sample(rawAudioBuffer: ShortBuffer, channels: Int, sampleRate: Int, private val path: String? = null) : IJsonSerializable {
+@TypeFor(field = "type", adapter = SampleTypeAdapter::class)
+open class Sample(sampleFile: SampleFile) {
+    val type: String = javaClass.simpleName
 
     // Find the correct OpenAL format
-    private val format = formats[channels]
+    private val format = formats[sampleFile.channelCount]
 
     //Request space for the buffer
-    val bufferPointer = alGenBuffers()
+    @Json(ignored = true)
+    val pointer = alGenBuffers()
 
     init {
         check(format != null) { "format not found" }
         //Send the data to OpenAL
-        alBufferData(bufferPointer, format, rawAudioBuffer, sampleRate)
+        alBufferData(pointer, format, sampleFile.data, sampleFile.sampleRate)
     }
 
-    override fun toJson(): Any? {
-        checkNotNull(path)
-
-        return mapOf(
-            "path" to path
-        )
-    }
-
-    companion object : ICreateViaPath<Sample>, IJsonUnserializable<Sample> {
+    companion object : ICreateViaPath<Sample> {
         val formats = mapOf(1 to AL_FORMAT_MONO16, 2 to AL_FORMAT_STEREO16)
 
-        override fun createViaPath(path: String): Sample {
+        fun getSampleFileViaPath(path: String): SampleFile {
             // Allocate space to store return information from the function
             MemoryStack.stackPush()
 
@@ -58,16 +53,11 @@ class Sample(rawAudioBuffer: ShortBuffer, channels: Int, sampleRate: Int, privat
             //Free the space we allocated earlier
             MemoryStack.stackPop()
             MemoryStack.stackPop()
-
-            return Sample(rawAudioBuffer, channels, sampleRate)
+            return SampleFile(rawAudioBuffer, channels, sampleRate)
         }
 
-        override fun fromJson(json: Any?): Sample {
-            val map = json as Map<*, *>
-
-            checkNotNull(map["path"])
-
-            return createViaPath(map["path"] as String)
+        override fun createViaPath(path: String): Sample {
+            return SampleViaPath(path)
         }
     }
 }
