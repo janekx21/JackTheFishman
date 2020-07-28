@@ -1,2 +1,2 @@
 rootProject.name = "JackTheFishman"
-include("DodgyDeliveries3")
+include(":DodgyDeliveries3")

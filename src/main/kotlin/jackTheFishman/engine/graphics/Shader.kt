@@ -10,7 +10,6 @@ import org.joml.Vector4fc
 import org.lwjgl.opengl.GL20
 import org.lwjgl.opengl.GL46.*
 import java.io.File
-import java.nio.file.Path
 
 class Shader(val vertexCode: String, val fragmentCode: String, private val path: String? = null) : IUsable {
     private val program = compileProgram(vertexCode, fragmentCode)
@@ -88,7 +87,7 @@ class Shader(val vertexCode: String, val fragmentCode: String, private val path:
 
         private fun preprocess(path: String): String {
             var code = ""
-            val folder = Path.of(path).parent
+            val folder = File(path).parent
             for (line in File(path).readLines()) {
                 code += if (line.startsWith(importKeyword)) {
                     val file = line.substringAfterLast("$importKeyword ")

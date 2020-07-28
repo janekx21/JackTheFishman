@@ -25,7 +25,7 @@ class DD3 : Game() {
         Loader.rootPath = "dodgyDeliveries3"
     }
 
-    private val logo = Loader.createViaPath<Texture2D>("../jackTheFishman/engine/logo.png")
+    private val logo = Loader.createViaPath<Texture2D>("logos/logo.png")
 
     /*
     Camera Control:

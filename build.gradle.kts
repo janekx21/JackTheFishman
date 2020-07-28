@@ -2,43 +2,38 @@ import org.jetbrains.dokka.gradle.DokkaTask
 
 plugins {
     // Apply the Kotlin JVM plugin to add support for Kotlin.
-    id("org.jetbrains.kotlin.jvm") version "1.3.72"
+    kotlin("jvm") version "1.3.70"
 
     // Dokka javadoc/KDoc generation
     // see https://kotlinlang.org/docs/reference/kotlin-doc.html
     id("org.jetbrains.dokka") version "0.10.1"
-
-    // Apply the application plugin to add support for building a CLI application.
-    application
 }
 
-subprojects {
-    // Apllying the root plungins for the subprojects
+project(":DodgyDeliveries3") {
     // We need kotlin for the documentation generation
     apply(plugin = "java")
     apply(plugin = "kotlin")
+
+    dependencies {
+        // All subprojects depend on root project
+        implementation(project(":"))
+    }
 }
 
 allprojects {
     version = "1.0"
 
     repositories {
-        // Use jcenter for resolving dependencies.
-        // You can declare any Maven/Ivy/file repository here.
         jcenter()
-
-        flatDir {
-            // Adds lib dir as a repository
-            dirs("lib")
-        }
+        mavenCentral()
     }
 
     dependencies {
+        // Kotlin standard library for runtime support
+        implementation(kotlin("stdlib"))
+
         // Align versions of all Kotlin components
         implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
-
-        // Use the Kotlin JDK 8 standard library.
-        implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
         // Use the Kotlin test library.
         testImplementation("org.jetbrains.kotlin:kotlin-test")
@@ -46,20 +41,45 @@ allprojects {
         // Use the Kotlin JUnit integration.
         testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
 
-        // Every lib in the lib folder needs do be includes
-        implementation(fileTree("lib"))
-        // TODO change dependencies to online repository
+        // Koin for dependency injection
+        val koinVersion = "2.1.5"
+        implementation("org.koin:koin-core:$koinVersion")
+        testImplementation("org.koin:koin-test:$koinVersion")
+
+        // Klaxon is a json serialisation library
+        implementation("com.beust:klaxon:5.0.1")
+        // Faster JSON parser (about twice on large json strings)
+        implementation("com.beust:klaxon-jackson:1.0.1")
+
+        // 2D Physics
+        implementation("org.jbox2d:jbox2d-library:2.2.1.1")
+
+        // LWJGL is a collection of game library's
+        val lwjglVersion = "3.2.3"
+        val jomlVersion = "1.9.25"
+        val lwjglNatives = "natives-windows"
+        implementation(platform("org.lwjgl:lwjgl-bom:$lwjglVersion"))
+
+        implementation("org.lwjgl", "lwjgl")
+        implementation("org.lwjgl", "lwjgl-assimp")
+        implementation("org.lwjgl", "lwjgl-glfw")
+        implementation("org.lwjgl", "lwjgl-openal")
+        implementation("org.lwjgl", "lwjgl-opengl")
+        implementation("org.lwjgl", "lwjgl-stb")
+        implementation("org.lwjgl", "lwjgl-tinyfd")
+        runtimeOnly("org.lwjgl", "lwjgl", classifier = lwjglNatives)
+        runtimeOnly("org.lwjgl", "lwjgl-assimp", classifier = lwjglNatives)
+        runtimeOnly("org.lwjgl", "lwjgl-glfw", classifier = lwjglNatives)
+        runtimeOnly("org.lwjgl", "lwjgl-openal", classifier = lwjglNatives)
+        runtimeOnly("org.lwjgl", "lwjgl-opengl", classifier = lwjglNatives)
+        runtimeOnly("org.lwjgl", "lwjgl-stb", classifier = lwjglNatives)
+        runtimeOnly("org.lwjgl", "lwjgl-tinyfd", classifier = lwjglNatives)
+        implementation("org.joml", "joml", jomlVersion)
     }
 }
 
-
-application {
-    // Define the main class for the application.
-    // TODO define main class
-}
-
 tasks {
-    // Generate documentation
+    // Generate documentation with kotlin support
     val dokka by getting(DokkaTask::class) {
         outputFormat = "html"
         outputDirectory = "$buildDir/dokka"
