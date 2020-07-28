@@ -25,7 +25,7 @@ object Loader {
         return File(resourcePath)
     }
 
-    @Deprecated("because its symbol is ugly", ReplaceWith("createViaPath<T>(path)"))
+    @Deprecated("because its symbol is ugly. Replace with `createViaPath<T>(path)`.")
     inline fun <reified T> createViaPath(obj: ICreateViaPath<T>, path: String): T {
         val pathWithRoot = File(rootPath).resolve(path)
         val moddedPath = resourceFileViaPath(pathWithRoot.invariantSeparatorsPath)

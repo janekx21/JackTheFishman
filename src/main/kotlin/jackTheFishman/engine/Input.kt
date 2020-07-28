@@ -289,23 +289,23 @@ object Input {
          */
         private var nextKeyStates = keyStates.toMutableMap()
 
-        @Deprecated("it depends on glfw key codes", ReplaceWith("down(key: Keys)"))
+        @Deprecated("it depends on glfw key codes")
         fun down(key: Int): Boolean = down(glfwKeyToKey[key] ?: error("Key not found"))
         fun down(key: Keys): Boolean = keyStates.getValue(key).isDown
 
-        @Deprecated("it depends on glfw key codes", ReplaceWith("up(key: Keys)"))
+        @Deprecated("it depends on glfw key codes")
         fun up(key: Int): Boolean = up(glfwKeyToKey[key] ?: error("Key not found"))
         fun up(key: Keys): Boolean = !down(key)
 
-        @Deprecated("it depends on glfw key codes", ReplaceWith("changed(key: Keys)"))
+        @Deprecated("it depends on glfw key codes")
         fun changed(key: Int): Boolean = changed(glfwKeyToKey[key] ?: error("Key not found"))
         fun changed(key: Keys): Boolean = keyStates.getValue(key).changed
 
-        @Deprecated("it depends on glfw key codes", ReplaceWith("justDown(key: Keys)"))
+        @Deprecated("it depends on glfw key codes")
         fun justDown(key: Int): Boolean = justDown(glfwKeyToKey[key] ?: error("Key not found"))
         fun justDown(key: Keys): Boolean = keyStates.getValue(key).justDown
 
-        @Deprecated("it depends on glfw key codes", ReplaceWith("justUp(key: Keys)"))
+        @Deprecated("it depends on glfw key codes")
         fun justUp(key: Int): Boolean = justUp(glfwKeyToKey[key] ?: error("Key not found"))
         fun justUp(key: Keys): Boolean = keyStates.getValue(key).justUp
 
