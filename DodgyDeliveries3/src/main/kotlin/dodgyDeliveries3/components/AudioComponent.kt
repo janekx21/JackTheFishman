@@ -1,13 +1,12 @@
 package dodgyDeliveries3.components
 
 import dodgyDeliveries3.Component
-import dodgyDeliveries3.GameObject
 import jackTheFishman.engine.audio.IPlayable
 import jackTheFishman.engine.audio.Sample
 import jackTheFishman.engine.audio.Source
 import jackTheFishman.engine.math.Vector3fCopy
 
-class AudioComponent(gameObject: GameObject) : Component(gameObject), IPlayable {
+class AudioComponent : Component(), IPlayable {
     private var source = Source()
 
     var sample: Sample? = null
@@ -24,7 +23,9 @@ class AudioComponent(gameObject: GameObject) : Component(gameObject), IPlayable 
     override fun stop() = source.stop()
 
     override var time: Float
-        set(value) { source.time = value }
+        set(value) {
+            source.time = value
+        }
         get() = source.time
 
     override val playing: Boolean get() = source.playing
@@ -37,16 +38,4 @@ class AudioComponent(gameObject: GameObject) : Component(gameObject), IPlayable 
     }
 
     override fun draw() {}
-
-    override fun toJson(): Any? {
-        return mapOf(
-            "source" to source.toJson()
-        )
-    }
-
-    override fun fromJson(json: Any?) {
-        val map = json as Map<*, *>
-
-        source = Source.fromJson(map["source"]!!)
-    }
 }

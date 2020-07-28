@@ -17,16 +17,16 @@ class Framebuffer : IUsable {
         glBindFramebuffer(GL_FRAMEBUFFER, buffer)
     }
 
-    var texture = Texture2D(size).also {
-        it.fillWithNull()
+    var texture = Texture2D().also {
+        it.fillWithNull(size)
         it.makeLinear()
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, it.texture, 0)
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, it.pointer, 0)
     }
 
-    var depth = Texture2D(size).also {
-        it.fillWithZeroDepth()
+    var depth = Texture2D().also {
+        it.fillWithZeroDepth(size)
         it.makeLinear()
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, it.texture, 0)
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, it.pointer, 0)
     }
 
     init {

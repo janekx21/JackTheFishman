@@ -1,26 +1,27 @@
 package jackTheFishman.engine.graphics
 
+import com.beust.klaxon.Json
 import jackTheFishman.engine.util.ICreateViaPath
 import jackTheFishman.engine.util.IUsable
-import jackTheFishman.engine.util.IntPointer
 import org.joml.Vector2i
 import org.joml.Vector2ic
 import org.lwjgl.BufferUtils
 import org.lwjgl.glfw.GLFWImage
 import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL46.*
-import org.lwjgl.stb.STBImage.*
 import java.nio.ByteBuffer
 
-class Texture2D(val size: Vector2ic) : Texture(), IUsable {
-    val texture = glGenTextures()
+open class Texture2D : Texture(), IUsable {
+    @Json(ignored = true)
+    override val pointer = glGenTextures()
+    private var internalSize: Vector2ic = Vector2i(0, 0)
     private var internalData = ByteArray(0)
 
     init {
         glEnable(GL_TEXTURE_2D)
     }
 
-    fun setData(data: ByteBuffer) {
+    fun setData(data: ByteBuffer, size: Vector2ic) {
         use {
             glTexImage2D(
                 GL_TEXTURE_2D,
@@ -33,30 +34,35 @@ class Texture2D(val size: Vector2ic) : Texture(), IUsable {
                 GL_UNSIGNED_BYTE,
                 data
             )
+            // is needed because of the texture filtering mode
             glGenerateMipmap(GL_TEXTURE_2D)
         }
 
+        // copy's data to internalData
         internalData = ByteArray(data.remaining())
         data.get(internalData)
         data.rewind()
+        internalSize = Vector2i(size)
     }
 
-    fun fillWithNull() {
+    fun fillWithNull(size: Vector2ic) {
+        internalSize = Vector2i(size)
         use {
             val n: ByteBuffer? = null
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, size.x(), size.y(), 0, GL_RGBA, GL_UNSIGNED_BYTE, n)
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, internalSize.x(), internalSize.y(), 0, GL_RGBA, GL_UNSIGNED_BYTE, n)
         }
     }
 
-    fun fillWithZeroDepth() {
+    fun fillWithZeroDepth(size: Vector2ic) {
+        internalSize = Vector2i(size)
         use {
             val n: ByteBuffer? = null
             glTexImage2D(
                 GL_TEXTURE_2D,
                 0,
                 GL_DEPTH24_STENCIL8,
-                size.x(),
-                size.y(),
+                internalSize.x(),
+                internalSize.y(),
                 0,
                 GL_DEPTH_STENCIL,
                 GL_UNSIGNED_INT_24_8,
@@ -72,25 +78,25 @@ class Texture2D(val size: Vector2ic) : Texture(), IUsable {
         }
     }
 
-    fun toGLFWImage(): GLFWImage {
+    fun asGLFWImage(): GLFWImage {
         val image = GLFWImage.create()
-        val bb = BufferUtils.createByteBuffer(size.x() * size.y() * 4)
+        val bb = BufferUtils.createByteBuffer(internalSize.x() * internalSize.y() * 4)
         // copy and flip the image
-        for (i in 0 until size.x() * size.y() * 4) {
-            val x = i / 4 % size.x()
-            val y = size.y() - 1 - i / 4 / size.x() // flip y
+        for (i in 0 until internalSize.x() * internalSize.y() * 4) {
+            val x = i / 4 % internalSize.x()
+            val y = internalSize.y() - 1 - i / 4 / internalSize.x() // flip y
             val b = i % 4
 
-            bb.put(i, internalData[(x + y * size.x()) * 4 + b])
+            bb.put(i, internalData[(x + y * internalSize.x()) * 4 + b])
         }
 
-        image.set(size.x(), size.y(), bb)
+        image.set(internalSize.x(), internalSize.y(), bb)
         return image
     }
 
     override fun bindWithIndex(index: Int) {
         glActiveTexture(GL_TEXTURE0 + index)
-        glBindTexture(GL_TEXTURE_2D, texture)
+        glBindTexture(GL_TEXTURE_2D, pointer)
     }
 
     override fun unbindWithIndex(index: Int) {
@@ -98,6 +104,10 @@ class Texture2D(val size: Vector2ic) : Texture(), IUsable {
         glBindTexture(GL_TEXTURE_2D, 0)
     }
 
+    /**
+     * Binds and unbinds the texture
+     * This wraps the callback in a bound state
+     */
     override fun use(callback: () -> Unit) {
         bindWithIndex(0)
         callback()
@@ -105,20 +115,8 @@ class Texture2D(val size: Vector2ic) : Texture(), IUsable {
     }
 
     companion object : ICreateViaPath<Texture2D> {
-        override fun createViaPath(path: String): Texture2D {
-            val width = IntPointer()
-            val height = IntPointer()
-            val channels = IntPointer()
-            stbi_set_flip_vertically_on_load(true)
-            val data = stbi_load(path, width.buffer, height.buffer, channels.buffer, 4)
-            check(data != null) { "image could not be loaded" }
-            val size = Vector2i(width.value, height.value)
-
-            val texture = Texture2D(size)
-            texture.setData(data)
-
-            stbi_image_free(data)
-            return texture
+        override fun createViaPath(path: String): Texture2DViaPath {
+            return Texture2DViaPath(path)
         }
 
         fun setDefaultTextureWhite() {
@@ -134,7 +132,6 @@ class Texture2D(val size: Vector2ic) : Texture(), IUsable {
                 GL_UNSIGNED_BYTE,
                 intArrayOf(0xffffff)
             )
-
         }
     }
 }

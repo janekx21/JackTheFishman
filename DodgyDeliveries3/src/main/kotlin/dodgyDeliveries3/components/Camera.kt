@@ -1,12 +1,14 @@
 package dodgyDeliveries3.components
 
 import dodgyDeliveries3.Component
-import dodgyDeliveries3.GameObject
 import jackTheFishman.engine.Window
-import jackTheFishman.engine.math.*
+import jackTheFishman.engine.math.Vector3fCopy
+import jackTheFishman.engine.math.minus
+import jackTheFishman.engine.math.plus
+import jackTheFishman.engine.math.times
 import org.joml.*
 
-class Camera(gameObject: GameObject) : Component(gameObject) {
+class Camera : Component() {
     private var matrix: Matrix4fc = Matrix4f().perspective(Math.toRadians(90.0).toFloat(), Window.aspect, .1f, 100f)
     private var hash = 0
     private var cached: Matrix4fc = Matrix4f()
@@ -47,21 +49,12 @@ class Camera(gameObject: GameObject) : Component(gameObject) {
         if (follow != null) {
             val pointToFollow = follow!!.position + relativeRotation.normalize(1F) * distance
             transform.position = Vector3f(transform.position).lerp(pointToFollow, smoothAmount)
-            transform.rotation = (Quaternionf().identity().lookAlong((follow!!.position - transform.position), Vector3fCopy.up))
+            transform.rotation =
+                (Quaternionf().identity().lookAlong((follow!!.position - transform.position), Vector3fCopy.up))
         }
     }
 
     companion object {
         var main: Camera? = null
-    }
-
-    override fun toJson(): Any? {
-        return matrix.toJson()
-    }
-
-    override fun fromJson(json: Any?) {
-        val map = json as Map<*, *>
-        this.matrix = Matrix4fExt.fromJson(map["matrix"])
-        generateViewMatrix()
     }
 }

@@ -1,11 +1,13 @@
 package jackTheFishman.engine.graphics
 
+import com.beust.klaxon.TypeFor
 import jackTheFishman.engine.math.times
 import jackTheFishman.engine.math.toMatrix4fc
 import jackTheFishman.engine.math.toVector3fc
 import jackTheFishman.engine.util.ICreateViaPath
 import jackTheFishman.engine.util.IDrawable
 import jackTheFishman.engine.util.IUsable
+import jackTheFishman.engine.util.typeAdapter.MeshTypeAdapter
 import org.joml.Matrix4f
 import org.joml.Vector2f
 import org.joml.Vector3f
@@ -15,8 +17,10 @@ import org.lwjgl.assimp.AIScene
 import org.lwjgl.assimp.Assimp
 import org.lwjgl.opengl.GL46.*
 
+@TypeFor(field = "type", adapter = MeshTypeAdapter::class)
+open class Mesh(private val data: Array<Vertex>) : IDrawable, IUsable {
+    val type: String = javaClass.simpleName
 
-class Mesh(private val data: Array<Vertex>, private val path: String? = null) : IDrawable, IUsable {
     private val vbo: Int = glGenBuffers()
     private val vao: Int = glGenVertexArrays()
 
@@ -44,15 +48,21 @@ class Mesh(private val data: Array<Vertex>, private val path: String? = null) : 
     }
 
     companion object : ICreateViaPath<Mesh> {
-        override fun createViaPath(path: String): Mesh {
+        fun getMeshDataViaPath(path: String): Array<Vertex> {
             val scene =
-                Assimp.aiImportFile(path, Assimp.aiProcess_Triangulate or Assimp.aiProcess_GenNormals or Assimp.aiProcess_CalcTangentSpace)
+                Assimp.aiImportFile(
+                    path,
+                    Assimp.aiProcess_Triangulate or Assimp.aiProcess_GenNormals or Assimp.aiProcess_CalcTangentSpace
+                )
             check(scene != null) { Assimp.aiGetErrorString()!! }
 
             val root = scene.mRootNode()!!
             val list = processMesh(scene, root)
+            return list.toTypedArray()
+        }
 
-            return Mesh(list.toTypedArray())
+        override fun createViaPath(path: String): Mesh {
+            return MeshViaPath(path)
         }
 
         private val constantScale = Matrix4f().scale(.01f)
@@ -104,15 +114,5 @@ class Mesh(private val data: Array<Vertex>, private val path: String? = null) : 
             }
             return list
         }
-
-        fun fromJson(json: Any?): Mesh {
-            val map = json as Map<*, *>
-            return createViaPath(map["path"] as String)
-        }
-    }
-
-    fun toJson(): Any? {
-        check(path != null)
-        return mapOf("path" to path)
     }
 }

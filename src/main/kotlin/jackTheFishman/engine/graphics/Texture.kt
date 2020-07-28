@@ -1,6 +1,13 @@
 package jackTheFishman.engine.graphics
 
+import com.beust.klaxon.TypeFor
+import jackTheFishman.engine.util.typeAdapter.TextureTypeAdapter
+
+@TypeFor(field = "type", adapter = TextureTypeAdapter::class)
 abstract class Texture {
+    val type: String = javaClass.simpleName
+
+    abstract val pointer: Int
     abstract fun bindWithIndex(index: Int)
     abstract fun unbindWithIndex(index: Int)
 

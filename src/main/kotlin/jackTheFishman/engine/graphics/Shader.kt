@@ -1,8 +1,10 @@
 package jackTheFishman.engine.graphics
 
+import com.beust.klaxon.TypeFor
 import jackTheFishman.engine.util.ICreateViaPath
 import jackTheFishman.engine.util.IUsable
 import jackTheFishman.engine.util.IntPointer
+import jackTheFishman.engine.util.typeAdapter.ShaderTypeAdapter
 import org.joml.Matrix4f
 import org.joml.Matrix4fc
 import org.joml.Vector3fc
@@ -11,8 +13,11 @@ import org.lwjgl.opengl.GL20
 import org.lwjgl.opengl.GL46.*
 import java.io.File
 
-class Shader(val vertexCode: String, val fragmentCode: String, private val path: String? = null) : IUsable {
-    private val program = compileProgram(vertexCode, fragmentCode)
+@TypeFor(field = "type", adapter = ShaderTypeAdapter::class)
+open class Shader(code: ShaderCode) : IUsable {
+    val type: String = javaClass.simpleName
+
+    private val program = compileProgram(code.vertexCode, code.fragmentCode)
     private val uniformLocations = HashMap<String, Int>()
     private val textureUniforms = arrayListOf<Texture>()
 
@@ -61,14 +66,6 @@ class Shader(val vertexCode: String, val fragmentCode: String, private val path:
         setUniform(viewAttributeName, view)
         setUniform(projectionAttributeName, projection)
         setUniform(mvpAttributeName, mvp)
-    }
-
-    fun toJson(): Any? {
-        return if (path != null) {
-            mapOf("path" to path)
-        } else {
-            mapOf("vertexCode" to vertexCode, "fragmentCode" to fragmentCode)
-        }
     }
 
     companion object : ICreateViaPath<Shader> {
@@ -134,7 +131,7 @@ class Shader(val vertexCode: String, val fragmentCode: String, private val path:
             None, Vertex, Fragment
         }
 
-        override fun createViaPath(path: String): Shader {
+        fun getCodeViaPath(path: String): ShaderCode {
             var vertex = ""
             var fragment = ""
             var mode = Mode.None
@@ -168,18 +165,11 @@ class Shader(val vertexCode: String, val fragmentCode: String, private val path:
                     }
                 }
             }
-
-            return Shader(prefixShader(vertex), prefixShader(fragment))
+            return ShaderCode(prefixShader(vertex), prefixShader(fragment))
         }
 
-        fun fromJson(json: Any?): Shader {
-            val map = json as Map<*, *>
-
-            return if (map["path"] != null) {
-                createViaPath(map["path"] as String)
-            } else {
-                Shader(map["vertexCode"] as String, map["fragmentCode"] as String)
-            }
+        override fun createViaPath(path: String): Shader {
+            return ShaderViaPath(path)
         }
     }
 }

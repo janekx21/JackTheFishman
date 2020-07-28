@@ -1,12 +1,11 @@
 package dodgyDeliveries3.components
 
 import dodgyDeliveries3.Component
-import dodgyDeliveries3.GameObject
 import jackTheFishman.engine.audio.IPlayable
 import jackTheFishman.engine.audio.Sample
 import jackTheFishman.engine.audio.Source
 
-class Music(gameObject: GameObject) : Component(gameObject), IPlayable {
+class Music : Component(), IPlayable {
 
     var sample: Sample? = null
         get() = source.sample
@@ -24,7 +23,9 @@ class Music(gameObject: GameObject) : Component(gameObject), IPlayable {
     override fun pause() = source.pause()
     override fun stop() = source.stop()
     override var time: Float
-        set(value) { source.time = value }
+        set(value) {
+            source.time = value
+        }
         get() = source.time
     override val playing: Boolean get() = source.playing
 
@@ -34,20 +35,4 @@ class Music(gameObject: GameObject) : Component(gameObject), IPlayable {
 
     val beat: Float
         get() = (time - offset) / (60f / bpm)
-
-    override fun toJson(): Any? {
-        return mapOf(
-            "source" to source.toJson(),
-            "bpm" to bpm,
-            "offset" to offset
-        )
-    }
-
-    override fun fromJson(json: Any?) {
-        val map = json as Map<*, *>
-
-        source = Source.fromJson(map["source"]!!)
-        bpm = (map["bpm"] as Double).toFloat()
-        offset = (map["offset"] as Double).toFloat()
-    }
 }

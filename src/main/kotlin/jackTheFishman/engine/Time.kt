@@ -7,7 +7,7 @@ object Time {
     var timeScale = 1f
 
     fun update(deltaTime: Float) {
-        this.deltaTime = deltaTime
+        Time.deltaTime = deltaTime
         time += deltaTime * timeScale
     }
 }

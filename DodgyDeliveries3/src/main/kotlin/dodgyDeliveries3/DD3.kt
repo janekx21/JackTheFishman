@@ -85,7 +85,7 @@ class DD3 : Game() {
             Scene.active.spawn(gameObject)
         }
 
-        // dodgyDeliveries3.GameObject: components.Camera
+        // dodgyDeliveries3.GameObject: dodgyDeliveries3.components.Camera
         GameObject("Camera").also { gameObject ->
             gameObject.addComponent<Transform>().apply {
                 position = Vector3f(0f, 0f, .5f)

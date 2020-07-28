@@ -1,6 +1,5 @@
 package dodgyDeliveries3.components
 
-import dodgyDeliveries3.GameObject
 import dodgyDeliveries3.graphics.Material
 import jackTheFishman.engine.Loader
 import jackTheFishman.engine.graphics.Mesh
@@ -8,15 +7,13 @@ import jackTheFishman.engine.graphics.Shader
 import jackTheFishman.engine.graphics.Texture2D
 import org.joml.Vector3f
 
-class ModelRenderer(gameObject: GameObject) : Renderer(gameObject) {
+data class ModelRenderer(var mesh: Mesh? = null, var material: Material = defaultMaterial) : Renderer() {
     companion object {
         val defaultShader = Loader.createViaPath<Shader>("shaders/default.shader")
         val defaultNormal = Loader.createViaPath<Texture2D>("textures/normal.png")
         val defaultAlbedo = Loader.createViaPath<Texture2D>("textures/default.png")
+        val defaultMaterial = Material(defaultShader, .5f, 40f, .6f, Vector3f(.1f, .1f, .1f), null, null, .1f)
     }
-
-    var mesh: Mesh? = null
-    var material = Material(defaultShader, .5f, 40f, .6f, Vector3f(.1f, .1f, .1f), null, null, .1f)
 
     override fun update() {}
 
@@ -56,26 +53,5 @@ class ModelRenderer(gameObject: GameObject) : Renderer(gameObject) {
                 mesh?.draw()
             }
         }
-    }
-
-    override fun toJson(): Any? {
-        return mapOf(
-            "mesh" to mesh?.toJson(),
-            "material" to material
-        )
-    }
-
-    override fun fromJson(json: Any?) {
-        val map = json as Map<*, *>
-        val mesh: Mesh?
-
-        mesh = if (map["mesh"] != null) {
-            Mesh.fromJson(map["mesh"] as String)
-        } else {
-            null
-        }
-
-        this.mesh = mesh
-        this.material = map["material"] as Material
     }
 }
