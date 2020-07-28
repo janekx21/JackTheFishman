@@ -1,5 +1,9 @@
 package dodgyDeliveries3
 
+import jackTheFishman.engine.Serialisation
+import jackTheFishman.engine.util.ICreateViaPath
+import java.io.File
+
 data class Scene(val allGameObjects: ArrayList<GameObject> = arrayListOf()) {
     init {
         for (go in allGameObjects) {
@@ -44,7 +48,13 @@ data class Scene(val allGameObjects: ArrayList<GameObject> = arrayListOf()) {
         return allGameObjects.find(predicate)
     }
 
-    companion object {
+    companion object : ICreateViaPath<Scene> {
         var active = Scene()
+        override fun createViaPath(path: String): Scene {
+            val json = File(path).readText()
+            val scene = Serialisation.klaxon.parse<Scene>(json)
+            check(scene != null) {"Scene could not pe loaded at $path"}
+            return scene
+        }
     }
 }
