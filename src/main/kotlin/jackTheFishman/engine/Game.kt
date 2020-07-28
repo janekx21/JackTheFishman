@@ -8,7 +8,7 @@ open class Game {
         check(GLFW.glfwInit()) { "GLFW could'nt init" }
         // Configure GLFW
         GLFW.glfwDefaultWindowHints() // optional, the current window hints are already the default
-        Window // init window
+        Window
         Audio
         Physics
     }
