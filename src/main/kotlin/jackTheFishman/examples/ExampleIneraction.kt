@@ -1,6 +1,7 @@
 package jackTheFishman.examples
 
 import jackTheFishman.engine.*
+import jackTheFishman.engine.Loader.createViaPath
 import jackTheFishman.engine.graphics.Mesh
 import jackTheFishman.engine.graphics.Shader
 import jackTheFishman.engine.graphics.Texture2D
@@ -20,9 +21,9 @@ class Game1 : Game() {
         Loader.rootPath = "assets/jackTheFishman/examples"
     }
 
-    private val loadedMesh = Loader.createViaPath(Mesh, "models/street.fbx")
-    private val tex = Loader.createViaPath(Texture2D, "textures/krakula-xl.png")
-    private val shader: Shader = Loader.createViaPath(Shader, "shaders/funky.shader")
+    private val loadedMesh = createViaPath<Mesh>("models/street.fbx")
+    private val tex = createViaPath<Texture2D>("textures/krakula-xl.png")
+    private val shader: Shader = createViaPath("shaders/funky.shader")
 
     val world = Matrix4f()
     val projection = Matrix4f()
@@ -52,7 +53,7 @@ class Game1 : Game() {
         shader.setUniform("funkyColor", Vector4f(.2f, .5f, .7f, 1f))
         shader.setUniform("funkyTex", tex)
 
-        if (Input.Keyboard.down(GLFW.GLFW_KEY_SPACE)) {
+        if (Input.Keyboard.down(Input.Keyboard.Keys.KEY_SPACE)) {
             shader.setUniform("funkyColor", Vector4f(.9f, .2f, .2f, 1f))
         }
         shader.use {

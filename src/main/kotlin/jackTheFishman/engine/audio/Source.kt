@@ -1,7 +1,7 @@
 package jackTheFishman.engine.audio
 
-import jackTheFishman.engine.math.Vector3fCopy
-import org.joml.Vector3f
+import jackTheFishman.engine.math.Vector3fConst
+import org.joml.Vector3fc
 import org.lwjgl.openal.AL10.*
 import org.lwjgl.openal.AL11.AL_SEC_OFFSET
 import java.io.Closeable

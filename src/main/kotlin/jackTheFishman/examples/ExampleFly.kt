@@ -2,19 +2,18 @@ package jackTheFishman.examples
 
 
 import jackTheFishman.engine.*
+import jackTheFishman.engine.Loader.createViaPath
 import jackTheFishman.engine.graphics.CubeTexture
 import jackTheFishman.engine.graphics.Mesh
 import jackTheFishman.engine.graphics.Shader
 import jackTheFishman.engine.graphics.Texture2D
 import jackTheFishman.engine.math.Vector3fConst
-import jackTheFishman.engine.math.Vector3fCopy
 import jackTheFishman.engine.math.clamp
-import org.joml.Matrix4f
-import org.joml.Quaternionf
-import org.joml.Vector3f
-import org.joml.Vector4f
-import org.lwjgl.glfw.GLFW
+import jackTheFishman.engine.math.plus
+import jackTheFishman.engine.math.times
+import org.joml.*
 import org.lwjgl.opengl.GL46
+import java.lang.Math
 
 fun main() {
     Game2().run()
@@ -25,11 +24,11 @@ class Game2 : Game() {
         Loader.rootPath = "jackTheFishman/examples"
     }
 
-    private val loadedMesh = Loader.createViaPath(Mesh, "models/scene.fbx")
-    private val tex = Loader.createViaPath(Texture2D, "textures/krakula-xl.png")
-    private val shader: Shader = Loader.createViaPath(Shader, "shaders/funky.shader")
+    private val loadedMesh = createViaPath<Mesh>("models/scene.fbx")
+    private val tex = createViaPath<Texture2D>("textures/krakula-xl.png")
+    private val shader: Shader = createViaPath("shaders/funky.shader")
     private val logo = Loader.createViaPath<Texture2D>("../engine/logo.png")
-    private val cube = Loader.createViaPath(CubeTexture, "textures/cubeExample")
+    private val cube = createViaPath<CubeTexture>("textures/cubeExample")
 
     private val world = Matrix4f()
     private val projection = Matrix4f()
@@ -72,11 +71,11 @@ class Game2 : Game() {
         if (Input.Keyboard.down(GLFW.GLFW_KEY_LEFT_SHIFT)) {
             move.add(Vector3fConst.down)
         }
-        if (Input.Keyboard.down(GLFW.GLFW_KEY_A)) {
-            move.add(Vector3fConst.left)
+        if (Input.Keyboard.down(Input.Keyboard.Keys.KEY_A)) {
+            move += Vector3fConst.left
         }
-        if (Input.Keyboard.down(GLFW.GLFW_KEY_D)) {
-            move.add(Vector3fConst.right)
+        if (Input.Keyboard.down(Input.Keyboard.Keys.KEY_D)) {
+            move += Vector3fConst.right
         }
 
         val sensitivity = .006f

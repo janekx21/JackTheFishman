@@ -1,10 +1,16 @@
 package jackTheFishman.engine
 
+import jackTheFishman.engine.Input.Keyboard.changed
+import jackTheFishman.engine.Input.Keyboard.down
+import jackTheFishman.engine.Input.Keyboard.justDown
+import jackTheFishman.engine.Input.Keyboard.justUp
+import jackTheFishman.engine.Input.Keyboard.up
 import jackTheFishman.engine.math.Vector2fCopy
+import jackTheFishman.engine.math.minus
 import jackTheFishman.engine.util.DoublePointer
 import org.joml.Vector2f
+import org.joml.Vector2fc
 import org.lwjgl.glfw.GLFW.*
-import org.lwjgl.glfw.GLFWGamepadState
 
 object Input {
 

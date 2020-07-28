@@ -1,6 +1,5 @@
 package jackTheFishman.engine.math
 
-import jackTheFishman.engine.util.IJsonUnserializable
 import org.joml.Vector3f
 import org.joml.Vector3fc
 
