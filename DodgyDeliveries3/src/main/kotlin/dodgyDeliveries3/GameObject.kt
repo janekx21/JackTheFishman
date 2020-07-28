@@ -59,13 +59,13 @@ data class GameObject(val name: String, val components: ArrayList<Component> = a
         }
     }
 
-    fun onEnable() {
+    fun start() {
         for (component in components) {
             component.start()
         }
     }
 
-    fun onDisable() {
+    fun stop() {
         for (component in components) {
             component.stop()
         }

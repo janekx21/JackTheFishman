@@ -6,19 +6,19 @@ data class Scene(val allGameObjects: ArrayList<GameObject> = arrayListOf()) {
             go.setOrigin(this)
         }
         for (go in allGameObjects) {
-            go.onEnable()
+            go.start()
         }
     }
 
     fun spawn(go: GameObject) {
         go.setOrigin(this)
         allGameObjects.add(go)
-        go.onEnable()
+        go.start()
     }
 
     fun destroy(go: GameObject) {
         go.destroyAllComponents()
-        go.onDisable()
+        go.stop()
         allGameObjects.remove(go)
     }
 
