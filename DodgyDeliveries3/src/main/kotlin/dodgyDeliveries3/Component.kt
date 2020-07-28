@@ -3,41 +3,40 @@ package dodgyDeliveries3
 import com.beust.klaxon.Json
 import com.beust.klaxon.TypeFor
 import dodgyDeliveries3.components.Transform
+import dodgyDeliveries3.util.IDrawable
 import dodgyDeliveries3.util.IHasOrigin
+import dodgyDeliveries3.util.IRunnable
+import dodgyDeliveries3.util.IUpdatable
 import dodgyDeliveries3.util.typeAdapter.ComponentTypeAdapter
 
 @TypeFor(field = "className", adapter = ComponentTypeAdapter::class)
-abstract class Component : IHasOrigin<GameObject> {
+abstract class Component : IHasOrigin<GameObject>, IUpdatable, IDrawable, IRunnable {
     val className: String = javaClass.name
 
-    /**
-     * Cached [GameObject] for later use. Otherwise it would be searched every time.
-     */
-    private var cachedGameObject: GameObject? = null
+    private var internalGameObject: GameObject? = null
 
     @Json(ignored = true)
     var gameObject: GameObject
         get() {
-            check(cachedGameObject != null) { "Component not initialized yet. Try overriding the start() function" }
-            return cachedGameObject!!
+            check(internalGameObject != null) { "Component not initialized yet. Try overriding the start() function" }
+            return internalGameObject!!
         }
         set(value) {
-            check(cachedGameObject == null) { "gameObject was already set" }
-            cachedGameObject = value
+            check(internalGameObject == null) { "gameObject was already set" }
+            internalGameObject = value
         }
 
 
-    open fun start() {}
-    abstract fun update()
-    abstract fun draw()
-    open fun onEnable() {}
-    open fun onDisable() {}
+    override fun start() {}
+    abstract override fun update()
+    abstract override fun draw()
+    override fun stop() {}
 
     @Json(ignored = true)
     val transform: Transform
         get() = gameObject.getComponent()
 
     override fun setOrigin(origin: GameObject) {
-        cachedGameObject = origin
+        internalGameObject = origin
     }
 }

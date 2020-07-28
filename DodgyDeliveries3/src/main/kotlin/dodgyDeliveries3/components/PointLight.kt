@@ -16,12 +16,12 @@ data class PointLight(var color: Vector3fc = Vector3f(0f, 0f, 0f)) : Component()
         }
     }
 
-    override fun onEnable() {
+    override fun start() {
         check(all.size < max) { "you can only have $max PointLight's" }
         all.add(this)
     }
 
-    override fun onDisable() {
+    override fun stop() {
         all.remove(this)
     }
 
