@@ -27,7 +27,7 @@ class ExampleFly : Game() {
     private val loadedMesh = createViaPath<Mesh>("models/scene.fbx")
     private val tex = createViaPath<Texture2D>("textures/krakula-xl.png")
     private val shader: Shader = createViaPath("shaders/funky.shader")
-    private val logo = Loader.createViaPath<Texture2D>("../engine/logo.png")
+    private val logo = createViaPath<Texture2D>("../engine/logo.png")
     private val cube = createViaPath<CubeTexture>("textures/cubeExample")
 
     private val world = Matrix4f()
