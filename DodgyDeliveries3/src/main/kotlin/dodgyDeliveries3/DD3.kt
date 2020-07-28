@@ -26,7 +26,7 @@ class DD3 : Game() {
 
     init {
         // set default texture color to white
-        Texture2D.setDefaultTextureWhite()
+        Texture2D.setDefaultTexture2DWhite()
         configCulling()
         loadDefaultScene()
         configWindow()

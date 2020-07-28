@@ -6,6 +6,9 @@ import org.lwjgl.openal.AL10.*
 import org.lwjgl.openal.AL11.AL_SEC_OFFSET
 import java.io.Closeable
 
+/**
+ * Represents a audio sample like a sound
+ */
 class Source(initialSample: Sample? = null) : Closeable, IPlayable {
     private val pointer = alGenSources()
     var sample: Sample? = null
@@ -32,15 +35,15 @@ class Source(initialSample: Sample? = null) : Closeable, IPlayable {
             field = value
         }
 
-    var position: Vector3f = Vector3fCopy.zero
+    var position: Vector3fc = Vector3fConst.zero
         set(value) {
-            alSource3f(pointer, AL_POSITION, value.x, value.y, value.z)
+            alSource3f(pointer, AL_POSITION, value.x(), value.y(), value.z())
             field = value
         }
 
-    var velocity: Vector3f = Vector3fCopy.zero
+    var velocity: Vector3fc = Vector3fConst.zero
         set(value) {
-            alSource3f(pointer, AL_VELOCITY, value.x, value.y, value.z)
+            alSource3f(pointer, AL_VELOCITY, value.x(), value.y(), value.z())
             field = value
         }
 

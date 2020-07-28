@@ -16,10 +16,10 @@ import org.lwjgl.opengl.GL46
 import java.lang.Math
 
 fun main() {
-    Game2().run()
+    ExampleFly().run()
 }
 
-class Game2 : Game() {
+class ExampleFly : Game() {
     init {
         Loader.rootPath = "jackTheFishman/examples"
     }
@@ -34,8 +34,8 @@ class Game2 : Game() {
     private val projection = Matrix4f()
     private val view = Matrix4f()
 
-    private val position = Vector3f()
-    private val rotation = Quaternionf()
+    private var position: Vector3fc = Vector3f()
+    private var rotation = Quaternionf()
 
     init {
         Window.onResize = {
@@ -52,24 +52,24 @@ class Game2 : Game() {
         GL46.glClear(GL46.GL_COLOR_BUFFER_BIT or GL46.GL_DEPTH_BUFFER_BIT)
 
 
-        val move = Vector3fCopy.zero
+        var move: Vector3fc = Vector3fConst.zero
         val speed = 6f
 
         if (Input.Mouse.left.justDown) {
             Input.Mouse.setMode(Input.Mouse.CursorMode.DISABLED)
         }
 
-        if (Input.Keyboard.down(GLFW.GLFW_KEY_W)) {
-            move.add(Vector3fConst.forward)
+        if (Input.Keyboard.down(Input.Keyboard.Keys.KEY_W)) {
+            move += Vector3fConst.forward
         }
-        if (Input.Keyboard.down(GLFW.GLFW_KEY_S)) {
-            move.add(Vector3fConst.backwards)
+        if (Input.Keyboard.down(Input.Keyboard.Keys.KEY_S)) {
+            move += Vector3fConst.backwards
         }
-        if (Input.Keyboard.down(GLFW.GLFW_KEY_SPACE)) {
-            move.add(Vector3fConst.up)
+        if (Input.Keyboard.down(Input.Keyboard.Keys.KEY_SPACE)) {
+            move += Vector3fConst.up
         }
-        if (Input.Keyboard.down(GLFW.GLFW_KEY_LEFT_SHIFT)) {
-            move.add(Vector3fConst.down)
+        if (Input.Keyboard.down(Input.Keyboard.Keys.KEY_LEFT_SHIFT)) {
+            move += Vector3fConst.down
         }
         if (Input.Keyboard.down(Input.Keyboard.Keys.KEY_A)) {
             move += Vector3fConst.left
@@ -79,13 +79,15 @@ class Game2 : Game() {
         }
 
         val sensitivity = .006f
-        rotation.rotateAxis(Input.Mouse.deltaPosition.x * sensitivity, Vector3fConst.up)
-        rotation.rotateLocalX(Input.Mouse.deltaPosition.y * sensitivity)
+        rotation.rotateAxis(Input.Mouse.deltaPosition.x() * sensitivity, Vector3fConst.up)
+        rotation.rotateLocalX(Input.Mouse.deltaPosition.y() * sensitivity)
 
         move.clamp(1f)
-        move.mul(Time.deltaTime * speed)
-        rotation.transformInverse(move)
-        position.add(move)
+        move *= Time.deltaTime * speed
+        move = with(Vector3f(move)) {
+            rotation.transformInverse(this)
+        }
+        position += move
 
         view.identity()
         view.rotation(rotation)

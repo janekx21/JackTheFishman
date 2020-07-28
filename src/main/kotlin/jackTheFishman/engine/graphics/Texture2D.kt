@@ -105,8 +105,8 @@ open class Texture2D : Texture(), IUsable {
     }
 
     /**
-     * Binds and unbinds the texture
-     * This wraps the callback in a bound state
+     * Binds and unbinds the texture.
+     * This wraps the callback in a bound state.
      */
     override fun use(callback: () -> Unit) {
         bindWithIndex(0)
@@ -119,7 +119,7 @@ open class Texture2D : Texture(), IUsable {
             return Texture2DViaPath(path)
         }
 
-        fun setDefaultTextureWhite() {
+        fun setDefaultTexture2DWhite() {
             GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0)
             glTexImage2D(
                 GL_TEXTURE_2D,

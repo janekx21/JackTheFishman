@@ -5,8 +5,8 @@ import jackTheFishman.engine.Audio
 
 class AudioListener : Component() {
     override fun update() {
-        Audio.Listener.position = transform.generateMatrix().getTranslation(Vector3fCopy.zero)
-        Audio.Listener.rotation = transform.generateMatrix().getNormalizedRotation(Quaternionf())
+        Audio.Listener.position = transform.position
+        Audio.Listener.rotation = transform.rotation
     }
 
     override fun draw() {}

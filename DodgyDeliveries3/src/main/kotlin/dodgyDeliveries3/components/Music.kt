@@ -6,7 +6,6 @@ import jackTheFishman.engine.audio.Sample
 import jackTheFishman.engine.audio.Source
 
 class Music : Component(), IPlayable {
-
     var sample: Sample? = null
         get() = source.sample
         set(value) {

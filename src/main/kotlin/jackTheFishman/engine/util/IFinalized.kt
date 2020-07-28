@@ -1,9 +1,12 @@
 package jackTheFishman.engine.util
 
-/** @author Janek Winkler
- ** Interface for closing sources before program exit.
- **/
+/**
+ * Interface for closing sources before program exit
+ */
 interface IFinalized {
+    /**
+     * Event that will be called when this source is about to be closed
+     */
     fun finalize()
 
     companion object {

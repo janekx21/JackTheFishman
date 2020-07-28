@@ -10,15 +10,21 @@ import org.lwjgl.opengl.GL46
 import org.lwjgl.opengl.GL46.GL_DEPTH_TEST
 import org.lwjgl.opengl.GL46.glEnable
 import java.io.Closeable
+import kotlin.math.min
 
 
+/**
+ * Window Wrapper that also manages the open gl context
+ */
 object Window : Closeable {
+    private const val MAX_DELTA_TIME = .1f // translates to 10fps
     private const val title = "Jack the Fishman Framework"
 
     var size: Vector2ic = Vector2i(680, 460)
 
-    val shouldClose
+    var shouldClose
         get() = glfwWindowShouldClose(pointer)
+        set(value) = glfwSetWindowShouldClose(pointer, value)
 
     val aspect: Float
         get() = size.x().toFloat() / size.y().toFloat()
@@ -30,17 +36,29 @@ object Window : Closeable {
     private var lastTime = 0.0
 
     init {
+        open()
         config()
-        glfwMakeContextCurrent(pointer)
-        createCapabilities()
-        glEnable(GL_DEPTH_TEST)
-        glfwShowWindow(pointer)
     }
 
     private fun config() {
+        configGLFW()
+        configEvents()
+        configOpenGL()
+    }
+
+    private fun open() {
+        glfwMakeContextCurrent(pointer)
+        createCapabilities()
+        glfwShowWindow(pointer)
+    }
+
+    private fun configOpenGL() {
+        glEnable(GL_DEPTH_TEST)
+    }
+
+    private fun configGLFW() {
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE) // the window will stay hidden after creation
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE) // the window will be resizable
-        configEvents()
         glfwSwapInterval(1)
     }
 
@@ -58,6 +76,10 @@ object Window : Closeable {
             onResize(this)
         }
 
+        glfwSetWindowCloseCallback(pointer) { _ ->
+            glfwDestroyWindow(pointer)
+            glfwTerminate()
+        }
     }
 
     fun setIcon(texture: Texture2D) {
@@ -67,15 +89,27 @@ object Window : Closeable {
     }
 
     fun update() {
-        val time = glfwGetTime()
+        updateWindow()
+        updateTime()
+    }
+
+    private fun updateWindow() {
         glfwSwapBuffers(pointer)
         glfwPollEvents()
-        Time.update((time - lastTime).toFloat())
-        lastTime = time
+    }
+
+    private fun updateTime() {
+        glfwGetTime().also {time ->
+            // when the window should close the time jumps to 0
+            if (time > 0.0) {
+                val deltaTime = (time - lastTime).toFloat()
+                Time.update(min(deltaTime, MAX_DELTA_TIME))
+                lastTime = time
+            }
+        }
     }
 
     override fun close() {
-        glfwDestroyWindow(pointer)
-        glfwTerminate()
+        shouldClose = true
     }
 }

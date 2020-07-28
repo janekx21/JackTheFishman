@@ -2,10 +2,15 @@ package jackTheFishman.engine.graphics
 
 import jackTheFishman.engine.util.IntPointer
 import org.joml.Vector2i
+import org.joml.Vector2ic
 import org.lwjgl.stb.STBImage
 import org.lwjgl.stb.STBImage.stbi_set_flip_vertically_on_load
 import java.io.Closeable
 
+/**
+ * Represents a image file as buffer object.
+ * Primary for loading `jpeg` and `png` image files.
+ */
 class ImageFile(path: String) : Closeable {
     private val width = IntPointer()
     private val height = IntPointer()
@@ -23,7 +28,7 @@ class ImageFile(path: String) : Closeable {
 
     val data = possiblyData!!
 
-    val size = Vector2i(width.value, height.value)
+    val size: Vector2ic = Vector2i(width.value, height.value)
 
     override fun close() {
         STBImage.stbi_image_free(data)

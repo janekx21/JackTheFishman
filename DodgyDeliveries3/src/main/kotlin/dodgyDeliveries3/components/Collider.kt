@@ -6,6 +6,9 @@ import org.jbox2d.dynamics.Fixture
 import org.joml.Vector2fc
 import org.joml.Vector3f
 
+/**
+ * Represents a physical object with collision
+ */
 abstract class Collider : Component() {
     protected abstract val fixture: Fixture
     abstract var velocity: Vector2fc

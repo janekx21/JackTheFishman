@@ -1,9 +1,11 @@
 package jackTheFishman.engine
 
-import jackTheFishman.engine.math.Vector3fCopy
+import jackTheFishman.engine.math.Vector3fConst
 import jackTheFishman.engine.util.IFinalized
 import org.joml.Quaternionf
+import org.joml.Quaternionfc
 import org.joml.Vector3f
+import org.joml.Vector3fc
 import org.lwjgl.openal.AL
 import org.lwjgl.openal.AL10.*
 import org.lwjgl.openal.ALC
@@ -25,14 +27,24 @@ object Audio : IFinalized {
     private val context = alcCreateContext(device, attributes)
 
     init {
+        setupContext()
+        setupCapabilities()
+        setupListener()
+    }
+
+    private fun setupContext() {
         alcMakeContextCurrent(context).also {
             check(it) { "failed to make context current" }
         }
         alcMakeContextCurrent(context)
+    }
 
+    private fun setupCapabilities() {
         val cap = ALC.createCapabilities(device)
         AL.createCapabilities(cap)
+    }
 
+    private fun setupListener() {
         alListener3f(AL_POSITION, 0f, 0f, 1f)
         alListener3f(AL_VELOCITY, 0f, 0f, 0f)
         alListenerfv(AL_ORIENTATION, floatArrayOf(0f, 0f, 1f, 0f, 1f, 0f))
@@ -45,26 +57,24 @@ object Audio : IFinalized {
     }
 
     object Listener {
-        var position: Vector3f = Vector3fCopy.zero
+        var position: Vector3fc = Vector3fConst.zero
             set(value) {
-                alListener3f(AL_POSITION, value.x, value.y, value.z)
+                alListener3f(AL_POSITION, value.x(), value.y(), value.z())
                 field = value
             }
 
-        var velocity: Vector3f = Vector3fCopy.zero
+        var velocity: Vector3fc = Vector3fConst.zero
             set(value) {
-                alListener3f(AL_VELOCITY, value.x, value.y, value.z)
+                alListener3f(AL_VELOCITY, value.x(), value.y(), value.z())
                 field = value
             }
 
-        // TODO this is buggy
-        var rotation: Quaternionf = Quaternionf()
+        var rotation: Quaternionfc = Quaternionf()
             set(value) {
-                val direction = Vector3fCopy.forward // default direction
-                rotation.transformInverse(direction)
-                alListenerfv(AL_ORIENTATION, floatArrayOf(direction.x, direction.y, direction.z, 0f, 1f, 0f))
+                val direction = Vector3f(Vector3fConst.forward) // default direction
+                Quaternionf(rotation).transform(direction)
+                alListenerfv(AL_ORIENTATION, floatArrayOf(direction.x(), direction.y(), direction.z(), 0f, 1f, 0f))
                 field = value
             }
-
     }
 }

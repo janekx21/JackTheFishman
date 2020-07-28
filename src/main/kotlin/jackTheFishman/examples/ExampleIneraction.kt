@@ -13,10 +13,10 @@ import org.lwjgl.opengl.GL46
 import kotlin.math.sin
 
 fun main() {
-    Game1().run()
+    ExampleInteraction().run()
 }
 
-class Game1 : Game() {
+class ExampleInteraction : Game() {
     init {
         Loader.rootPath = "assets/jackTheFishman/examples"
     }

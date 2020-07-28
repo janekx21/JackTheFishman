@@ -2,7 +2,7 @@ package dodgyDeliveries3.components
 
 import dodgyDeliveries3.Component
 import jackTheFishman.engine.Window
-import jackTheFishman.engine.math.Vector3fCopy
+import jackTheFishman.engine.math.Vector3fConst
 import jackTheFishman.engine.math.minus
 import jackTheFishman.engine.math.plus
 import jackTheFishman.engine.math.times
@@ -50,7 +50,7 @@ class Camera : Component() {
             val pointToFollow = follow!!.position + relativeRotation.normalize(1F) * distance
             transform.position = Vector3f(transform.position).lerp(pointToFollow, smoothAmount)
             transform.rotation =
-                (Quaternionf().identity().lookAlong((follow!!.position - transform.position), Vector3fCopy.up))
+                (Quaternionf().identity().lookAlong((follow!!.position - transform.position), Vector3fConst.up))
         }
     }
 
