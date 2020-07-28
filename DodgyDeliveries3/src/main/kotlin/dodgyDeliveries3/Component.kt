@@ -10,12 +10,15 @@ import dodgyDeliveries3.util.typeAdapter.ComponentTypeAdapter
 abstract class Component : IHasOrigin<GameObject> {
     val className: String = javaClass.name
 
+    /**
+     * Cached [GameObject] for later use. Otherwise it would be searched every time.
+     */
     private var cachedGameObject: GameObject? = null
 
     @Json(ignored = true)
     var gameObject: GameObject
         get() {
-            check(cachedGameObject != null) { "dodgyDeliveries3.Component not initialized yet. Try overriding the start() function" }
+            check(cachedGameObject != null) { "Component not initialized yet. Try overriding the start() function" }
             return cachedGameObject!!
         }
         set(value) {

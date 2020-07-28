@@ -39,7 +39,6 @@ class DD3 : Game() {
     press shift for speed boost
      */
 
-
     init {
         // set default texture color to white
         Texture2D.setDefaultTextureWhite()
@@ -47,7 +46,6 @@ class DD3 : Game() {
         glCullFace(GL_BACK)
         glEnable(GL_CULL_FACE)
 
-        // dodgyDeliveries3.GameObject: Player
         GameObject("Player").also { gameObject ->
             gameObject.addComponent<Transform>()
             gameObject.addComponent<ModelRenderer>().apply {
@@ -60,7 +58,6 @@ class DD3 : Game() {
             Scene.active.spawn(gameObject)
         }
 
-        // dodgyDeliveries3.GameObject: Player
         GameObject("Object").also { gameObject ->
             gameObject.addComponent<Transform>().apply {
                 position = Vector3f(-10f, 0f, .5f)
@@ -76,7 +73,6 @@ class DD3 : Game() {
         }
 
 
-        // dodgyDeliveries3.GameObject: Tunnel
         GameObject("Tunnel").also { gameObject ->
             gameObject.addComponent<Transform>()
             gameObject.addComponent<ModelRenderer>().apply {
@@ -85,7 +81,6 @@ class DD3 : Game() {
             Scene.active.spawn(gameObject)
         }
 
-        // dodgyDeliveries3.GameObject: dodgyDeliveries3.components.Camera
         GameObject("Camera").also { gameObject ->
             gameObject.addComponent<Transform>().apply {
                 position = Vector3f(0f, 0f, .5f)
