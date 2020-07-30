@@ -4,7 +4,6 @@ import dodgyDeliveries3.Component
 import jackTheFishman.engine.audio.IPlayable
 import jackTheFishman.engine.audio.Sample
 import jackTheFishman.engine.audio.Source
-import jackTheFishman.engine.math.Vector3fCopy
 
 class AudioComponent : Component(), IPlayable {
     private var source = Source()
@@ -31,10 +30,8 @@ class AudioComponent : Component(), IPlayable {
     override val playing: Boolean get() = source.playing
 
     override fun update() {
-        /// An dieser Stelle wäre es falsch, `transform.position` zu benutzen, da das
-        /// nur die Translation eines einzelnen Transform Components wäre.
-        /// Wir wollen aber die Translation aller Transform Componenten zusammengefasst haben.
-        source.position = transform.generateMatrix().getTranslation(Vector3fCopy.zero)
+        // TODO make `transform.position` also be effected by parent transformation
+        source.position = transform.position
     }
 
     override fun draw() {}

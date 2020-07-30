@@ -26,7 +26,7 @@ open class Mesh(private val data: Array<Vertex>) : IDrawable, IUsable {
 
     init {
         glBindBuffer(GL_ARRAY_BUFFER, vbo)
-        val buffer = data.flatMap { vertex -> vertex.toBuffer() }.toFloatArray()
+        val buffer = data.flatMap { vertex -> vertex.asList() }.toFloatArray()
         glBufferData(GL_ARRAY_BUFFER, buffer, GL_STATIC_DRAW)
 
         glBindVertexArray(vao)

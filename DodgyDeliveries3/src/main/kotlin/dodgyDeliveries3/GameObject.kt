@@ -37,7 +37,6 @@ data class GameObject(val name: String, val components: ArrayList<Component> = a
     fun addComponent(component: Component) {
         component.gameObject = this
         components.add(component)
-        component.onEnable()
         component.start()
         if (component is Transform) {
             cachedTransform = component
@@ -54,27 +53,27 @@ data class GameObject(val name: String, val components: ArrayList<Component> = a
 
     fun removeComponent(component: Component) {
         components.remove(component)
-        component.onDisable()
+        component.stop()
         if (component is Transform) {
             cachedTransform = null
         }
     }
 
-    fun onEnable() {
+    fun start() {
         for (component in components) {
-            component.onEnable()
+            component.start()
         }
     }
 
-    fun onDisable() {
+    fun stop() {
         for (component in components) {
-            component.onDisable()
+            component.stop()
         }
     }
 
     fun destroyAllComponents() {
         for (component in components) {
-            component.onDisable()
+            component.stop()
         }
         components.clear()
     }

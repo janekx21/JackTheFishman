@@ -4,6 +4,9 @@ import jackTheFishman.engine.util.ICreateViaPath
 import java.io.File
 import kotlin.reflect.full.companionObjectInstance
 
+/**
+ * Object for loading and caching assets via java resources
+ */
 object Loader {
     var rootPath = ""
     private val rootFolder: File
@@ -22,6 +25,7 @@ object Loader {
         return File(resourcePath)
     }
 
+    @Deprecated("because its symbol is ugly. Replace with `createViaPath<T>(path)`.")
     inline fun <reified T> createViaPath(obj: ICreateViaPath<T>, path: String): T {
         val pathWithRoot = File(rootPath).resolve(path)
         val moddedPath = resourceFileViaPath(pathWithRoot.invariantSeparatorsPath)

@@ -1,5 +1,8 @@
 package jackTheFishman.engine.audio
 
+/**
+ * Represents a resource that can be played
+ */
 interface IPlayable {
     fun play() // starts play head
     fun pause() // only pauses progress

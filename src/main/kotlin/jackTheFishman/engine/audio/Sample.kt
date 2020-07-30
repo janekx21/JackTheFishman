@@ -16,13 +16,13 @@ open class Sample(sampleFile: SampleFile) {
     // Find the correct OpenAL format
     private val format = formats[sampleFile.channelCount]
 
-    //Request space for the buffer
+    // Request space for the buffer
     @Json(ignored = true)
     val pointer = alGenBuffers()
 
     init {
         check(format != null) { "format not found" }
-        //Send the data to OpenAL
+        // Send the data to OpenAL
         alBufferData(pointer, format, sampleFile.data, sampleFile.sampleRate)
     }
 
@@ -43,14 +43,14 @@ open class Sample(sampleFile: SampleFile) {
             check(rawAudioBuffer != null) {
                 val error = IntPointer()
                 STBVorbis.stb_vorbis_open_filename(path, error.buffer, null)
-                "audio file could not be loaded at \"$path\". error Nr. ${error.value}"
+                "Audio file could not be loaded at \"$path\". Error Nr. ${error.value}"
             }
 
             // Retrieve the extra information that was stored in the buffers by the function
             val channels = channelsBuffer.get()
             val sampleRate = sampleRateBuffer.get()
 
-            //Free the space we allocated earlier
+            // Free the space we allocated earlier
             MemoryStack.stackPop()
             MemoryStack.stackPop()
             return SampleFile(rawAudioBuffer, channels, sampleRate)

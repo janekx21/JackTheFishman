@@ -55,6 +55,7 @@ build/
 .idea/jarRepositories.xml
 .idea/uiDesigner.xml
 .idea/kotlinScripting.xml
+.idea/libraries/
 kotlin-ultimate/
 node_modules/
 .rpt2_cache/

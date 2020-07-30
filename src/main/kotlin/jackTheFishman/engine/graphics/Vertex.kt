@@ -2,14 +2,13 @@ package jackTheFishman.engine.graphics
 
 import org.joml.Vector2fc
 import org.joml.Vector3fc
-import org.lwjgl.opengl.GL46
-import org.lwjgl.opengl.GL46.GL_FLOAT
+import org.lwjgl.opengl.GL46.*
 
 data class Vertex(val position: Vector3fc, val uv: Vector2fc, val normal: Vector3fc, val tangent: Vector3fc) {
 
     data class Attribute(val name: String, val size: Int, val type: Int)
 
-    fun toBuffer(): List<Float> {
+    fun asList(): List<Float> {
         return listOf(
             position.x(),
             position.y(),
@@ -38,14 +37,18 @@ data class Vertex(val position: Vector3fc, val uv: Vector2fc, val normal: Vector
             var stride = 0
             for (attribute in attributes.withIndex()) {
                 with(attribute.index) {
-                    GL46.glVertexAttribPointer(
-                        this, attribute.value.size, attribute.value.type,
-                        false, size(), stride.toLong()
-                    )
-                    GL46.glEnableVertexAttribArray(this)
+                    createVertexAttribute(this, attribute.value, stride.toLong())
                     stride += attribute.value.size * floatSize // only upload floats
                 }
             }
+        }
+
+        private fun createVertexAttribute(index: Int, attribute: Attribute, stride: Long) {
+            glVertexAttribPointer(
+                index, attribute.size, attribute.type,
+                false, size(), stride
+            )
+            glEnableVertexAttribArray(index)
         }
 
         fun namedIndex(): Array<String> {

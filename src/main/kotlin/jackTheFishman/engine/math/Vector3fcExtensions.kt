@@ -13,6 +13,13 @@ fun Vector3fc.clamp(value: Float): Vector3fc {
     return result
 }
 
+fun Vector3fc.normalized(): Vector3fc {
+    if (this.lengthSquared() > 0) {
+        return Vector3f(this).normalize()
+    }
+    return this
+}
+
 operator fun Vector3fc.times(other: Vector3fc): Vector3fc {
     return Vector3f(this).mul(other)
 }
@@ -31,8 +38,4 @@ operator fun Vector3fc.minus(other: Vector3fc): Vector3fc {
 
 operator fun Vector3fc.unaryMinus(): Vector3fc {
     return Vector3f(this).negate()
-}
-
-fun Vector3fc.toJson(): Any? {
-    return arrayOf(this.x(), this.y(), this.z())
 }
