@@ -23,9 +23,4 @@ abstract class Collider : Component() {
 
     override fun draw() {
     }
-
-    override fun setOrigin(origin: GameObject) {
-        super.setOrigin(origin)
-        fixture.userData = origin
-    }
 }
