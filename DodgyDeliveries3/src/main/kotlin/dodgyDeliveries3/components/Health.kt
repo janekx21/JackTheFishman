@@ -2,7 +2,7 @@ package dodgyDeliveries3.components
 
 import dodgyDeliveries3.Component
 
-class HealthComponent : Component() {
+class Health : Component() {
     var hp: Float = 0F
     var maxHp: Float = 0F
 
