@@ -5,6 +5,9 @@ import jackTheFishman.engine.util.ICreateViaPath
 import java.io.File
 
 data class Scene(val allGameObjects: ArrayList<GameObject> = arrayListOf()) {
+
+    private val gameObjectsToDestroy: ArrayList<GameObject> = arrayListOf()
+
     init {
         for (go in allGameObjects) {
             go.setOrigin(this)
@@ -21,15 +24,23 @@ data class Scene(val allGameObjects: ArrayList<GameObject> = arrayListOf()) {
     }
 
     fun destroy(go: GameObject) {
-        go.destroyAllComponents()
-        go.stop()
-        allGameObjects.remove(go)
+        gameObjectsToDestroy.add(go)
+    }
+
+    private fun clearGameObjectsToDestroy() {
+        for(gameObjects in ArrayList(gameObjectsToDestroy)) {
+            gameObjects.destroyAllComponents()
+            gameObjects.stop()
+            allGameObjects.remove(gameObjects)
+        }
+        gameObjectsToDestroy.clear()
     }
 
     fun update() {
         for (gameObject in ArrayList(allGameObjects)) {
             gameObject.update()
         }
+        clearGameObjectsToDestroy()
     }
 
     fun draw() {
