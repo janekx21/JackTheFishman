@@ -12,16 +12,14 @@ fun loadDefaultScene() {
 
     Scene.active.spawn(makePlayer())
 
-    GameObject("Object").also { gameObject ->
+    GameObject("StandardEnemy").also { gameObject ->
         gameObject.addComponent<Transform>().apply {
-            position = Vector3f(-10f, 0f, .5f)
+            position = Vector3f(0f, 0f, -20f)
         }
         gameObject.addComponent<ModelRenderer>().apply {
-            mesh = Loader.createViaPath("models/monkey.fbx") // TODO: add player mesh
+            mesh = Loader.createViaPath("models/standardenemy.fbx") // TODO: add player mesh
         }
-        gameObject.addComponent<BoxCollider>().apply {
-            velocity = Vector2fCopy.right * 1f
-        }
+        gameObject.addComponent<ProjectileSpawner>()
         // TODO: add player controller when ready
         Scene.active.spawn(gameObject)
     }
@@ -84,7 +82,10 @@ fun makePlayer(): GameObject {
             mesh = Loader.createViaPath("models/monkey.fbx") // TODO: add player mesh
         }
         gameObject.addComponent<CircleCollider>().apply {
-            velocity = Vector2fCopy.left * 1f
+        }
+        gameObject.addComponent<Health>().also {
+            it.hp = 100f
+            it.maxHp = 100f
         }
         // TODO: add player controller when ready
     }

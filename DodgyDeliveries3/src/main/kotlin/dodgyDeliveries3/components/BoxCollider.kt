@@ -74,7 +74,7 @@ class BoxCollider(var internalVelocity: Vector2fc = Vector2f(0f, 0f), var intern
         }
 
     override fun start() {
-        fixture.body.position.set(Vec2(transform.position.x(), transform.position.z()))
+        fixture.body.setTransform(Vec2(transform.position.x(), transform.position.z()), fixture.body.angle)
         fixture.body.linearVelocity = velocity.toVec2()
         fixture.isSensor = isSensor
     }
