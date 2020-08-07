@@ -4,39 +4,23 @@ import dodgyDeliveries3.components.*
 import dodgyDeliveries3.util.ColorPalette
 import jackTheFishman.engine.Loader
 import jackTheFishman.engine.graphics.Mesh
-import jackTheFishman.engine.math.Vector2fCopy
 import jackTheFishman.engine.math.times
 import org.joml.Vector3f
 
 fun loadDefaultScene() {
     Scene.active.allGameObjects.clear()
 
-    GameObject("Player").also { gameObject ->
-        gameObject.addComponent<Transform>()
-        gameObject.addComponent<ModelRenderer>().apply {
-            mesh = Loader.createViaPath(Mesh, "models/monkey.fbx") // TODO: add player mesh
-        }
-        gameObject.addComponent<CircleCollider>().apply {
-            velocity = Vector2fCopy.left * 1f
-        }
-        // TODO: add player controller when ready
-        Scene.active.spawn(gameObject)
-    }
-
-    GameObject("Object").also { gameObject ->
+    val player = GameObject("Player").also { gameObject ->
         gameObject.addComponent<Transform>().apply {
-            position = Vector3f(-10f, 0f, .5f)
+            position = Vector3f(0f, 0f, -5f)
         }
         gameObject.addComponent<ModelRenderer>().apply {
-            mesh = Loader.createViaPath(Mesh, "models/monkey.fbx") // TODO: add player mesh
+            mesh = Loader.createViaPath("models/monkey.fbx") // TODO: add player mesh
         }
-        gameObject.addComponent<BoxCollider>().apply {
-            velocity = Vector2fCopy.right * 1f
-        }
-        // TODO: add player controller when ready
+        gameObject.addComponent<CircleCollider>()
+        gameObject.addComponent<Player>()
         Scene.active.spawn(gameObject)
     }
-
 
     GameObject("Tunnel").also { gameObject ->
         gameObject.addComponent<Transform>()
@@ -48,10 +32,13 @@ fun loadDefaultScene() {
 
     GameObject("Camera").also { gameObject ->
         gameObject.addComponent<Transform>().apply {
-            position = Vector3f(0f, 0f, .5f)
+            position = Vector3f(0f, 2f, 4f)
         }
         gameObject.addComponent<AudioListener>()
         gameObject.addComponent<DebugCameraMovement>()
+        gameObject.addComponent<LookAt>().apply {
+            target = player.transform
+        }
         Camera.main = gameObject.addComponent()
         Scene.active.spawn(gameObject)
     }

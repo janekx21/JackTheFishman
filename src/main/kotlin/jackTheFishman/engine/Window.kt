@@ -22,9 +22,7 @@ object Window : Closeable {
 
     var size: Vector2ic = Vector2i(680, 460)
 
-    var shouldClose
-        get() = glfwWindowShouldClose(pointer)
-        set(value) = glfwSetWindowShouldClose(pointer, value)
+    var shouldClose = false
 
     val aspect: Float
         get() = size.x().toFloat() / size.y().toFloat()
@@ -40,11 +38,6 @@ object Window : Closeable {
         config()
     }
 
-    private fun config() {
-        configGLFW()
-        configEvents()
-        configOpenGL()
-    }
 
     private fun open() {
         glfwMakeContextCurrent(pointer)
@@ -52,8 +45,11 @@ object Window : Closeable {
         glfwShowWindow(pointer)
     }
 
-    private fun configOpenGL() {
-        glEnable(GL_DEPTH_TEST)
+
+    private fun config() {
+        configGLFW()
+        configEvents()
+        configOpenGL()
     }
 
     private fun configGLFW() {
@@ -65,7 +61,7 @@ object Window : Closeable {
     private fun configEvents() {
         glfwSetKeyCallback(pointer) { window, key, _, action, _ ->
             if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
-                glfwSetWindowShouldClose(window, true)
+                close()
             }
             Input.Keyboard.onKeyChanged(key, action)
         }
@@ -77,9 +73,12 @@ object Window : Closeable {
         }
 
         glfwSetWindowCloseCallback(pointer) { _ ->
-            glfwDestroyWindow(pointer)
-            glfwTerminate()
+            close()
         }
+    }
+
+    private fun configOpenGL() {
+        glEnable(GL_DEPTH_TEST)
     }
 
     fun setIcon(texture: Texture2D) {
@@ -110,6 +109,8 @@ object Window : Closeable {
     }
 
     override fun close() {
+        glfwDestroyWindow(pointer)
+        glfwTerminate()
         shouldClose = true
     }
 }
