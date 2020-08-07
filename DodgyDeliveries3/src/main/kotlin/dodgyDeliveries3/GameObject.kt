@@ -1,11 +1,12 @@
 package dodgyDeliveries3
 
 import com.beust.klaxon.Json
+import dodgyDeliveries3.components.ICollisionHandler
 import dodgyDeliveries3.components.Transform
 import dodgyDeliveries3.util.IHasOrigin
 import kotlin.reflect.full.primaryConstructor
 
-data class GameObject(val name: String, val components: ArrayList<Component> = arrayListOf()) : IHasOrigin<Scene> {
+data class GameObject(val name: String, val components: ArrayList<Component> = arrayListOf()) : IHasOrigin<Scene>, ICollisionHandler {
     @Json(ignored = true)
     val transform: Transform
         get() = getComponent()
@@ -97,5 +98,19 @@ data class GameObject(val name: String, val components: ArrayList<Component> = a
 
     override fun setOrigin(origin: Scene) {
         scene = origin
+    }
+
+    override fun beginContact(other: GameObject) {
+        components
+            .filter { it is ICollisionHandler }
+            .map { it as ICollisionHandler }
+            .forEach { it.beginContact(other) }
+    }
+
+    override fun endContact(other: GameObject) {
+        components
+            .filter { it is ICollisionHandler }
+            .map { it as ICollisionHandler }
+            .forEach { it.endContact(other) }
     }
 }

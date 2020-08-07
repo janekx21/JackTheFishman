@@ -1,7 +1,9 @@
 package dodgyDeliveries3.components
 
 import dodgyDeliveries3.Component
+import dodgyDeliveries3.GameObject
 import jackTheFishman.engine.math.toVector2fc
+import org.jbox2d.dynamics.BodyDef
 import org.jbox2d.dynamics.Fixture
 import org.joml.Vector2fc
 import org.joml.Vector3f
@@ -20,5 +22,10 @@ abstract class Collider : Component() {
     }
 
     override fun draw() {
+    }
+
+    override fun setOrigin(origin: GameObject) {
+        super.setOrigin(origin)
+        fixture.userData = origin
     }
 }

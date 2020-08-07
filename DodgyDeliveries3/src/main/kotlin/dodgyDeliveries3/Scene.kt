@@ -1,10 +1,44 @@
 package dodgyDeliveries3
 
+import jackTheFishman.engine.Physics
 import jackTheFishman.engine.Serialisation
 import jackTheFishman.engine.util.ICreateViaPath
+import org.jbox2d.callbacks.ContactImpulse
+import org.jbox2d.collision.Manifold
+import org.jbox2d.dynamics.contacts.Contact
 import java.io.File
 
 data class Scene(val allGameObjects: ArrayList<GameObject> = arrayListOf()) {
+    class ContactListener(private val scene: Scene) : org.jbox2d.callbacks.ContactListener {
+        override fun endContact(contact: Contact?) {
+            val userDataA = contact!!.fixtureA.userData
+            val userDataB = contact.fixtureB.userData
+
+            if (userDataA is Component && userDataB is Component) {
+                userDataA.gameObject.endContact(userDataB.gameObject)
+                userDataB.gameObject.endContact(userDataA.gameObject)
+            }
+        }
+
+        override fun beginContact(contact: Contact?) {
+            val userDataA = contact!!.fixtureA.userData
+            val userDataB = contact.fixtureB.userData
+
+            if (userDataA is Component && userDataB is Component) {
+                userDataA.gameObject.beginContact(userDataB.gameObject)
+                userDataB.gameObject.beginContact(userDataA.gameObject)
+            }
+        }
+
+        override fun preSolve(contact: Contact?, oldManifold: Manifold?) {
+            // nichts tun
+        }
+
+        override fun postSolve(contact: Contact?, impulse: ContactImpulse?) {
+            // nichts tun
+        }
+    }
+
     init {
         for (go in allGameObjects) {
             go.setOrigin(this)
@@ -12,6 +46,7 @@ data class Scene(val allGameObjects: ArrayList<GameObject> = arrayListOf()) {
         for (go in allGameObjects) {
             go.start()
         }
+        Physics.world.setContactListener(ContactListener(this))
     }
 
     fun spawn(go: GameObject) {
@@ -58,3 +93,4 @@ data class Scene(val allGameObjects: ArrayList<GameObject> = arrayListOf()) {
         }
     }
 }
+
