@@ -1,8 +1,49 @@
 package dodgyDeliveries3
 
+import dodgyDeliveries3.components.Collider
+import jackTheFishman.engine.Physics
 import jackTheFishman.engine.Serialisation
 import jackTheFishman.engine.util.ICreateViaPath
+import org.jbox2d.callbacks.ContactImpulse
+import org.jbox2d.collision.Manifold
+import org.jbox2d.dynamics.Fixture
+import org.jbox2d.dynamics.contacts.Contact
 import java.io.File
+
+private class SceneContactListener : org.jbox2d.callbacks.ContactListener {
+    override fun endContact(contact: Contact?) {
+        checkNotNull(contact)
+
+        val colliderA = getCollider(contact.fixtureA)
+        val colliderB = getCollider(contact.fixtureB)
+
+        colliderA.gameObject.endContact(colliderA, colliderB, contact)
+        colliderB.gameObject.endContact(colliderB, colliderA, contact)
+    }
+
+    override fun beginContact(contact: Contact?) {
+        checkNotNull(contact)
+
+        val colliderA = getCollider(contact.fixtureA)
+        val colliderB = getCollider(contact.fixtureB)
+
+        colliderA.gameObject.beginContact(colliderA, colliderB, contact)
+        colliderB.gameObject.beginContact(colliderB, colliderA, contact)
+    }
+
+    override fun preSolve(contact: Contact?, oldManifold: Manifold?) {
+        // do nothing
+    }
+
+    override fun postSolve(contact: Contact?, impulse: ContactImpulse?) {
+        // do nothing
+    }
+
+    fun getCollider(fixture: Fixture): Collider =
+        fixture.userData
+            .also { check(it is Collider) }
+            .let { it as Collider }
+}
 
 data class Scene(val allGameObjects: ArrayList<GameObject> = arrayListOf()) {
 
@@ -16,6 +57,7 @@ data class Scene(val allGameObjects: ArrayList<GameObject> = arrayListOf()) {
         for (go in allGameObjects) {
             go.start()
         }
+        Physics.world.setContactListener(SceneContactListener())
     }
 
     fun spawn(go: GameObject) {

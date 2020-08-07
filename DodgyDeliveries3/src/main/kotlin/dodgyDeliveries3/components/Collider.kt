@@ -1,7 +1,6 @@
 package dodgyDeliveries3.components
 
 import dodgyDeliveries3.Component
-import jackTheFishman.engine.math.toVec2
 import jackTheFishman.engine.math.toVector2fc
 import org.jbox2d.dynamics.Fixture
 import org.joml.Vector2fc

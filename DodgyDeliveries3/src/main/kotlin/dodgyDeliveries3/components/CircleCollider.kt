@@ -16,18 +16,24 @@ import org.joml.Vector2fc
 import org.joml.Vector3f
 
 class CircleCollider(var internalVelocity: Vector2fc = Vector2f(0f, 0f), var internalRadius: Float = 1f, var internalIsSensor: Boolean = false, var internalLinearDamping: Float = 0f) : Collider() {
-    override val fixture: Fixture = Physics.world.createBody(BodyDef().also {
-        it.type = BodyType.DYNAMIC
-        it.linearVelocity = internalVelocity.toVec2()
-        it.linearDamping = internalLinearDamping
-    }).createFixture(FixtureDef().also {
-        it.friction = .3f
-        it.density = 1f
-        it.shape = CircleShape().apply {
-            radius = internalRadius
-        }
-        it.isSensor = internalIsSensor
-    })
+    override val fixture: Fixture =
+        Physics.world.createBody(
+            BodyDef().also {
+                it.type = BodyType.DYNAMIC
+                it.linearVelocity = internalVelocity.toVec2()
+                it.linearDamping = internalLinearDamping
+            }
+        ).createFixture(
+            FixtureDef().also {
+                it.friction = .3f
+                it.density = 1f
+                it.shape = CircleShape().also { shape ->
+                    shape.radius = internalRadius
+                }
+                it.isSensor = internalIsSensor
+                it.userData = this
+            }
+        )
 
     @Json(ignored = true)
     override var velocity: Vector2fc
