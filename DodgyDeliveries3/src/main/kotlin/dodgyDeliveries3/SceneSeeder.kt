@@ -4,6 +4,7 @@ import dodgyDeliveries3.components.*
 import dodgyDeliveries3.util.ColorPalette
 import jackTheFishman.engine.Loader
 import jackTheFishman.engine.graphics.Mesh
+import jackTheFishman.engine.graphics.Texture2D
 import jackTheFishman.engine.math.times
 import org.joml.Vector3f
 
@@ -26,6 +27,11 @@ fun loadDefaultScene() {
         gameObject.addComponent<Transform>()
         gameObject.addComponent<ModelRenderer>().apply {
             mesh = Loader.createViaPath(Mesh, "models/tunnel.fbx")
+            material = material.copy(
+                albedoTexture = Loader.createViaPath<Texture2D>("textures/pipes/AlbedoMap.jpg"),
+                normalTexture = Loader.createViaPath<Texture2D>("textures/pipes/NormalMap.png"),
+                specularTexture = Loader.createViaPath<Texture2D>("textures/pipes/SpecularMap.png")
+            )
         }
         Scene.active.spawn(gameObject)
     }
