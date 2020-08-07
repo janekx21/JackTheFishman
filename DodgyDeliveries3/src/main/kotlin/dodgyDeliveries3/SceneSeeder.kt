@@ -67,7 +67,7 @@ fun loadDefaultScene() {
 
     GameObject("Light").also { gameObject ->
         gameObject.addComponent<Transform>().apply {
-            position = Vector3f(2f, 0f, 10f)
+            position = Vector3f(0f, 0f, 10f)
         }
 
         gameObject.addComponent<PointLight>().apply {
