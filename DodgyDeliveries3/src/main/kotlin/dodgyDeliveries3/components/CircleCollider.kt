@@ -39,6 +39,7 @@ class CircleCollider(var internalVelocity: Vector2fc = Vector2f(0f, 0f), var int
             return fixture.body.linearVelocity.toVector2fc()
         }
         set(value) {
+            fixture.body.isAwake = true
             fixture.body.linearVelocity.set(value.toVec2())
             internalVelocity = value
         }

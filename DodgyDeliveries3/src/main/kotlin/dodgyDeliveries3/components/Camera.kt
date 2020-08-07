@@ -2,23 +2,16 @@ package dodgyDeliveries3.components
 
 import dodgyDeliveries3.Component
 import jackTheFishman.engine.Window
-import jackTheFishman.engine.math.Vector3fConst
-import jackTheFishman.engine.math.minus
-import jackTheFishman.engine.math.plus
-import jackTheFishman.engine.math.times
-import org.joml.*
+import jackTheFishman.engine.math.unaryMinus
+import org.joml.Math
+import org.joml.Matrix4f
+import org.joml.Matrix4fc
+import org.joml.Quaternionf
 
 class Camera : Component() {
     private var matrix: Matrix4fc = Matrix4f().perspective(Math.toRadians(90.0).toFloat(), Window.aspect, .1f, 100f)
     private var hash = 0
     private var cached: Matrix4fc = Matrix4f()
-
-    var follow: Transform? = null
-
-    var distance: Float = 0F
-
-    var relativeRotation: Vector3f = Vector3f().zero()
-    var smoothAmount: Float = 0F
 
     override fun update() {}
 
@@ -36,22 +29,14 @@ class Camera : Component() {
         if (hash == getMatrixHash()) {
             return cached
         }
-        val matrix = Matrix4f(gameObject.transform.generateMatrix()).invert()
+        val rotation = Quaternionf(transform.rotation).invert()
+        val matrix = Matrix4f().rotate(rotation).translate(-transform.position)
         hash = getMatrixHash()
         return matrix.also { cached = matrix }
     }
 
     private fun getMatrixHash(): Int {
         return gameObject.transform.getMatrixHash()
-    }
-
-    private fun smoothFollow() {
-        if (follow != null) {
-            val pointToFollow = follow!!.position + relativeRotation.normalize(1F) * distance
-            transform.position = Vector3f(transform.position).lerp(pointToFollow, smoothAmount)
-            transform.rotation =
-                (Quaternionf().identity().lookAlong((follow!!.position - transform.position), Vector3fConst.up))
-        }
     }
 
     companion object {

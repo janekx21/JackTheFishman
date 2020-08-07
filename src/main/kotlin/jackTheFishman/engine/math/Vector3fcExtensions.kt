@@ -20,6 +20,12 @@ fun Vector3fc.normalized(): Vector3fc {
     return this
 }
 
+fun Vector3fc.moveTowards(target: Vector3fc, maxDelta: Float): Vector3fc {
+    val delta = target - this
+    val clampedDelta = delta.clamp(maxDelta)
+    return this + clampedDelta
+}
+
 operator fun Vector3fc.times(other: Vector3fc): Vector3fc {
     return Vector3f(this).mul(other)
 }
