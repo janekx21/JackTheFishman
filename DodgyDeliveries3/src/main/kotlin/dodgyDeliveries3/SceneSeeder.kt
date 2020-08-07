@@ -23,6 +23,19 @@ fun loadDefaultScene() {
         Scene.active.spawn(gameObject)
     }
 
+    GameObject("StandardEnemy").also { gameObject ->
+        gameObject.addComponent<Transform>().apply {
+            position = Vector3f(0f, 0f, -20f)
+        }
+        gameObject.addComponent<ModelRenderer>().apply {
+            mesh = Loader.createViaPath("models/monkey.fbx")
+        }
+        gameObject.addComponent<ProjectileSpawner>().apply {
+            projectileMesh = Loader.createViaPath("models/cube.fbx")
+        }
+        Scene.active.spawn(gameObject)
+    }
+
     GameObject("Object").also { gameObject ->
         gameObject.addComponent<Transform>().apply {
             position = Vector3f(-10f, 0f, .5f)
