@@ -12,12 +12,14 @@ fun loadDefaultScene() {
     Scene.active.allGameObjects.clear()
 
     GameObject("Player").also { gameObject ->
-        gameObject.addComponent<Transform>()
+        gameObject.addComponent<Transform>().apply {
+            position = Vector3f(0f,0f,-2f)
+        }
         gameObject.addComponent<ModelRenderer>().apply {
-            mesh = Loader.createViaPath(Mesh, "models/monkey.fbx") // TODO: add player mesh
+            mesh = Loader.createViaPath("models/monkey.fbx") // TODO: add player mesh
         }
         gameObject.addComponent<CircleCollider>().apply {
-            velocity = Vector2fCopy.left * 1f
+            //velocity = Vector2fCopy.left * 1f
         }
         // TODO: add player controller when ready
         Scene.active.spawn(gameObject)
@@ -30,13 +32,11 @@ fun loadDefaultScene() {
         gameObject.addComponent<ModelRenderer>().apply {
             mesh = Loader.createViaPath("models/monkey.fbx")
         }
-        gameObject.addComponent<ProjectileSpawner>().apply {
-            projectileMesh = Loader.createViaPath("models/cube.fbx")
-        }
+        gameObject.addComponent<ProjectileSpawner>()
         Scene.active.spawn(gameObject)
     }
 
-    GameObject("Object").also { gameObject ->
+    /*GameObject("Object").also { gameObject ->
         gameObject.addComponent<Transform>().apply {
             position = Vector3f(-10f, 0f, .5f)
         }
@@ -48,13 +48,13 @@ fun loadDefaultScene() {
         }
         // TODO: add player controller when ready
         Scene.active.spawn(gameObject)
-    }
+    }*/
 
 
     GameObject("Tunnel").also { gameObject ->
         gameObject.addComponent<Transform>()
         gameObject.addComponent<ModelRenderer>().apply {
-            mesh = Loader.createViaPath(Mesh, "models/tunnel.fbx")
+            mesh = Loader.createViaPath("models/tunnel.fbx")
         }
         Scene.active.spawn(gameObject)
     }

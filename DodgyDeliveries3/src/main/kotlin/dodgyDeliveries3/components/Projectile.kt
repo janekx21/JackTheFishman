@@ -5,7 +5,6 @@ import dodgyDeliveries3.Scene
 
 class Projectile : Component() {
     override fun update() {
-        println("Projectile " + transform.position)
         if (transform.position.z() > 10f) {
             Scene.active.destroy(gameObject)
         }

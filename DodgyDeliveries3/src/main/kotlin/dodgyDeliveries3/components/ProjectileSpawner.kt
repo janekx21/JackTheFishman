@@ -3,43 +3,42 @@ package dodgyDeliveries3.components
 import dodgyDeliveries3.Component
 import dodgyDeliveries3.GameObject
 import dodgyDeliveries3.Scene
+import jackTheFishman.engine.Loader
 import jackTheFishman.engine.Time
-import jackTheFishman.engine.graphics.Mesh
-import jackTheFishman.engine.graphics.Texture2D
 import jackTheFishman.engine.math.Vector2fConst
 import jackTheFishman.engine.math.times
+import org.joml.Vector3fc
 
 class ProjectileSpawner : Component() {
-    var projectileSpeed = 1f
-    var timeDiff = 5f
-    var projectileMesh: Mesh? = null
-    var projectileTexture: Texture2D? = null
+    var projectileSpeed = 5f
+    var projectilesPerSecond = 0.1f
 
-    private var time = 0f
+    private var timer = 0f
 
     override fun update() {
-        val goPosition = gameObject.transform.position
-        println(time)
-        if (time >= timeDiff) {
-            Scene.active.spawn(GameObject("Projectile").also { projectile ->
-                projectile.addComponent<Transform>().apply {
-                    transform.position = goPosition
-                }
-                projectile.addComponent<ModelRenderer>().apply {
-                    mesh = projectileMesh
-                }
-                projectile.addComponent<CircleCollider>().apply {
-                    velocity = Vector2fConst.up * projectileSpeed
-                }
-                projectile.addComponent<Projectile>()
-                Scene.active.spawn(projectile)
-            })
-            time = 0f
+        if (timer >= 1/projectilesPerSecond) {
+            Scene.active.spawn(makeProjectile(transform.position, projectileSpeed))
+            timer = 0f
         }
-        time += Time.deltaTime
+        timer += Time.deltaTime
+    }
+
+    fun makeProjectile(startPosition: Vector3fc, movementSpeed: Float) : GameObject {
+        return GameObject("Projectile").also {
+            it.addComponent<Transform>().apply {
+                transform.position = startPosition
+            }
+            it.addComponent<ModelRenderer>().apply {
+                mesh = Loader.createViaPath("models/cube.fbx")
+            }
+            it.addComponent<CircleCollider>().apply {
+                velocity = Vector2fConst.up * movementSpeed
+                isSensor = true
+            }
+            it.addComponent<Projectile>()
+        }
     }
 
     override fun draw() {
     }
-
 }

@@ -6,6 +6,7 @@ import java.io.File
 
 data class Scene(val allGameObjects: ArrayList<GameObject> = arrayListOf()) {
 
+    private val gameObjectsToSpawn: ArrayList<GameObject> = arrayListOf()
     private val gameObjectsToDestroy: ArrayList<GameObject> = arrayListOf()
 
     init {
@@ -18,17 +19,23 @@ data class Scene(val allGameObjects: ArrayList<GameObject> = arrayListOf()) {
     }
 
     fun spawn(go: GameObject) {
-        go.setOrigin(this)
-        allGameObjects.add(go)
-        go.start()
+        gameObjectsToSpawn.add(go)
     }
 
     fun destroy(go: GameObject) {
         gameObjectsToDestroy.add(go)
     }
 
-    private fun clearGameObjectsToDestroy() {
-        for(gameObjects in ArrayList(gameObjectsToDestroy)) {
+    fun update() {
+        for (gameObject in allGameObjects) {
+            gameObject.update()
+        }
+        applyGameObjectsToDestroy()
+        applyGameObjectsToSpawn()
+    }
+
+    private fun applyGameObjectsToDestroy() {
+        for(gameObjects in gameObjectsToDestroy) {
             gameObjects.destroyAllComponents()
             gameObjects.stop()
             allGameObjects.remove(gameObjects)
@@ -36,15 +43,17 @@ data class Scene(val allGameObjects: ArrayList<GameObject> = arrayListOf()) {
         gameObjectsToDestroy.clear()
     }
 
-    fun update() {
-        for (gameObject in ArrayList(allGameObjects)) {
-            gameObject.update()
+    private fun applyGameObjectsToSpawn() {
+        for(go in gameObjectsToSpawn) {
+            go.setOrigin(this)
+            allGameObjects.add(go)
+            go.start()
         }
-        clearGameObjectsToDestroy()
+        gameObjectsToSpawn.clear()
     }
 
     fun draw() {
-        for (gameObject in ArrayList(allGameObjects)) {
+        for (gameObject in allGameObjects) {
             gameObject.draw()
         }
     }
