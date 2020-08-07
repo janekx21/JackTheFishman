@@ -35,7 +35,7 @@ data class Scene(val allGameObjects: ArrayList<GameObject> = arrayListOf()) {
         }
 
         override fun postSolve(contact: Contact?, impulse: ContactImpulse?) {
-            // nichts tun
+            // do nothing
         }
     }
 
