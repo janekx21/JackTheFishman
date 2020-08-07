@@ -3,14 +3,16 @@ package dodgyDeliveries3.components
 import dodgyDeliveries3.Component
 import dodgyDeliveries3.GameObject
 import dodgyDeliveries3.Scene
+import dodgyDeliveries3.util.ColorPalette
 import jackTheFishman.engine.Loader
 import jackTheFishman.engine.Time
 import jackTheFishman.engine.math.Vector2fConst
 import jackTheFishman.engine.math.times
+import org.joml.Vector3f
 import org.joml.Vector3fc
 
 class ProjectileSpawner : Component() {
-    var projectileSpeed = 5f
+    var projectileSpeed = 15f
     var projectilesPerSecond = 0.1f
 
     private var timer = 0f
@@ -27,13 +29,17 @@ class ProjectileSpawner : Component() {
         return GameObject("Projectile").also {
             it.addComponent<Transform>().apply {
                 transform.position = startPosition
+                transform.scale *= 0.2f
             }
             it.addComponent<ModelRenderer>().apply {
-                mesh = Loader.createViaPath("models/cube.fbx")
+                mesh = Loader.createViaPath("models/projectiles/standardenemyprojectile.fbx")
             }
             it.addComponent<CircleCollider>().apply {
                 velocity = Vector2fConst.up * movementSpeed
                 isSensor = true
+            }
+            it.addComponent<PointLight>().apply {
+                color = Vector3f(ColorPalette.GREEN) * 2f
             }
             it.addComponent<Projectile>()
         }

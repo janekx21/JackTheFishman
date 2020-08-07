@@ -39,6 +39,9 @@ data class ModelRenderer(var mesh: Mesh? = null, var material: Material = defaul
             shader.setUniform("LightPositions[$index]", light.transform.position)
             shader.setUniform("LightColors[$index]", Vector3f(light.color))
         }
+        for (index in PointLight.all.size until PointLight.max) {
+            shader.setUniform("LightColors[$index]", Vector3f(0f, 0f, 0f))
+        }
     }
 
     private fun uploadMaterialUniforms(shader: Shader) {

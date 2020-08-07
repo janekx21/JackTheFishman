@@ -78,8 +78,8 @@ data class Scene(val allGameObjects: ArrayList<GameObject> = arrayListOf()) {
 
     private fun applyGameObjectsToDestroy() {
         for(gameObjects in gameObjectsToDestroy) {
-            gameObjects.destroyAllComponents()
             gameObjects.stop()
+            gameObjects.destroyAllComponents()
             allGameObjects.remove(gameObjects)
         }
         gameObjectsToDestroy.clear()

@@ -1,8 +1,11 @@
 package dodgyDeliveries3
 
 import dodgyDeliveries3.components.*
+import dodgyDeliveries3.graphics.Material
 import dodgyDeliveries3.util.ColorPalette
 import jackTheFishman.engine.Loader
+import jackTheFishman.engine.graphics.Texture
+import jackTheFishman.engine.graphics.Texture2D
 import jackTheFishman.engine.math.Vector2fCopy
 import jackTheFishman.engine.math.times
 import org.joml.Vector3f
@@ -24,13 +27,13 @@ fun loadDefaultScene() {
         Scene.active.spawn(gameObject)
     }
 
-
     GameObject("Tunnel1").also { gameObject ->
         gameObject.addComponent<Transform>().apply {
             position = Vector3f(0f, 0f, -50f)
         }
         gameObject.addComponent<ModelRenderer>().apply {
             mesh = Loader.createViaPath("models/tunnel.fbx")
+            material = material.copy(albedoTexture = Loader.createViaPath<Texture2D>("textures/pipes/AlbedoMap.jpg"), normalTexture = Loader.createViaPath<Texture2D>("textures/pipes/NormalMap.png"))
         }
         gameObject.addComponent<Tunnel>()
         Scene.active.spawn(gameObject)
@@ -41,6 +44,7 @@ fun loadDefaultScene() {
         }
         gameObject.addComponent<ModelRenderer>().apply {
             mesh = Loader.createViaPath("models/tunnel.fbx")
+            material = material.copy(albedoTexture = Loader.createViaPath<Texture2D>("textures/pipes/AlbedoMap.jpg"), normalTexture = Loader.createViaPath<Texture2D>("textures/pipes/NormalMap.png"))
         }
         gameObject.addComponent<Tunnel>()
         Scene.active.spawn(gameObject)
