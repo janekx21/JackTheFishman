@@ -1,9 +1,11 @@
 package dodgyDeliveries3
 
 import com.beust.klaxon.Json
+import dodgyDeliveries3.components.Collider
 import dodgyDeliveries3.components.ICollisionHandler
 import dodgyDeliveries3.components.Transform
 import dodgyDeliveries3.util.IHasOrigin
+import org.jbox2d.dynamics.contacts.Contact
 import kotlin.reflect.full.primaryConstructor
 
 data class GameObject(val name: String, val components: ArrayList<Component> = arrayListOf()) : IHasOrigin<Scene>, ICollisionHandler {
@@ -100,17 +102,17 @@ data class GameObject(val name: String, val components: ArrayList<Component> = a
         scene = origin
     }
 
-    override fun beginContact(other: GameObject) {
+    override fun beginContact(ours: Collider, other: Collider, contact: Contact) {
         components
             .filter { it is ICollisionHandler }
             .map { it as ICollisionHandler }
-            .forEach { it.beginContact(other) }
+            .forEach { it.beginContact(ours, other, contact) }
     }
 
-    override fun endContact(other: GameObject) {
+    override fun endContact(ours: Collider, other: Collider, contact: Contact) {
         components
             .filter { it is ICollisionHandler }
             .map { it as ICollisionHandler }
-            .forEach { it.endContact(other) }
+            .forEach { it.endContact(ours, other, contact) }
     }
 }

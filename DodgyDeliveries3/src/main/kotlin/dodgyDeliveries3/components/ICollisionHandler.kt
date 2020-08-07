@@ -1,8 +1,8 @@
 package dodgyDeliveries3.components
 
-import dodgyDeliveries3.GameObject
+import org.jbox2d.dynamics.contacts.Contact
 
 interface ICollisionHandler {
-    fun beginContact(other: GameObject)
-    fun endContact(other: GameObject)
+    fun beginContact(ours: Collider, other: Collider, contact: Contact)
+    fun endContact(ours: Collider, other: Collider, contact: Contact)
 }

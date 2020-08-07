@@ -1,5 +1,6 @@
 package dodgyDeliveries3
 
+import dodgyDeliveries3.components.Collider
 import jackTheFishman.engine.Physics
 import jackTheFishman.engine.Serialisation
 import jackTheFishman.engine.util.ICreateViaPath
@@ -8,37 +9,43 @@ import org.jbox2d.collision.Manifold
 import org.jbox2d.dynamics.contacts.Contact
 import java.io.File
 
-data class Scene(val allGameObjects: ArrayList<GameObject> = arrayListOf()) {
-    class ContactListener(private val scene: Scene) : org.jbox2d.callbacks.ContactListener {
-        override fun endContact(contact: Contact?) {
-            val userDataA = contact!!.fixtureA.userData
-            val userDataB = contact.fixtureB.userData
+private class SceneContactListener : org.jbox2d.callbacks.ContactListener {
+    override fun endContact(contact: Contact?) {
+        checkNotNull(contact)
 
-            if (userDataA is Component && userDataB is Component) {
-                userDataA.gameObject.endContact(userDataB.gameObject)
-                userDataB.gameObject.endContact(userDataA.gameObject)
-            }
-        }
+        val colliderA = contact.fixtureA.userData
+        check(colliderA is Collider)
 
-        override fun beginContact(contact: Contact?) {
-            val userDataA = contact!!.fixtureA.userData
-            val userDataB = contact.fixtureB.userData
+        val colliderB = contact.fixtureB.userData
+        check(colliderB is Collider)
 
-            if (userDataA is Component && userDataB is Component) {
-                userDataA.gameObject.beginContact(userDataB.gameObject)
-                userDataB.gameObject.beginContact(userDataA.gameObject)
-            }
-        }
-
-        override fun preSolve(contact: Contact?, oldManifold: Manifold?) {
-            // do nothing
-        }
-
-        override fun postSolve(contact: Contact?, impulse: ContactImpulse?) {
-            // do nothing
-        }
+        colliderA.gameObject.endContact(colliderA, colliderB, contact)
+        colliderB.gameObject.endContact(colliderB, colliderA, contact)
     }
 
+    override fun beginContact(contact: Contact?) {
+        checkNotNull(contact)
+
+        val colliderA = contact.fixtureA.userData
+        check(colliderA is Collider)
+
+        val colliderB = contact.fixtureB.userData
+        check(colliderB is Collider)
+
+        colliderA.gameObject.beginContact(colliderA, colliderB, contact)
+        colliderB.gameObject.beginContact(colliderB, colliderA, contact)
+    }
+
+    override fun preSolve(contact: Contact?, oldManifold: Manifold?) {
+        // do nothing
+    }
+
+    override fun postSolve(contact: Contact?, impulse: ContactImpulse?) {
+        // do nothing
+    }
+}
+
+data class Scene(val allGameObjects: ArrayList<GameObject> = arrayListOf()) {
     init {
         for (go in allGameObjects) {
             go.setOrigin(this)
@@ -46,7 +53,7 @@ data class Scene(val allGameObjects: ArrayList<GameObject> = arrayListOf()) {
         for (go in allGameObjects) {
             go.start()
         }
-        Physics.world.setContactListener(ContactListener(this))
+        Physics.world.setContactListener(SceneContactListener())
     }
 
     fun spawn(go: GameObject) {
