@@ -31,7 +31,7 @@ data class Scene(val allGameObjects: ArrayList<GameObject> = arrayListOf()) {
         }
 
         override fun preSolve(contact: Contact?, oldManifold: Manifold?) {
-            // nichts tun
+            // do nothing
         }
 
         override fun postSolve(contact: Contact?, impulse: ContactImpulse?) {
@@ -93,4 +93,3 @@ data class Scene(val allGameObjects: ArrayList<GameObject> = arrayListOf()) {
         }
     }
 }
-
