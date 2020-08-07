@@ -19,7 +19,7 @@ open class Shader(code: ShaderCode) : IUsable {
 
     private val program = compileProgram(code.vertexCode, code.fragmentCode)
     private val uniformLocations = HashMap<String, Int>()
-    private val textureUniforms = arrayListOf<Texture>()
+    private val textureUniforms = mutableSetOf<Texture>()
 
     override fun use(callback: () -> Unit) {
         glUseProgram(program)
@@ -45,7 +45,7 @@ open class Shader(code: ShaderCode) : IUsable {
 
     fun setUniform(name: String, value: Texture) {
         textureUniforms.add(value)
-        glProgramUniform1i(program, getUniformLocation(name), textureUniforms.lastIndex)
+        glProgramUniform1i(program, getUniformLocation(name), textureUniforms.indexOf(value))
     }
 
     fun setUniform(name: String, value: Float) {
