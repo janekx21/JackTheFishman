@@ -16,16 +16,22 @@ import org.joml.Vector2fc
 import org.joml.Vector3f
 
 class BoxCollider(var internalVelocity: Vector2fc = Vector2f(0f, 0f)) : Collider() {
-    override val fixture: Fixture = Physics.world.createBody(BodyDef().apply {
-        type = BodyType.DYNAMIC
-        linearVelocity = internalVelocity.toVec2()
-    }).createFixture(FixtureDef().apply {
-        friction = .3f
-        density = 1f
-        shape = PolygonShape().apply {
-            setAsBox(1f, 1f)
-        }
-    })
+    override val fixture: Fixture =
+        Physics.world.createBody(
+            BodyDef().also {
+                it.type = BodyType.DYNAMIC
+                it.linearVelocity = internalVelocity.toVec2()
+            }
+        ).createFixture(
+            FixtureDef().also {
+                it.friction = .3f
+                it.density = 1f
+                it.shape = PolygonShape().also {
+                    it.setAsBox(1f, 1f)
+                }
+                it.userData = this
+            }
+        )
 
     @Json(ignored = true)
     override var velocity: Vector2fc
