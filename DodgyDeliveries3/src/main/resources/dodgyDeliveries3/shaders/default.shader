@@ -29,6 +29,7 @@ uniform sampler2D AlbedoTexture;
 uniform vec3 CameraPosition;
 uniform float SpecularIntensity;
 uniform float SpecularRoughness;
+uniform sampler2D SpecularTexture;
 uniform float FresnelIntensity;
 uniform vec3 FogColor;
 uniform float FogDistance;
@@ -41,26 +42,33 @@ in vec3 position;
 in vec2 uv;
 out vec4 outColor;
 
+float luminance(vec3 rgb) {
+    const vec3 W = vec3(0.2125, 0.7154, 0.0721);
+    return dot(rgb, W);
+}
+
 void main() {
     vec3 normal = texture(NormalTexture, uv).xyz * 2 - 1;
-    normal.xy *= NormalIntensity;
+    // normal.xy *= NormalIntensity;
     normal = normalize(TBN * normal);
 
     vec3 light = vec3(0.0);
     vec3 viewDirection = normalize(position - CameraPosition);
+    vec3 albedo = texture(AlbedoTexture, uv).rgb;
+    vec3 specular = texture(SpecularTexture, uv).rgb;
     for (int i = 0; i < MAX_LIGHT_COUNT; i++) {
-        vec3 lightDirection = position - LightPositions[i];
-        float diffuse = dot(normal, -lightDirection);
-        float diffuseLight = diffuse / pow(length(lightDirection), 2);
+        if (LightColors[i] != vec3(0, 0, 0)) {
+            vec3 lightDirection = position - LightPositions[i];
+            float diffuse = dot(normal, -lightDirection);
+            float diffuseLight = max(diffuse / pow(length(lightDirection), 2), 0);
 
-        vec3 reflected = normalize(reflect(-lightDirection, normal));
-        float specularLight = pow(max(dot(reflected, viewDirection), 0), SpecularRoughness);
+            vec3 reflected = normalize(reflect(-lightDirection, normal));
+            float specularLight = max(pow(dot(reflected, viewDirection), SpecularRoughness), 0);
 
-
-        vec3 albedo = texture(AlbedoTexture, uv).rgb;
-        light += (diffuseLight * albedo + specularLight * SpecularIntensity) * LightColors[i];
+            light += (diffuseLight * albedo + specularLight * SpecularIntensity * specular) * LightColors[i];
+        }
     }
-    float fresnel = pow(1 - max(dot(-viewDirection, normal), 0), 4);
+    float fresnel = pow(1 - dot(-viewDirection, normal), 4);
 
     light += fresnel * FresnelIntensity + AmbientColor;
 
