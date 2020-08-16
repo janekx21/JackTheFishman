@@ -4,9 +4,12 @@ import dodgyDeliveries3.Component
 import jackTheFishman.engine.Input
 import jackTheFishman.engine.Window
 import jackTheFishman.engine.math.Vector2fConst
+import jackTheFishman.engine.math.Vector3fConst
 import jackTheFishman.engine.math.plus
 import jackTheFishman.engine.math.times
+import org.jbox2d.common.MathUtils.PI
 import org.jbox2d.common.MathUtils.clamp
+import org.joml.Quaternionf
 
 class Player(var speed: Float = 8f) : Component() {
     var internalcollider: Collider? = null
@@ -26,6 +29,7 @@ class Player(var speed: Float = 8f) : Component() {
     override fun update() {
         handleInput()
         applyVelocityChange()
+        animateRotation()
     }
 
     private fun handleInput() {
@@ -41,6 +45,12 @@ class Player(var speed: Float = 8f) : Component() {
         val moddedDelta = delta - collider.velocity.x() * .05f
         val deltaClamped = clamp(moddedDelta, -maxVelocityChange, maxVelocityChange)
         collider.velocity += Vector2fConst.right * deltaClamped * speed
+    }
+
+    private fun animateRotation() {
+        val turnAmount = -collider.velocity.x() * .013f
+        val clampedTurnAmount = clamp(turnAmount, -PI/4, PI/4)
+        transform.rotation = Quaternionf().rotateAxis(clampedTurnAmount + PI, Vector3fConst.up)
     }
 
     override fun draw() {}

@@ -58,11 +58,12 @@ void main() {
     vec3 specular = texture(SpecularTexture, uv).rgb;
     for (int i = 0; i < MAX_LIGHT_COUNT; i++) {
         if (LightColors[i] != vec3(0, 0, 0)) {
-            vec3 lightDirection = position - LightPositions[i];
+            vec3 deltaLight = position - LightPositions[i];
+            vec3 lightDirection = normalize(deltaLight);
             float diffuse = dot(normal, -lightDirection);
-            float diffuseLight = max(diffuse / pow(length(lightDirection), 2), 0);
+            float diffuseLight = max(diffuse / pow(length(deltaLight), 2), 0);
 
-            vec3 reflected = normalize(reflect(-lightDirection, normal));
+            vec3 reflected = reflect(lightDirection, normal);
             float specularLight = max(pow(dot(reflected, viewDirection), SpecularRoughness), 0);
 
             light += (diffuseLight * albedo + specularLight * SpecularIntensity * specular) * LightColors[i];

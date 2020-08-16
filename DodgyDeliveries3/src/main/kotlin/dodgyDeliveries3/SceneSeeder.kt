@@ -1,10 +1,8 @@
 package dodgyDeliveries3
 
 import dodgyDeliveries3.components.*
-import dodgyDeliveries3.graphics.Material
 import dodgyDeliveries3.util.ColorPalette
 import jackTheFishman.engine.Loader
-import jackTheFishman.engine.graphics.Texture
 import jackTheFishman.engine.graphics.Texture2D
 import jackTheFishman.engine.math.times
 import org.joml.Vector3f
@@ -101,5 +99,6 @@ fun makePlayer(): GameObject {
             it.hp = 100f
             it.maxHp = 100f
         }
+        gameObject.addComponent<Player>()
     }
 }
