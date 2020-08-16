@@ -28,6 +28,14 @@ class EnemyCommander(var speed: Float = 1f, var moves: Queue<MovementCommand> = 
                 right, right,
                 down, left
             )
+
+            val shortRight = listOf(
+                down, right, down, left, left
+            )
+
+            val shortLeft = listOf(
+                down, right, down, left, left
+            )
         }
     }
 

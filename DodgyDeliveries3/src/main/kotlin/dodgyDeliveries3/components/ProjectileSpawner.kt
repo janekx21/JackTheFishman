@@ -12,23 +12,33 @@ import jackTheFishman.engine.math.times
 import org.joml.Vector3f
 import org.joml.Vector3fc
 
-class ProjectileSpawner : Component() {
-    var projectileSpeed = 15f
-    var projectilesPerSecond = 0.1f
+class ProjectileSpawner(var timer: Float = 0f, var type: Type = Type.STANDARD) : Component() {
+    enum class Type {
+        STANDARD, WOBBLE
+    }
 
-    private var timer = 0f
+    var projectilesPerSecond = 0.1f
 
     override fun update() {
         val canShoot = gameObject.getComponent<EnemyCommander>().canShoot
         if (canShoot && timer >= 1 / projectilesPerSecond) {
-            Scene.active.spawn(makeProjectile(transform.position, projectileSpeed))
             timer = 0f
+            spawn()
         }
         timer += Time.deltaTime
     }
 
-    fun makeProjectile(startPosition: Vector3fc, movementSpeed: Float): GameObject {
-        return GameObject("Projectile").also {
+    private fun spawn() {
+        when (type) {
+            Type.STANDARD -> Scene.active.spawn(makeStandardProjectile(transform.position, 15f))
+            Type.WOBBLE -> Scene.active.spawn(makeWobbleProjectile(transform.position, 8f))
+            else -> throw NotImplementedError("projectile type not found")
+        }
+
+    }
+
+    private fun makeStandardProjectile(startPosition: Vector3fc, movementSpeed: Float): GameObject {
+        return GameObject("Standard Projectile").also {
             it.addComponent<Transform>().apply {
                 transform.position = startPosition
                 transform.scale = Vector3fConst.one * 0.2f
@@ -45,7 +55,30 @@ class ProjectileSpawner : Component() {
                 color = Vector3f(ColorPalette.GREEN) * 2f
             }
             it.addComponent<Projectile>().also { projectile ->
-                projectile.damage = 10f
+                projectile.damage = 1f
+            }
+        }
+    }
+
+    private fun makeWobbleProjectile(startPosition: Vector3fc, movementSpeed: Float): GameObject {
+        return GameObject("Wobble Projectile").also {
+            it.addComponent<Transform>().apply {
+                transform.position = startPosition
+                transform.scale = Vector3fConst.one * 0.5f
+            }
+            it.addComponent<ModelRenderer>().apply {
+                mesh = Loader.createViaPath("models/sphere.fbx")
+            }
+            it.addComponent<CircleCollider>().apply {
+                velocity = Vector2fConst.up * movementSpeed
+                isSensor = true
+                radius = .5f
+            }
+            it.addComponent<PointLight>().apply {
+                color = Vector3f(ColorPalette.GREEN) * 2f
+            }
+            it.addComponent<Projectile>().also { projectile ->
+                projectile.damage = 2f
             }
         }
     }

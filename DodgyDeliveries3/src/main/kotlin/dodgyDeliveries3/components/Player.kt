@@ -1,7 +1,6 @@
 package dodgyDeliveries3.components
 
 import dodgyDeliveries3.Component
-import dodgyDeliveries3.loadDefaultScene
 import jackTheFishman.engine.Input
 import jackTheFishman.engine.Time
 import jackTheFishman.engine.Window
@@ -68,7 +67,7 @@ class Player(var speed: Float = 8f) : Component() {
     private fun handleHealth() {
         val health = gameObject.getComponent<Health>()
         if(!health.alive) {
-            loadDefaultScene()
+            // TODO handle game over
         }
     }
 
