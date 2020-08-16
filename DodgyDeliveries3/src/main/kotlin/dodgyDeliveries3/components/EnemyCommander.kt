@@ -13,7 +13,7 @@ import java.util.*
 
 class EnemyCommander(var speed: Float = 1f, var moves: Queue<MovementCommand> = LinkedList<MovementCommand>()) :
     Component() {
-    data class MovementCommand(val deltaMovement: Vector3fc, val duration: Float, val shoots: Boolean = false) {
+    data class MovementCommand(val deltaMovement: Vector3fc, val duration: Float, val canShoot: Boolean = true) {
         companion object {
             val down = MovementCommand(Vector3fConst.backwards, 2f)
             val up = MovementCommand(Vector3fConst.forward, 2f)
@@ -39,6 +39,8 @@ class EnemyCommander(var speed: Float = 1f, var moves: Queue<MovementCommand> = 
     private var timer = 0f
 
     private var state = State.JOINING
+    val canShoot: Boolean
+        get() = state == State.LIVING && (currentCommand?.canShoot ?: false)
 
     override fun update() {
         when (state) {

@@ -19,18 +19,19 @@ class ProjectileSpawner : Component() {
     private var timer = 0f
 
     override fun update() {
-        if (timer >= 1/projectilesPerSecond) {
+        val canShoot = gameObject.getComponent<EnemyCommander>().canShoot
+        if (canShoot && timer >= 1 / projectilesPerSecond) {
             Scene.active.spawn(makeProjectile(transform.position, projectileSpeed))
             timer = 0f
         }
         timer += Time.deltaTime
     }
 
-    fun makeProjectile(startPosition: Vector3fc, movementSpeed: Float) : GameObject {
+    fun makeProjectile(startPosition: Vector3fc, movementSpeed: Float): GameObject {
         return GameObject("Projectile").also {
             it.addComponent<Transform>().apply {
                 transform.position = startPosition
-                transform.scale =  Vector3fConst.one * 0.2f
+                transform.scale = Vector3fConst.one * 0.2f
             }
             it.addComponent<ModelRenderer>().apply {
                 mesh = Loader.createViaPath("models/projectiles/standardenemyprojectile.fbx")
