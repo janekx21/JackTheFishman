@@ -52,12 +52,13 @@ fun loadDefaultScene() {
 
     GameObject("Camera").also { gameObject ->
         gameObject.addComponent<Transform>().apply {
-            position = Vector3f(0f, 2f, 4f)
+            position = Vector3f(0f, 2f, 2f)
         }
         gameObject.addComponent<AudioListener>()
         gameObject.addComponent<DebugCameraMovement>()
         gameObject.addComponent<LookAt>().apply {
             target = player.transform
+            offset = Vector3fConst.forward * 5f
         }
         Camera.main = gameObject.addComponent()
         Scene.active.spawn(gameObject)
@@ -85,13 +86,13 @@ fun loadDefaultScene() {
 fun makePlayer(): GameObject {
     return GameObject("Player").also { gameObject ->
         gameObject.addComponent<Transform>().also {
-            it.scale = Vector3fConst.one * .5f
+            it.scale = Vector3fConst.one * .8f
         }
         gameObject.addComponent<ModelRenderer>().also {
-            it.mesh = Loader.createViaPath("models/monkey.fbx") // TODO: add player mesh
+            it.mesh = Loader.createViaPath("models/player.fbx")
         }
         gameObject.addComponent<CircleCollider>().also {
-            it.radius = .5f
+            it.radius = .8f
         }
         gameObject.addComponent<Health>().also {
             it.hp = 100f
