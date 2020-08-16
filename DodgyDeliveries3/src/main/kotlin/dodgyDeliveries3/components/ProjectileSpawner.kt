@@ -44,7 +44,4 @@ class ProjectileSpawner : Component() {
             it.addComponent<Projectile>()
         }
     }
-
-    override fun draw() {
-    }
 }
