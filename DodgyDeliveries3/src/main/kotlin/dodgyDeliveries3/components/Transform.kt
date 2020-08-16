@@ -24,7 +24,7 @@ data class Transform(
         if (hash == getMatrixHash()) {
             return cached
         }
-        val matrix = Matrix4f().scale(scale).rotate(rotation).translate(position)
+        val matrix = Matrix4f().translate(position).scale(scale).rotate(rotation)
         hash = getMatrixHash()
         return if (parent != null) {
             matrix.mul(parent!!.generateMatrix())

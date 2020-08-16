@@ -46,6 +46,10 @@ private class SceneContactListener : org.jbox2d.callbacks.ContactListener {
 }
 
 data class Scene(val allGameObjects: ArrayList<GameObject> = arrayListOf()) {
+
+    private val gameObjectsToSpawn: ArrayList<GameObject> = arrayListOf()
+    private val gameObjectsToDestroy: ArrayList<GameObject> = arrayListOf()
+
     init {
         for (go in allGameObjects) {
             go.setOrigin(this)
@@ -57,25 +61,41 @@ data class Scene(val allGameObjects: ArrayList<GameObject> = arrayListOf()) {
     }
 
     fun spawn(go: GameObject) {
-        go.setOrigin(this)
-        allGameObjects.add(go)
-        go.start()
+        gameObjectsToSpawn.add(go)
     }
 
     fun destroy(go: GameObject) {
-        go.destroyAllComponents()
-        go.stop()
-        allGameObjects.remove(go)
+        gameObjectsToDestroy.add(go)
     }
 
     fun update() {
-        for (gameObject in ArrayList(allGameObjects)) {
+        for (gameObject in allGameObjects) {
             gameObject.update()
         }
+        applyGameObjectsToDestroy()
+        applyGameObjectsToSpawn()
+    }
+
+    private fun applyGameObjectsToDestroy() {
+        for(gameObjects in gameObjectsToDestroy) {
+            gameObjects.stop()
+            gameObjects.destroyAllComponents()
+            allGameObjects.remove(gameObjects)
+        }
+        gameObjectsToDestroy.clear()
+    }
+
+    private fun applyGameObjectsToSpawn() {
+        for(go in gameObjectsToSpawn) {
+            go.setOrigin(this)
+            allGameObjects.add(go)
+            go.start()
+        }
+        gameObjectsToSpawn.clear()
     }
 
     fun draw() {
-        for (gameObject in ArrayList(allGameObjects)) {
+        for (gameObject in allGameObjects) {
             gameObject.draw()
         }
     }
