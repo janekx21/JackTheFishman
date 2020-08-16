@@ -53,8 +53,6 @@ class Player(var speed: Float = 8f) : Component() {
         transform.rotation = Quaternionf().rotateAxis(clampedTurnAmount + PI, Vector3fConst.up)
     }
 
-    override fun draw() {}
-
     companion object {
         const val maxVelocityChange = 4f
         const val laneWidth = 8f

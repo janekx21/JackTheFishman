@@ -4,6 +4,7 @@ import dodgyDeliveries3.components.*
 import dodgyDeliveries3.util.ColorPalette
 import jackTheFishman.engine.Loader
 import jackTheFishman.engine.graphics.Texture2D
+import jackTheFishman.engine.math.Vector3fConst
 import jackTheFishman.engine.math.times
 import org.joml.Vector3f
 
@@ -13,14 +14,8 @@ fun loadDefaultScene() {
     val player = makePlayer()
     Scene.active.spawn(player)
 
-    GameObject("StandardEnemy").also { gameObject ->
-        gameObject.addComponent<Transform>().apply {
-            position = Vector3f(0f, 0f, -20f)
-        }
-        gameObject.addComponent<ModelRenderer>().apply {
-            mesh = Loader.createViaPath("models/standardenemy.fbx") // TODO: add player mesh
-        }
-        gameObject.addComponent<ProjectileSpawner>()
+    GameObject("Enemy Spawner").also { gameObject ->
+        gameObject.addComponent<EnemySpawner>()
         Scene.active.spawn(gameObject)
     }
 
@@ -89,11 +84,14 @@ fun loadDefaultScene() {
 
 fun makePlayer(): GameObject {
     return GameObject("Player").also { gameObject ->
-        gameObject.addComponent<Transform>()
-        gameObject.addComponent<ModelRenderer>().apply {
-            mesh = Loader.createViaPath("models/monkey.fbx") // TODO: add player mesh
+        gameObject.addComponent<Transform>().also {
+            it.scale = Vector3fConst.one * .5f
         }
-        gameObject.addComponent<CircleCollider>().apply {
+        gameObject.addComponent<ModelRenderer>().also {
+            it.mesh = Loader.createViaPath("models/monkey.fbx") // TODO: add player mesh
+        }
+        gameObject.addComponent<CircleCollider>().also {
+            it.radius = .5f
         }
         gameObject.addComponent<Health>().also {
             it.hp = 100f
