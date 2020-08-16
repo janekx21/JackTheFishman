@@ -63,8 +63,8 @@ void main() {
             float diffuse = dot(normal, -lightDirection);
             float diffuseLight = max(diffuse / pow(length(deltaLight), 2), 0);
 
-            vec3 reflected = reflect(lightDirection, normal);
-            float specularLight = max(pow(dot(reflected, viewDirection), SpecularRoughness), 0);
+            vec3 reflected = reflect(-lightDirection, normal);
+            float specularLight = pow(max(dot(reflected, viewDirection), 0), SpecularRoughness);
 
             light += (diffuseLight * albedo + specularLight * SpecularIntensity * specular) * LightColors[i];
         }
