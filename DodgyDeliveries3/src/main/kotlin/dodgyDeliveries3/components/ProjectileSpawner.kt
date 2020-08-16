@@ -77,7 +77,7 @@ class ProjectileSpawner(var timer: Float = 0f, var type: Type = Type.STANDARD) :
             it.addComponent<PointLight>().apply {
                 color = Vector3f(ColorPalette.GREEN) * 2f
             }
-            it.addComponent<Projectile>().also { projectile ->
+            it.addComponent<WobbleProjectile>().also { projectile ->
                 projectile.damage = 2f
             }
         }

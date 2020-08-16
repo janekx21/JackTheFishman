@@ -4,7 +4,7 @@ import dodgyDeliveries3.Component
 import dodgyDeliveries3.Scene
 import org.jbox2d.dynamics.contacts.Contact
 
-class Projectile(var damage: Float = 1f) : Component(), ICollisionHandler {
+open class Projectile(var damage: Float = 1f) : Component(), ICollisionHandler {
 
     override fun update() {
         if (transform.position.z() > 10f) {
