@@ -95,8 +95,8 @@ fun makePlayer(): GameObject {
             it.radius = .5f
         }
         gameObject.addComponent<Health>().also {
-            it.hp = 100f
-            it.maxHp = 100f
+            it.hp = 10f
+            it.maxHp = 10f
         }
         gameObject.addComponent<Player>()
     }

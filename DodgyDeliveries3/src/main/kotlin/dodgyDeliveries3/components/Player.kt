@@ -1,6 +1,7 @@
 package dodgyDeliveries3.components
 
 import dodgyDeliveries3.Component
+import dodgyDeliveries3.loadDefaultScene
 import jackTheFishman.engine.Input
 import jackTheFishman.engine.Time
 import jackTheFishman.engine.Window
@@ -34,6 +35,7 @@ class Player(var speed: Float = 8f) : Component() {
         applyVelocityChange()
         animateRotation()
         animateYAxis()
+        handleHealth()
     }
 
     private fun handleInput() {
@@ -61,6 +63,13 @@ class Player(var speed: Float = 8f) : Component() {
     private fun animateYAxis() {
         val y = sin(Time.time * 3f) * .1f
         transform.position = Vector3f(transform.position.x(), y, transform.position.z())
+    }
+
+    private fun handleHealth() {
+        val health = gameObject.getComponent<Health>()
+        if(!health.alive) {
+            loadDefaultScene()
+        }
     }
 
     companion object {

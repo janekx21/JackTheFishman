@@ -44,7 +44,9 @@ class ProjectileSpawner : Component() {
             it.addComponent<PointLight>().apply {
                 color = Vector3f(ColorPalette.GREEN) * 2f
             }
-            it.addComponent<Projectile>()
+            it.addComponent<Projectile>().also { projectile ->
+                projectile.damage = 10f
+            }
         }
     }
 }
