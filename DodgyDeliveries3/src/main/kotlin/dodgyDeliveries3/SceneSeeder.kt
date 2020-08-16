@@ -6,14 +6,14 @@ import dodgyDeliveries3.util.ColorPalette
 import jackTheFishman.engine.Loader
 import jackTheFishman.engine.graphics.Texture
 import jackTheFishman.engine.graphics.Texture2D
-import jackTheFishman.engine.graphics.Texture2D
 import jackTheFishman.engine.math.times
 import org.joml.Vector3f
 
 fun loadDefaultScene() {
     Scene.active.allGameObjects.clear()
 
-    Scene.active.spawn(makePlayer())
+    val player = makePlayer()
+    Scene.active.spawn(player)
 
     GameObject("StandardEnemy").also { gameObject ->
         gameObject.addComponent<Transform>().apply {
