@@ -5,6 +5,8 @@ import dodgyDeliveries3.GameObject
 import dodgyDeliveries3.Scene
 import jackTheFishman.engine.Loader
 import jackTheFishman.engine.Time
+import jackTheFishman.engine.math.Vector3fConst
+import jackTheFishman.engine.math.times
 import org.joml.Vector3f
 import org.joml.Vector3fc
 import java.util.*
@@ -28,6 +30,7 @@ class EnemySpawner : Component() {
         return GameObject("StandardEnemy").also { gameObject ->
             gameObject.addComponent<Transform>().also {
                 it.position = position
+                it.scale = Vector3fConst.one * .5f
             }
             gameObject.addComponent<ModelRenderer>().apply {
                 mesh = Loader.createViaPath("models/standardenemy.fbx")

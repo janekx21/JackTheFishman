@@ -7,6 +7,7 @@ import dodgyDeliveries3.util.ColorPalette
 import jackTheFishman.engine.Loader
 import jackTheFishman.engine.Time
 import jackTheFishman.engine.math.Vector2fConst
+import jackTheFishman.engine.math.Vector3fConst
 import jackTheFishman.engine.math.times
 import org.joml.Vector3f
 import org.joml.Vector3fc
@@ -29,7 +30,7 @@ class ProjectileSpawner : Component() {
         return GameObject("Projectile").also {
             it.addComponent<Transform>().apply {
                 transform.position = startPosition
-                transform.scale *= 0.2f
+                transform.scale =  Vector3fConst.one * 0.2f
             }
             it.addComponent<ModelRenderer>().apply {
                 mesh = Loader.createViaPath("models/projectiles/standardenemyprojectile.fbx")
@@ -37,6 +38,7 @@ class ProjectileSpawner : Component() {
             it.addComponent<CircleCollider>().apply {
                 velocity = Vector2fConst.up * movementSpeed
                 isSensor = true
+                radius = .2f
             }
             it.addComponent<PointLight>().apply {
                 color = Vector3f(ColorPalette.GREEN) * 2f

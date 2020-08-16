@@ -92,7 +92,7 @@ fun makePlayer(): GameObject {
             it.mesh = Loader.createViaPath("models/player.fbx")
         }
         gameObject.addComponent<CircleCollider>().also {
-            it.radius = .8f
+            it.radius = .5f
         }
         gameObject.addComponent<Health>().also {
             it.hp = 100f

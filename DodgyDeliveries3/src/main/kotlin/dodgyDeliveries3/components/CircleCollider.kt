@@ -87,7 +87,9 @@ class CircleCollider(var internalVelocity: Vector2fc = Vector2f(0f, 0f), var int
     override fun draw() {
         if (Debug.active) {
             super.draw()
-            Debug.drawWiredSphere(transform.position, radius, Vector3f(1f, 0f, 1f))
+            val position = Vector3f(transform.position)
+            position.y = 0f
+            Debug.drawWiredSphere(position, radius, Vector3f(1f, 0f, 1f))
         }
     }
 }
