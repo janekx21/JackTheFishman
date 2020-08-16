@@ -13,6 +13,12 @@ fun Vector2fc.clamp(value: Float): Vector2fc {
     return result
 }
 
+fun Vector2fc.moveTowards(target: Vector2fc, maxDelta: Float): Vector2fc {
+    val delta = target - this
+    val clampedDelta = delta.clamp(maxDelta)
+    return this + clampedDelta
+}
+
 operator fun Vector2fc.times(other: Vector2fc): Vector2fc {
     return Vector2f(this).mul(other)
 }

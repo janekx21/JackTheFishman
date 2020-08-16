@@ -12,5 +12,6 @@ data class Material(
     val ambientColor: Vector3fc,
     val albedoTexture: Texture?,
     val normalTexture: Texture?,
+    val specularTexture: Texture?,
     val normalIntensity: Float
 )

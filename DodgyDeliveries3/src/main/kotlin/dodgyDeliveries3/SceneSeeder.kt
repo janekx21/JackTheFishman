@@ -6,7 +6,7 @@ import dodgyDeliveries3.util.ColorPalette
 import jackTheFishman.engine.Loader
 import jackTheFishman.engine.graphics.Texture
 import jackTheFishman.engine.graphics.Texture2D
-import jackTheFishman.engine.math.Vector2fCopy
+import jackTheFishman.engine.graphics.Texture2D
 import jackTheFishman.engine.math.times
 import org.joml.Vector3f
 
@@ -23,7 +23,6 @@ fun loadDefaultScene() {
             mesh = Loader.createViaPath("models/standardenemy.fbx") // TODO: add player mesh
         }
         gameObject.addComponent<ProjectileSpawner>()
-        // TODO: add player controller when ready
         Scene.active.spawn(gameObject)
     }
 
@@ -33,7 +32,11 @@ fun loadDefaultScene() {
         }
         gameObject.addComponent<ModelRenderer>().apply {
             mesh = Loader.createViaPath("models/tunnel.fbx")
-            material = material.copy(albedoTexture = Loader.createViaPath<Texture2D>("textures/pipes/AlbedoMap.jpg"), normalTexture = Loader.createViaPath<Texture2D>("textures/pipes/NormalMap.png"))
+            material = material.copy(
+                albedoTexture = Loader.createViaPath<Texture2D>("textures/pipes/AlbedoMap.jpg"),
+                normalTexture = Loader.createViaPath<Texture2D>("textures/pipes/NormalMap.png"),
+                specularTexture = Loader.createViaPath<Texture2D>("textures/pipes/SpecularMap.png")
+            )
         }
         gameObject.addComponent<Tunnel>()
         Scene.active.spawn(gameObject)
@@ -44,7 +47,11 @@ fun loadDefaultScene() {
         }
         gameObject.addComponent<ModelRenderer>().apply {
             mesh = Loader.createViaPath("models/tunnel.fbx")
-            material = material.copy(albedoTexture = Loader.createViaPath<Texture2D>("textures/pipes/AlbedoMap.jpg"), normalTexture = Loader.createViaPath<Texture2D>("textures/pipes/NormalMap.png"))
+            material = material.copy(
+                albedoTexture = Loader.createViaPath<Texture2D>("textures/pipes/AlbedoMap.jpg"),
+                normalTexture = Loader.createViaPath<Texture2D>("textures/pipes/NormalMap.png"),
+                specularTexture = Loader.createViaPath<Texture2D>("textures/pipes/SpecularMap.png")
+            )
         }
         gameObject.addComponent<Tunnel>()
         Scene.active.spawn(gameObject)
@@ -52,10 +59,13 @@ fun loadDefaultScene() {
 
     GameObject("Camera").also { gameObject ->
         gameObject.addComponent<Transform>().apply {
-            position = Vector3f(0f, 0f, .5f)
+            position = Vector3f(0f, 2f, 4f)
         }
         gameObject.addComponent<AudioListener>()
         gameObject.addComponent<DebugCameraMovement>()
+        gameObject.addComponent<LookAt>().apply {
+            target = player.transform
+        }
         Camera.main = gameObject.addComponent()
         Scene.active.spawn(gameObject)
     }
@@ -91,6 +101,5 @@ fun makePlayer(): GameObject {
             it.hp = 100f
             it.maxHp = 100f
         }
-        // TODO: add player controller when ready
     }
 }

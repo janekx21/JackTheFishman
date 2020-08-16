@@ -61,6 +61,11 @@ data class ModelRenderer(var mesh: Mesh? = null, var material: Material = defaul
         } else {
             shader.setUniform("NormalTexture", defaultNormal)
         }
+        if (material.specularTexture != null) {
+            shader.setUniform("SpecularTexture", material.specularTexture!!)
+        } else {
+            shader.setUniform("SpecularTexture", defaultAlbedo)
+        }
         shader.setUniform("NormalIntensity", material.normalIntensity)
     }
 
@@ -73,6 +78,6 @@ data class ModelRenderer(var mesh: Mesh? = null, var material: Material = defaul
         private val defaultShader = Loader.createViaPath<Shader>("shaders/default.shader")
         private val defaultNormal = Loader.createViaPath<Texture2D>("textures/normal.png")
         private val defaultAlbedo = Loader.createViaPath<Texture2D>("textures/default.png")
-        private val defaultMaterial = Material(defaultShader, .5f, 40f, .6f, Vector3f(.1f, .1f, .1f), null, null, .1f)
+        private val defaultMaterial = Material(defaultShader, .5f, 40f, .3f, Vector3f(.1f, .1f, .1f), null, null, null, .1f)
     }
 }
