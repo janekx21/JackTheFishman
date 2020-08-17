@@ -33,11 +33,16 @@ class EnemySpawner : Component() {
     private fun spawn() {
         val xOffset = random.range(-2f, 2f)
         val timerOffset = random.range(0f, 1f)
-        if (random.nextFloat() > .5f) {
-            Scene.active.spawn(makeStandardEnemy(Vector3f(xOffset, 5f, -20f), timerOffset))
-        } else {
-            val right = random.nextFloat() > .5f
-            Scene.active.spawn(makeHammerhead(Vector3f(xOffset, 5f, -10f), timerOffset, right))
+        when ((random.nextFloat() * 3f).toInt()) {
+            0 -> Scene.active.spawn(makeStandardEnemy(Vector3f(xOffset, 5f, -20f), timerOffset))
+            1 -> {
+                val right = random.nextFloat() > .5f
+                Scene.active.spawn(makeHammerhead(Vector3f(xOffset, 5f, -10f), timerOffset, right))
+            }
+            2 -> {
+                Scene.active.spawn(makeLaserShark(Vector3f(xOffset, 5f, -10f), timerOffset))
+            }
+            else->throw NotImplementedError("No fitting choice found")
         }
     }
 
@@ -50,9 +55,9 @@ class EnemySpawner : Component() {
             gameObject.addComponent<ModelRenderer>().apply {
                 mesh = Loader.createViaPath("models/standardenemy.fbx")
                 material = material.copy(
-                    albedoTexture = Loader.createViaPath<Texture2D>("textures/stripes.png"),
+                    albedoColor = ColorPalette.RED,
                     normalTexture = Loader.createViaPath<Texture2D>("textures/sandNormal.png"),
-                    normalIntensity = .2f
+                    normalIntensity = .1f
                 )
             }
             gameObject.addComponent<ProjectileSpawner>().also {
@@ -76,7 +81,7 @@ class EnemySpawner : Component() {
                 material = material.copy(
                     albedoColor = ColorPalette.YELLOW,
                     normalTexture = Loader.createViaPath<Texture2D>("textures/sandNormal.png"),
-                    normalIntensity = .2f
+                    normalIntensity = .1f
                 )
             }
             gameObject.addComponent<ProjectileSpawner>().also {
@@ -90,6 +95,30 @@ class EnemySpawner : Component() {
                 } else {
                     it.moves = LinkedList(EnemyCommander.MovementCommand.shortLeft)
                 }
+            }
+        }
+    }
+
+    private fun makeLaserShark(position: Vector3fc, timeOffset: Float): GameObject {
+        return GameObject("Laser Shark Enemy").also { gameObject ->
+            gameObject.addComponent<Transform>().also {
+                it.position = position
+                it.scale = Vector3fConst.one * .5f
+            }
+            gameObject.addComponent<ModelRenderer>().apply {
+                mesh = Loader.createViaPath("models/standardenemy.fbx")
+                material = material.copy(
+                    albedoTexture = Loader.createViaPath<Texture2D>("textures/stripes.png"),
+                    normalTexture = Loader.createViaPath<Texture2D>("textures/sandNormal.png"),
+                    normalIntensity = .1f
+                )
+            }
+            gameObject.addComponent<ProjectileSpawner>().also {
+                it.timer = timeOffset
+            }
+            gameObject.addComponent<EnemyCommander>().also {
+                it.speed = 1f
+                it.moves = LinkedList(EnemyCommander.MovementCommand.twirl)
             }
         }
     }
