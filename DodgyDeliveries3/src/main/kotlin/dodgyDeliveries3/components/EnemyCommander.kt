@@ -3,10 +3,7 @@ package dodgyDeliveries3.components
 import dodgyDeliveries3.Component
 import dodgyDeliveries3.Scene
 import jackTheFishman.engine.Time
-import jackTheFishman.engine.math.Vector3fConst
-import jackTheFishman.engine.math.moveTowards
-import jackTheFishman.engine.math.plus
-import jackTheFishman.engine.math.times
+import jackTheFishman.engine.math.*
 import org.joml.Vector3f
 import org.joml.Vector3fc
 import java.util.*
@@ -47,12 +44,15 @@ class EnemyCommander(var speed: Float = 1f, var moves: Queue<MovementCommand> = 
     private var currentCommand: MovementCommand? = null
     private var timer = 0f
     private var liveTime = 0f
+    private var targetPosition: Vector3fc? = null
 
     private var state = State.JOINING
     val canShoot: Boolean
         get() = state == State.LIVING && (currentCommand?.canShoot ?: false)
 
     override fun update() {
+        handleTargetPosition()
+
         when (state) {
             State.JOINING -> handleJoining()
             State.GOING_AWAY -> handleGoingAway()
@@ -62,17 +62,26 @@ class EnemyCommander(var speed: Float = 1f, var moves: Queue<MovementCommand> = 
         liveTime += Time.deltaTime
     }
 
+    private fun handleTargetPosition() {
+        if (targetPosition == null) {
+            targetPosition = transform.position
+        }
+
+        val delta = targetPosition!! - transform.position
+        transform.position = transform.position.moveTowards(targetPosition!!, Time.deltaTime * delta.length())
+    }
+
     private fun handleJoining() {
-        val target = Vector3f(transform.position)
+        val target = Vector3f(targetPosition)
         target.y = 0f
-        transform.position = transform.position.moveTowards(target, Time.deltaTime * speed)
+        targetPosition = targetPosition!!.moveTowards(target, Time.deltaTime * speed)
         if (transform.position.distance(target) <= .1) {
             state = State.LIVING
         }
     }
 
     private fun handleGoingAway() {
-        transform.position += Vector3fConst.down * Time.deltaTime
+        targetPosition = Vector3fConst.down * Time.deltaTime + targetPosition!!
         if (transform.position.y() < -10) {
             Scene.active.destroy(gameObject)
         }
@@ -83,11 +92,11 @@ class EnemyCommander(var speed: Float = 1f, var moves: Queue<MovementCommand> = 
 
         if (currentCommand != null) {
             val movement = Vector3f(currentCommand!!.deltaMovement).normalize()
-            transform.position += movement * speed * Time.deltaTime
+            targetPosition = movement * speed * Time.deltaTime + targetPosition!!
 
-            val position = Vector3f(transform.position)
+            val position = Vector3f(targetPosition)
             position.y = sin(liveTime * 3f) * .2f
-            transform.position = position
+            targetPosition = position
 
             updateTimer()
         }

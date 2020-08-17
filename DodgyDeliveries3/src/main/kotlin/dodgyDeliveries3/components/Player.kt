@@ -53,7 +53,7 @@ class Player(var speed: Float = 8f) : Component() {
     }
 
     private fun animateRotation() {
-        val turnAmount = -collider.velocity.x() * .013f
+        val turnAmount = -collider.velocity.x() * .02f
         val clampedTurnAmount = clamp(turnAmount, -PI/4, PI/4)
         transform.rotation = Quaternionf()
             .rotateAxis(clampedTurnAmount + PI, Vector3fConst.up)
