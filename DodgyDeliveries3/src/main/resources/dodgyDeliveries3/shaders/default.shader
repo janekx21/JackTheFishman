@@ -25,6 +25,7 @@ void main() {
 #define MAX_LIGHT_COUNT 32
 uniform vec3 LightPositions[MAX_LIGHT_COUNT];
 uniform vec3 LightColors[MAX_LIGHT_COUNT];
+uniform vec3 AlbedoColor;
 uniform sampler2D AlbedoTexture;
 uniform vec3 CameraPosition;
 uniform float SpecularIntensity;
@@ -49,12 +50,13 @@ float luminance(vec3 rgb) {
 
 void main() {
     vec3 normal = texture(NormalTexture, uv).xyz * 2 - 1;
-    // normal.xy *= NormalIntensity;
+    normal.xy *= NormalIntensity;
+    normal = normalize(normal);
     normal = normalize(TBN * normal);
 
     vec3 light = vec3(0.0);
     vec3 viewDirection = normalize(position - CameraPosition);
-    vec3 albedo = texture(AlbedoTexture, uv).rgb;
+    vec3 albedo = texture(AlbedoTexture, uv).rgb * AlbedoColor;
     vec3 specular = texture(SpecularTexture, uv).rgb;
     for (int i = 0; i < MAX_LIGHT_COUNT; i++) {
         if (LightColors[i] != vec3(0, 0, 0)) {

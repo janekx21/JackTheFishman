@@ -10,6 +10,7 @@ import jackTheFishman.engine.math.times
 import org.joml.Vector3f
 import org.joml.Vector3fc
 import java.util.*
+import kotlin.math.sin
 
 class EnemyCommander(var speed: Float = 1f, var moves: Queue<MovementCommand> = LinkedList<MovementCommand>()) :
     Component() {
@@ -45,6 +46,7 @@ class EnemyCommander(var speed: Float = 1f, var moves: Queue<MovementCommand> = 
 
     private var currentCommand: MovementCommand? = null
     private var timer = 0f
+    private var liveTime = 0f
 
     private var state = State.JOINING
     val canShoot: Boolean
@@ -56,6 +58,8 @@ class EnemyCommander(var speed: Float = 1f, var moves: Queue<MovementCommand> = 
             State.GOING_AWAY -> handleGoingAway()
             State.LIVING -> handleLiving()
         }
+
+        liveTime += Time.deltaTime
     }
 
     private fun handleJoining() {
@@ -80,6 +84,11 @@ class EnemyCommander(var speed: Float = 1f, var moves: Queue<MovementCommand> = 
         if (currentCommand != null) {
             val movement = Vector3f(currentCommand!!.deltaMovement).normalize()
             transform.position += movement * speed * Time.deltaTime
+
+            val position = Vector3f(transform.position)
+            position.y = sin(liveTime * 3f) * .2f
+            transform.position = position
+
             updateTimer()
         }
     }

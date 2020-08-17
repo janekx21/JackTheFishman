@@ -5,6 +5,7 @@ import jackTheFishman.engine.Loader
 import jackTheFishman.engine.graphics.Mesh
 import jackTheFishman.engine.graphics.Shader
 import jackTheFishman.engine.graphics.Texture2D
+import jackTheFishman.engine.math.Vector3fConst
 import org.joml.Vector3f
 
 /**
@@ -50,6 +51,7 @@ data class ModelRenderer(var mesh: Mesh? = null, var material: Material = defaul
         shader.setUniform("SpecularRoughness", material.specularRoughness)
         shader.setUniform("FresnelIntensity", material.fresnelIntensity)
         shader.setUniform("AmbientColor", material.ambientColor)
+        shader.setUniform("AlbedoColor", material.albedoColor)
 
         if (material.albedoTexture != null) {
             shader.setUniform("AlbedoTexture", material.albedoTexture!!)
@@ -78,6 +80,18 @@ data class ModelRenderer(var mesh: Mesh? = null, var material: Material = defaul
         private val defaultShader = Loader.createViaPath<Shader>("shaders/default.shader")
         private val defaultNormal = Loader.createViaPath<Texture2D>("textures/normal.png")
         private val defaultAlbedo = Loader.createViaPath<Texture2D>("textures/default.png")
-        private val defaultMaterial = Material(defaultShader, .5f, 40f, .3f, Vector3f(.1f, .1f, .1f), null, null, null, .1f)
+        private val defaultMaterial =
+            Material(
+                defaultShader,
+                .5f,
+                40f,
+                .3f,
+                Vector3f(.1f, .1f, .1f),
+                Vector3fConst.one,
+                null,
+                null,
+                null,
+                1f
+            )
     }
 }

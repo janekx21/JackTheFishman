@@ -13,10 +13,6 @@ class Camera(var fov: Float = 80f) : Component() {
     private var hash = 0
     private var cached: Matrix4fc = Matrix4f()
 
-    override fun update() {}
-
-    override fun draw() {}
-
     fun getProjectionMatrix(): Matrix4fc {
         return matrix
     }

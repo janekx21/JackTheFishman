@@ -3,6 +3,7 @@ package dodgyDeliveries3.components
 import dodgyDeliveries3.Component
 import dodgyDeliveries3.GameObject
 import dodgyDeliveries3.Scene
+import dodgyDeliveries3.util.ColorPalette
 import jackTheFishman.engine.Loader
 import jackTheFishman.engine.Time
 import jackTheFishman.engine.graphics.Texture2D
@@ -48,7 +49,11 @@ class EnemySpawner : Component() {
             }
             gameObject.addComponent<ModelRenderer>().apply {
                 mesh = Loader.createViaPath("models/standardenemy.fbx")
-                material = material.copy(albedoTexture = Loader.createViaPath<Texture2D>("textures/stripes.png"))
+                material = material.copy(
+                    albedoTexture = Loader.createViaPath<Texture2D>("textures/stripes.png"),
+                    normalTexture = Loader.createViaPath<Texture2D>("textures/sandNormal.png"),
+                    normalIntensity = .2f
+                )
             }
             gameObject.addComponent<ProjectileSpawner>().also {
                 it.timer = timeOffset
@@ -68,6 +73,11 @@ class EnemySpawner : Component() {
             }
             gameObject.addComponent<ModelRenderer>().apply {
                 mesh = Loader.createViaPath("models/hammerheadenemy.fbx")
+                material = material.copy(
+                    albedoColor = ColorPalette.YELLOW,
+                    normalTexture = Loader.createViaPath<Texture2D>("textures/sandNormal.png"),
+                    normalIntensity = .2f
+                )
             }
             gameObject.addComponent<ProjectileSpawner>().also {
                 it.type = ProjectileSpawner.Type.WOBBLE
