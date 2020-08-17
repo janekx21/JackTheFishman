@@ -54,11 +54,12 @@ class Player(var speed: Float = 8f) : Component() {
 
     private fun animateRotation() {
         val turnAmount = -collider.velocity.x() * .02f
-        val clampedTurnAmount = clamp(turnAmount, -PI/4, PI/4)
+        val clampedTurnAmount = clamp(turnAmount, -PI / 4, PI / 4)
         transform.rotation = Quaternionf()
             .rotateAxis(clampedTurnAmount + PI, Vector3fConst.up)
             .rotateAxis(sin(Time.time * 3f) * .1f, Vector3fConst.right)
     }
+
     private fun animateYAxis() {
         val y = sin(Time.time * 3f) * .1f
         transform.position = Vector3f(transform.position.x(), y, transform.position.z())
@@ -66,7 +67,7 @@ class Player(var speed: Float = 8f) : Component() {
 
     private fun handleHealth() {
         val health = gameObject.getComponent<Health>()
-        if(!health.alive) {
+        if (!health.alive) {
             // TODO handle game over
         }
     }

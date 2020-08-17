@@ -9,7 +9,8 @@ import org.joml.Matrix4fc
 import org.joml.Quaternionf
 
 class Camera(var fov: Float = 80f) : Component() {
-    private var matrix: Matrix4fc = Matrix4f().perspective(Math.toRadians(fov.toDouble()).toFloat(), Window.aspect, .1f, 100f)
+    private var matrix: Matrix4fc =
+        Matrix4f().perspective(Math.toRadians(fov.toDouble()).toFloat(), Window.aspect, .1f, 100f)
     private var hash = 0
     private var cached: Matrix4fc = Matrix4f()
 

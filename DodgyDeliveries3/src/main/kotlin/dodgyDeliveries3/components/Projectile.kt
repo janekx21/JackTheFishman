@@ -13,7 +13,7 @@ open class Projectile(var damage: Float = 1f) : Component(), ICollisionHandler {
     }
 
     override fun beginContact(ours: Collider, other: Collider, contact: Contact) {
-        if(other.gameObject.getComponents<Player>().isNotEmpty()) {
+        if (other.gameObject.getComponents<Player>().isNotEmpty()) {
             other.gameObject.getComponent<Health>().applyDamage(damage)
             Scene.active.destroy(gameObject)
         }

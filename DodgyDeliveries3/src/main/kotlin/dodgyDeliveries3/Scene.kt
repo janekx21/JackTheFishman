@@ -77,7 +77,7 @@ data class Scene(val allGameObjects: ArrayList<GameObject> = arrayListOf()) {
     }
 
     private fun applyGameObjectsToDestroy() {
-        for(gameObjects in gameObjectsToDestroy) {
+        for (gameObjects in gameObjectsToDestroy) {
             gameObjects.stop()
             gameObjects.destroyAllComponents()
             allGameObjects.remove(gameObjects)
@@ -86,7 +86,7 @@ data class Scene(val allGameObjects: ArrayList<GameObject> = arrayListOf()) {
     }
 
     private fun applyGameObjectsToSpawn() {
-        for(go in gameObjectsToSpawn) {
+        for (go in gameObjectsToSpawn) {
             go.setOrigin(this)
             allGameObjects.add(go)
             go.start()
@@ -115,7 +115,7 @@ data class Scene(val allGameObjects: ArrayList<GameObject> = arrayListOf()) {
         override fun createViaPath(path: String): Scene {
             val json = File(path).readText()
             val scene = Serialisation.klaxon.parse<Scene>(json)
-            check(scene != null) {"Scene could not pe loaded at $path"}
+            check(scene != null) { "Scene could not pe loaded at $path" }
             return scene
         }
     }
