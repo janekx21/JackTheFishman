@@ -17,7 +17,7 @@ import kotlin.random.asKotlinRandom
 class EnemySpawner : Component() {
     var timer = 0f
     var spawnInterval = 8f
-    val random = Random().asKotlinRandom()
+    private val random = Random().asKotlinRandom()
 
     override fun update() {
         timer -= Time.deltaTime
@@ -65,7 +65,7 @@ class EnemySpawner : Component() {
                 it.scale = Vector3fConst.one * .5f
             }
             gameObject.addComponent<ModelRenderer>().apply {
-                mesh = Loader.createViaPath("models/monkey.fbx")
+                mesh = Loader.createViaPath("models/hammerheadenemy.fbx")
             }
             gameObject.addComponent<ProjectileSpawner>().also {
                 it.type = ProjectileSpawner.Type.WOBBLE

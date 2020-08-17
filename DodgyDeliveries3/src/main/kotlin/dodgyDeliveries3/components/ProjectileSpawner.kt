@@ -67,7 +67,7 @@ class ProjectileSpawner(var timer: Float = 0f, var type: Type = Type.STANDARD) :
                 transform.scale = Vector3fConst.one * 0.5f
             }
             it.addComponent<ModelRenderer>().apply {
-                mesh = Loader.createViaPath("models/sphere.fbx")
+                mesh = Loader.createViaPath("models/projectiles/hammerheadprojectile.fbx")
             }
             it.addComponent<CircleCollider>().apply {
                 velocity = Vector2fConst.up * movementSpeed
