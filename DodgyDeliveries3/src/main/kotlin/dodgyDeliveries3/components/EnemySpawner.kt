@@ -5,6 +5,7 @@ import dodgyDeliveries3.GameObject
 import dodgyDeliveries3.Scene
 import jackTheFishman.engine.Loader
 import jackTheFishman.engine.Time
+import jackTheFishman.engine.graphics.Texture2D
 import jackTheFishman.engine.math.Vector3fConst
 import jackTheFishman.engine.math.times
 import jackTheFishman.engine.util.range
@@ -47,6 +48,7 @@ class EnemySpawner : Component() {
             }
             gameObject.addComponent<ModelRenderer>().apply {
                 mesh = Loader.createViaPath("models/standardenemy.fbx")
+                material = material.copy(albedoTexture = Loader.createViaPath<Texture2D>("textures/stripes.png"))
             }
             gameObject.addComponent<ProjectileSpawner>().also {
                 it.timer = timeOffset

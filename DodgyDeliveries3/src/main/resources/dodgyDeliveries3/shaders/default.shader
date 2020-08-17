@@ -71,7 +71,7 @@ void main() {
     }
     float fresnel = pow(1 - dot(-viewDirection, normal), 4);
 
-    light += fresnel * FresnelIntensity + AmbientColor;
+    light += fresnel * FresnelIntensity * specular + AmbientColor * albedo;
 
     float distance = distance(position, CameraPosition);
     distance = clamp(distance / 100, 0, 1);
