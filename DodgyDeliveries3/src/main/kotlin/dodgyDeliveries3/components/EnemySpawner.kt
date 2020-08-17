@@ -26,23 +26,24 @@ class EnemySpawner : Component() {
         if (timer <= 0) {
             timer = spawnInterval
             spawn()
-            spawnInterval = max(spawnInterval - 1f, 1f)
+            spawnInterval = max(spawnInterval - 1f, 4f)
         }
     }
 
     private fun spawn() {
         val xOffset = random.range(-2f, 2f)
         val timerOffset = random.range(0f, 1f)
-        when ((random.nextFloat() * 3f).toInt()) {
+        // when ((random.nextFloat() * 4f).toInt()) {
+        when (3) {
             0 -> Scene.active.spawn(makeStandardEnemy(Vector3f(xOffset, 5f, -20f), timerOffset))
             1 -> {
                 val right = random.nextFloat() > .5f
                 Scene.active.spawn(makeHammerhead(Vector3f(xOffset, 5f, -10f), timerOffset, right))
             }
-            2 -> {
-                Scene.active.spawn(makeLaserShark(Vector3f(xOffset, 5f, -10f), timerOffset))
-            }
-            else->throw NotImplementedError("No fitting choice found")
+            2 -> Scene.active.spawn(makeLaserShark(Vector3f(xOffset, 5f, -10f), timerOffset))
+            3 -> Scene.active.spawn(makeLanternFish(Vector3f(xOffset, 5f, -10f), timerOffset))
+
+            else -> throw NotImplementedError("No fitting choice found")
         }
     }
 
@@ -62,9 +63,10 @@ class EnemySpawner : Component() {
             }
             gameObject.addComponent<ProjectileSpawner>().also {
                 it.timer = timeOffset
+                it.projectilesPerSecond = .2f
             }
             gameObject.addComponent<EnemyCommander>().also {
-                it.speed = 1f
+                it.speed = 1.5f
                 it.moves = LinkedList(EnemyCommander.MovementCommand.twirl)
             }
         }
@@ -89,7 +91,7 @@ class EnemySpawner : Component() {
                 it.timer = timeOffset
             }
             gameObject.addComponent<EnemyCommander>().also {
-                it.speed = 1f
+                it.speed = 1.5f
                 if (right) {
                     it.moves = LinkedList(EnemyCommander.MovementCommand.shortRight)
                 } else {
@@ -117,7 +119,31 @@ class EnemySpawner : Component() {
                 it.timer = timeOffset
             }
             gameObject.addComponent<EnemyCommander>().also {
-                it.speed = 1f
+                it.speed = .6f
+                it.moves = LinkedList(EnemyCommander.MovementCommand.twirl)
+            }
+        }
+    }
+
+    private fun makeLanternFish(position: Vector3fc, timeOffset: Float): GameObject {
+        return GameObject("Lantern Fish Enemy").also { gameObject ->
+            gameObject.addComponent<Transform>().also {
+                it.position = position
+                it.scale = Vector3fConst.one * .5f
+            }
+            gameObject.addComponent<ModelRenderer>().apply {
+                mesh = Loader.createViaPath("models/lanternfishenemy.fbx")
+                material = material.copy(
+                    albedoColor = ColorPalette.BLUE,
+                    normalTexture = Loader.createViaPath<Texture2D>("textures/sandNormal.png"),
+                    normalIntensity = .1f
+                )
+            }
+            gameObject.addComponent<ProjectileSpawner>().also {
+                it.timer = timeOffset
+            }
+            gameObject.addComponent<EnemyCommander>().also {
+                it.speed = .6f
                 it.moves = LinkedList(EnemyCommander.MovementCommand.twirl)
             }
         }
