@@ -13,12 +13,11 @@ import jackTheFishman.engine.util.range
 import org.joml.Vector3f
 import org.joml.Vector3fc
 import java.util.*
-import kotlin.math.max
 import kotlin.random.asKotlinRandom
 
 class EnemySpawner : Component() {
     var timer = 0f
-    var spawnInterval = 8f
+    var spawnInterval = 6f
     private val random = Random().asKotlinRandom()
 
     override fun update() {
@@ -26,22 +25,20 @@ class EnemySpawner : Component() {
         if (timer <= 0) {
             timer = spawnInterval
             spawn()
-            spawnInterval = max(spawnInterval - 1f, 4f)
         }
     }
 
     private fun spawn() {
         val xOffset = random.range(-2f, 2f)
         val timerOffset = random.range(0f, 1f)
-        // when ((random.nextFloat() * 4f).toInt()) {
-        when (3) {
+        when ((random.nextFloat() * 4f).toInt()) {
             0 -> Scene.active.spawn(makeStandardEnemy(Vector3f(xOffset, 5f, -20f), timerOffset))
             1 -> {
                 val right = random.nextFloat() > .5f
-                Scene.active.spawn(makeHammerhead(Vector3f(xOffset, 5f, -10f), timerOffset, right))
+                Scene.active.spawn(makeHammerhead(Vector3f(xOffset, 5f, -15f), timerOffset, right))
             }
-            2 -> Scene.active.spawn(makeLaserShark(Vector3f(xOffset, 5f, -10f), timerOffset))
-            3 -> Scene.active.spawn(makeLanternFish(Vector3f(xOffset, 5f, -10f), timerOffset))
+            2 -> Scene.active.spawn(makeLaserShark(Vector3f(xOffset, 5f, -15f), timerOffset))
+            3 -> Scene.active.spawn(makeLanternFish(Vector3f(xOffset, 5f, -15f), timerOffset))
 
             else -> throw NotImplementedError("No fitting choice found")
         }
@@ -63,7 +60,7 @@ class EnemySpawner : Component() {
             }
             gameObject.addComponent<ProjectileSpawner>().also {
                 it.timer = timeOffset
-                it.projectilesPerSecond = .2f
+                it.projectilesPerSecond = .3f
             }
             gameObject.addComponent<EnemyCommander>().also {
                 it.speed = 1.5f
@@ -89,6 +86,7 @@ class EnemySpawner : Component() {
             gameObject.addComponent<ProjectileSpawner>().also {
                 it.type = ProjectileSpawner.Type.WOBBLE
                 it.timer = timeOffset
+                it.projectilesPerSecond = .2f
             }
             gameObject.addComponent<EnemyCommander>().also {
                 it.speed = 1.5f
@@ -117,6 +115,7 @@ class EnemySpawner : Component() {
             }
             gameObject.addComponent<ProjectileSpawner>().also {
                 it.timer = timeOffset
+                it.projectilesPerSecond = .2f
             }
             gameObject.addComponent<EnemyCommander>().also {
                 it.speed = .6f
@@ -141,6 +140,8 @@ class EnemySpawner : Component() {
             }
             gameObject.addComponent<ProjectileSpawner>().also {
                 it.timer = timeOffset
+                it.type = ProjectileSpawner.Type.LIGHT
+                it.projectilesPerSecond = .2f
             }
             gameObject.addComponent<EnemyCommander>().also {
                 it.speed = .6f

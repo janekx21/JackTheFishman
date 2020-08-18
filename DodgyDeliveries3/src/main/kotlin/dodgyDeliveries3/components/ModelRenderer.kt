@@ -2,10 +2,12 @@ package dodgyDeliveries3.components
 
 import dodgyDeliveries3.graphics.Material
 import jackTheFishman.engine.Loader
+import jackTheFishman.engine.Time
 import jackTheFishman.engine.graphics.Mesh
 import jackTheFishman.engine.graphics.Shader
 import jackTheFishman.engine.graphics.Texture2D
 import jackTheFishman.engine.math.Vector3fConst
+import jackTheFishman.engine.math.moveTowards
 import org.joml.Vector3f
 
 /**
@@ -43,6 +45,16 @@ data class ModelRenderer(var mesh: Mesh? = null, var material: Material = defaul
         for (index in PointLight.all.size until PointLight.max) {
             shader.setUniform("LightColors[$index]", Vector3f(0f, 0f, 0f))
         }
+
+        // TODO refactor
+        for (light in PointLight.all) {
+            if (!light.alive) {
+                light.animatedColor =
+                    light.animatedColor.moveTowards(Vector3fConst.zero, Time.deltaTime * PointLight.animationSpeed)
+            }
+        }
+
+        PointLight.all.removeIf { !it.alive && it.animatedColor.lengthSquared() <= 0 }
     }
 
     private fun uploadMaterialUniforms(shader: Shader) {

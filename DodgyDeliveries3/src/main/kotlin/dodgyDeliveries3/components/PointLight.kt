@@ -12,6 +12,7 @@ data class PointLight(var color: Vector3fc = Vector3f(0f, 0f, 0f)) : Component()
 
     var animatedColor: Vector3fc = Vector3fConst.zero
     var targetColor: Vector3fc = Vector3fConst.zero
+    var alive = true
 
     override fun start() {
         check(all.size < max) { "you can only have $max PointLight's" }
@@ -19,7 +20,7 @@ data class PointLight(var color: Vector3fc = Vector3f(0f, 0f, 0f)) : Component()
     }
 
     override fun update() {
-        targetColor = color
+        targetColor = (if (alive) color else Vector3fConst.zero)
         animatedColor = animatedColor.moveTowards(targetColor, Time.deltaTime * animationSpeed)
     }
 
@@ -30,7 +31,7 @@ data class PointLight(var color: Vector3fc = Vector3f(0f, 0f, 0f)) : Component()
     }
 
     override fun stop() {
-        all.remove(this)
+        alive = false
     }
 
     companion object {

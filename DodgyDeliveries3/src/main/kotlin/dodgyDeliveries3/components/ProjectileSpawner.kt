@@ -14,7 +14,7 @@ import org.joml.Vector3fc
 
 class ProjectileSpawner(var timer: Float = 0f, var type: Type = Type.STANDARD) : Component() {
     enum class Type {
-        STANDARD, WOBBLE
+        STANDARD, WOBBLE, LIGHT
     }
 
     var projectilesPerSecond = 0.1f
@@ -30,14 +30,14 @@ class ProjectileSpawner(var timer: Float = 0f, var type: Type = Type.STANDARD) :
 
     private fun spawn() {
         when (type) {
-            Type.STANDARD -> Scene.active.spawn(makeStandardProjectile(transform.position, 15f))
-            Type.WOBBLE -> Scene.active.spawn(makeWobbleProjectile(transform.position, 8f))
-            else -> throw NotImplementedError("projectile type not found")
+            Type.STANDARD -> Scene.active.spawn(makeStandardProjectile(transform.position))
+            Type.WOBBLE -> Scene.active.spawn(makeWobbleProjectile(transform.position))
+            Type.LIGHT -> Scene.active.spawn(makeLightBall(transform.position))
         }
 
     }
 
-    private fun makeStandardProjectile(startPosition: Vector3fc, movementSpeed: Float): GameObject {
+    private fun makeStandardProjectile(startPosition: Vector3fc): GameObject {
         return GameObject("Standard Projectile").also {
             it.addComponent<Transform>().apply {
                 transform.position = startPosition
@@ -47,12 +47,12 @@ class ProjectileSpawner(var timer: Float = 0f, var type: Type = Type.STANDARD) :
                 mesh = Loader.createViaPath("models/projectiles/standardenemyprojectile.fbx")
             }
             it.addComponent<CircleCollider>().apply {
-                velocity = Vector2fConst.up * movementSpeed
+                velocity = Vector2fConst.up * 15f
                 isSensor = true
                 radius = .2f
             }
             it.addComponent<PointLight>().apply {
-                color = Vector3f(ColorPalette.GREEN) * 2f
+                color = Vector3f(ColorPalette.RED) * 2f
             }
             it.addComponent<Projectile>().also { projectile ->
                 projectile.damage = 1f
@@ -60,7 +60,7 @@ class ProjectileSpawner(var timer: Float = 0f, var type: Type = Type.STANDARD) :
         }
     }
 
-    private fun makeWobbleProjectile(startPosition: Vector3fc, movementSpeed: Float): GameObject {
+    private fun makeWobbleProjectile(startPosition: Vector3fc): GameObject {
         return GameObject("Wobble Projectile").also {
             it.addComponent<Transform>().apply {
                 transform.position = startPosition
@@ -70,15 +70,39 @@ class ProjectileSpawner(var timer: Float = 0f, var type: Type = Type.STANDARD) :
                 mesh = Loader.createViaPath("models/projectiles/hammerheadprojectile.fbx")
             }
             it.addComponent<CircleCollider>().apply {
-                velocity = Vector2fConst.up * movementSpeed
+                velocity = Vector2fConst.up * 8f
                 isSensor = true
                 radius = .5f
             }
             it.addComponent<PointLight>().apply {
-                color = Vector3f(ColorPalette.GREEN) * 2f
+                color = Vector3f(ColorPalette.YELLOW) * 2f
             }
             it.addComponent<WobbleProjectile>().also { projectile ->
                 projectile.damage = 2f
+            }
+        }
+    }
+
+    private fun makeLightBall(startPosition: Vector3fc): GameObject {
+        return GameObject("Light Ball Projectile").also {
+            it.addComponent<Transform>().apply {
+                transform.position = startPosition
+                transform.scale = Vector3fConst.one * 0.2f
+            }
+            it.addComponent<ModelRenderer>().apply {
+                mesh = Loader.createViaPath("models/sphere.fbx")
+                material = material.copy(albedoColor = ColorPalette.BLUE)
+            }
+            it.addComponent<CircleCollider>().apply {
+                velocity = Vector2fConst.up * 4f
+                isSensor = true
+                radius = .2f
+            }
+            it.addComponent<PointLight>().apply {
+                color = Vector3f(ColorPalette.BLUE) * 2f
+            }
+            it.addComponent<Projectile>().also { projectile ->
+                projectile.damage = 0f
             }
         }
     }
