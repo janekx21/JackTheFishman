@@ -3,8 +3,8 @@ package jackTheFishman.engine
 import jackTheFishman.engine.graphics.Texture2D
 import org.joml.Vector2i
 import org.joml.Vector2ic
+import org.lwjgl.glfw.*
 import org.lwjgl.glfw.GLFW.*
-import org.lwjgl.glfw.GLFWImage
 import org.lwjgl.opengl.GL.createCapabilities
 import org.lwjgl.opengl.GL46
 import org.lwjgl.opengl.GL46.GL_DEPTH_TEST
@@ -48,7 +48,6 @@ object Window : Closeable {
 
     private fun config() {
         configGLFW()
-        configEvents()
         configOpenGL()
     }
 
@@ -58,23 +57,21 @@ object Window : Closeable {
         glfwSwapInterval(1)
     }
 
-    private fun configEvents() {
-        glfwSetKeyCallback(pointer) { window, key, _, action, _ ->
-            if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
-                close()
-            }
-            Input.Keyboard.onKeyChanged(key, action)
-        }
-
-        glfwSetFramebufferSizeCallback(pointer) { _, width, height ->
-            size = Vector2i(width, height)
-            GL46.glViewport(0, 0, size.x(), size.y())
-            onResize(this)
-        }
-
-        glfwSetWindowCloseCallback(pointer) { _ ->
+    val keyCallback = GLFWKeyCallbackI { window, key, _, action, _ ->
+        if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
             close()
         }
+        Input.Keyboard.onKeyChanged(key, action)
+    }
+
+    val framebufferSizeCallback = GLFWFramebufferSizeCallbackI { _, width, height ->
+        size = Vector2i(width, height)
+        GL46.glViewport(0, 0, size.x(), size.y())
+        onResize(this)
+    }
+
+    val windowCloseCallback = GLFWWindowCloseCallbackI {_ ->
+        close()
     }
 
     private fun configOpenGL() {

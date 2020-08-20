@@ -3,11 +3,22 @@ package dodgyDeliveries3
 import dodgyDeliveries3.components.Collider
 import jackTheFishman.engine.Physics
 import jackTheFishman.engine.Serialisation
+import jackTheFishman.engine.Window
 import jackTheFishman.engine.util.ICreateViaPath
 import org.jbox2d.callbacks.ContactImpulse
 import org.jbox2d.collision.Manifold
 import org.jbox2d.dynamics.Fixture
 import org.jbox2d.dynamics.contacts.Contact
+import org.joml.Vector2f
+import org.joml.Vector4f
+import org.liquidengine.legui.DefaultInitializer
+import org.liquidengine.legui.animation.AnimatorProvider
+import org.liquidengine.legui.component.Frame
+import org.liquidengine.legui.component.Panel
+import org.liquidengine.legui.event.WindowSizeEvent
+import org.liquidengine.legui.style.Background
+import org.liquidengine.legui.style.Style
+import org.liquidengine.legui.system.layout.LayoutManager
 import java.io.File
 
 private class SceneContactListener : org.jbox2d.callbacks.ContactListener {
@@ -50,6 +61,10 @@ data class Scene(val allGameObjects: ArrayList<GameObject> = arrayListOf()) {
     private val gameObjectsToSpawn: ArrayList<GameObject> = arrayListOf()
     private val gameObjectsToDestroy: ArrayList<GameObject> = arrayListOf()
 
+    private var leguiFrame: Frame
+    private var leguiInitializer: DefaultInitializer
+    var gui: Panel
+
     init {
         for (go in allGameObjects) {
             go.setOrigin(this)
@@ -58,6 +73,31 @@ data class Scene(val allGameObjects: ArrayList<GameObject> = arrayListOf()) {
             go.start()
         }
         Physics.world.setContactListener(SceneContactListener())
+
+        leguiFrame = Frame(Window.size.x().toFloat(), Window.size.y().toFloat())
+        leguiInitializer = DefaultInitializer(Window.pointer, leguiFrame)
+        leguiInitializer.renderer.initialize()
+
+        leguiInitializer.callbackKeeper.also {
+            it.chainKeyCallback.add(Window.keyCallback)
+            it.chainFramebufferSizeCallback.add(Window.framebufferSizeCallback)
+            it.chainWindowCloseCallback.add(Window.windowCloseCallback)
+        }
+
+        gui = Panel()
+        gui.style = Style().also {
+            it.background = Background().also {
+                it.color = Vector4f(0f, 0f, 0f, 0f)
+            }
+        }
+        gui.isFocusable = false
+        gui.listenerMap.addListener(
+            WindowSizeEvent::class.java
+        ) {
+            gui.size = Vector2f(it.width.toFloat(), it.height.toFloat())
+        }
+
+        leguiFrame.container.add(gui)
     }
 
     fun spawn(go: GameObject) {
@@ -74,7 +114,13 @@ data class Scene(val allGameObjects: ArrayList<GameObject> = arrayListOf()) {
         }
         applyGameObjectsToDestroy()
         applyGameObjectsToSpawn()
+
+        AnimatorProvider.getAnimator().runAnimations()
+        leguiInitializer.systemEventProcessor.processEvents(leguiFrame, leguiInitializer.context)
+        leguiInitializer.guiEventProcessor.processEvents()
     }
+
+
 
     private fun applyGameObjectsToDestroy() {
         for(gameObjects in gameObjectsToDestroy) {
@@ -98,6 +144,10 @@ data class Scene(val allGameObjects: ArrayList<GameObject> = arrayListOf()) {
         for (gameObject in allGameObjects) {
             gameObject.draw()
         }
+
+        leguiInitializer.context.updateGlfwWindow()
+        LayoutManager.getInstance().layout(leguiFrame)
+        leguiInitializer.renderer.render(leguiFrame, leguiInitializer.context)
     }
 
     fun findViaName(name: String): GameObject {

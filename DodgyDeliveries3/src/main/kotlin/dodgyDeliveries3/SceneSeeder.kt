@@ -58,6 +58,7 @@ fun loadDefaultScene() {
     }
 
     GameObject("Camera").also { gameObject ->
+        Scene.active.spawn(gameObject)
         gameObject.addComponent<Transform>().apply {
             position = Vector3f(0f, 2f, 4f)
         }
@@ -67,7 +68,8 @@ fun loadDefaultScene() {
             target = player.transform
         }
         Camera.main = gameObject.addComponent()
-        Scene.active.spawn(gameObject)
+        gameObject.addComponent(Text("test"))
+
     }
     GameObject("Light").also { gameObject ->
         gameObject.addComponent<Transform>()
