@@ -61,8 +61,6 @@ data class Scene(val allGameObjects: ArrayList<GameObject> = arrayListOf()) {
     private val gameObjectsToSpawn: ArrayList<GameObject> = arrayListOf()
     private val gameObjectsToDestroy: ArrayList<GameObject> = arrayListOf()
 
-    private var leguiFrame: Frame
-    private var leguiInitializer: DefaultInitializer
     var gui: Panel
 
     init {
@@ -74,16 +72,6 @@ data class Scene(val allGameObjects: ArrayList<GameObject> = arrayListOf()) {
         }
         Physics.world.setContactListener(SceneContactListener())
 
-        leguiFrame = Frame(Window.size.x().toFloat(), Window.size.y().toFloat())
-        leguiInitializer = DefaultInitializer(Window.pointer, leguiFrame)
-        leguiInitializer.renderer.initialize()
-
-        leguiInitializer.callbackKeeper.also {
-            it.chainKeyCallback.add(Window.keyCallback)
-            it.chainFramebufferSizeCallback.add(Window.framebufferSizeCallback)
-            it.chainWindowCloseCallback.add(Window.windowCloseCallback)
-        }
-
         gui = Panel()
         gui.style = Style().also {
             it.background = Background().also {
@@ -91,13 +79,14 @@ data class Scene(val allGameObjects: ArrayList<GameObject> = arrayListOf()) {
             }
         }
         gui.isFocusable = false
+        gui.size = Vector2f(Window.size)
         gui.listenerMap.addListener(
             WindowSizeEvent::class.java
         ) {
             gui.size = Vector2f(it.width.toFloat(), it.height.toFloat())
         }
 
-        leguiFrame.container.add(gui)
+        Window.leguiFrame.container.add(gui)
     }
 
     fun spawn(go: GameObject) {
@@ -116,11 +105,7 @@ data class Scene(val allGameObjects: ArrayList<GameObject> = arrayListOf()) {
         applyGameObjectsToSpawn()
 
         AnimatorProvider.getAnimator().runAnimations()
-        leguiInitializer.systemEventProcessor.processEvents(leguiFrame, leguiInitializer.context)
-        leguiInitializer.guiEventProcessor.processEvents()
     }
-
-
 
     private fun applyGameObjectsToDestroy() {
         for(gameObjects in gameObjectsToDestroy) {
@@ -144,10 +129,6 @@ data class Scene(val allGameObjects: ArrayList<GameObject> = arrayListOf()) {
         for (gameObject in allGameObjects) {
             gameObject.draw()
         }
-
-        leguiInitializer.context.updateGlfwWindow()
-        LayoutManager.getInstance().layout(leguiFrame)
-        leguiInitializer.renderer.render(leguiFrame, leguiInitializer.context)
     }
 
     fun findViaName(name: String): GameObject {

@@ -6,8 +6,11 @@ import dodgyDeliveries3.util.ColorPalette
 import jackTheFishman.engine.Loader
 import jackTheFishman.engine.graphics.Texture
 import jackTheFishman.engine.graphics.Texture2D
+import jackTheFishman.engine.math.plus
 import jackTheFishman.engine.math.times
+import org.joml.Vector2f
 import org.joml.Vector3f
+import org.liquidengine.legui.style.font.FontRegistry
 
 fun loadDefaultScene() {
     Scene.active.allGameObjects.clear()
@@ -68,8 +71,6 @@ fun loadDefaultScene() {
             target = player.transform
         }
         Camera.main = gameObject.addComponent()
-        gameObject.addComponent(Text("test"))
-
     }
     GameObject("Light").also { gameObject ->
         gameObject.addComponent<Transform>()
@@ -102,6 +103,11 @@ fun makePlayer(): GameObject {
         gameObject.addComponent<Health>().also {
             it.hp = 100f
             it.maxHp = 100f
+        }
+        gameObject.addComponent<HpText>().also {
+            it.scaledFontSize = 32F
+            it.fontName = FontRegistry.ROBOTO_BOLD
+            it.scaledPosition = Vector2f(8f, 8f + 5f /* zusätzlich 5f vertikal, da das Text-Rendering irgendwie nicht präzise ist */)
         }
     }
 }

@@ -3,6 +3,9 @@ package jackTheFishman.engine
 import jackTheFishman.engine.graphics.Texture2D
 import org.joml.Vector2i
 import org.joml.Vector2ic
+import org.liquidengine.legui.DefaultInitializer
+import org.liquidengine.legui.component.Frame
+import org.liquidengine.legui.system.layout.LayoutManager
 import org.lwjgl.glfw.*
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.opengl.GL.createCapabilities
@@ -10,6 +13,7 @@ import org.lwjgl.opengl.GL46
 import org.lwjgl.opengl.GL46.GL_DEPTH_TEST
 import org.lwjgl.opengl.GL46.glEnable
 import java.io.Closeable
+import java.nio.FloatBuffer
 import kotlin.math.min
 
 
@@ -31,20 +35,51 @@ object Window : Closeable {
 
     val pointer = glfwCreateWindow(size.x(), size.y(), title, 0, 0)
 
+    var contentScale: Float = 1.0F
+
     private var lastTime = 0.0
+
+    lateinit var leguiFrame: Frame
+
+    lateinit var leguiInitializer: DefaultInitializer
+
+    private val keyCallback = GLFWKeyCallbackI { window, key, _, action, _ ->
+        if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+            close()
+        }
+        Input.Keyboard.onKeyChanged(key, action)
+    }
+
+    private val framebufferSizeCallback = GLFWFramebufferSizeCallbackI { _, width, height ->
+        size = Vector2i(width, height)
+        GL46.glViewport(0, 0, size.x(), size.y())
+        onResize(this)
+    }
+
+    private val windowCloseCallback = GLFWWindowCloseCallbackI {_ ->
+        close()
+    }
 
     init {
         open()
         config()
     }
 
-
     private fun open() {
         glfwMakeContextCurrent(pointer)
         createCapabilities()
         glfwShowWindow(pointer)
-    }
 
+        leguiFrame = Frame(size.x().toFloat(), size.y().toFloat())
+        leguiInitializer = DefaultInitializer(pointer, leguiFrame)
+        leguiInitializer.renderer.initialize()
+
+        leguiInitializer.callbackKeeper.also {
+            it.chainKeyCallback.add(keyCallback)
+            it.chainFramebufferSizeCallback.add(framebufferSizeCallback)
+            it.chainWindowCloseCallback.add(windowCloseCallback)
+        }
+    }
 
     private fun config() {
         configGLFW()
@@ -55,23 +90,11 @@ object Window : Closeable {
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE) // the window will stay hidden after creation
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE) // the window will be resizable
         glfwSwapInterval(1)
-    }
 
-    val keyCallback = GLFWKeyCallbackI { window, key, _, action, _ ->
-        if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
-            close()
-        }
-        Input.Keyboard.onKeyChanged(key, action)
-    }
-
-    val framebufferSizeCallback = GLFWFramebufferSizeCallbackI { _, width, height ->
-        size = Vector2i(width, height)
-        GL46.glViewport(0, 0, size.x(), size.y())
-        onResize(this)
-    }
-
-    val windowCloseCallback = GLFWWindowCloseCallbackI {_ ->
-        close()
+        val x = FloatArray(1)
+        val y = FloatArray(1)
+        glfwGetWindowContentScale(pointer, x, y)
+        contentScale = x[0]*0.5F + y[0]*0.5F
     }
 
     private fun configOpenGL() {
@@ -92,6 +115,8 @@ object Window : Closeable {
     private fun updateWindow() {
         glfwSwapBuffers(pointer)
         glfwPollEvents()
+        leguiInitializer.systemEventProcessor.processEvents(leguiFrame, leguiInitializer.context)
+        leguiInitializer.guiEventProcessor.processEvents()
     }
 
     private fun updateTime() {
@@ -103,6 +128,12 @@ object Window : Closeable {
                 lastTime = time
             }
         }
+    }
+
+    fun draw() {
+        leguiInitializer.context.updateGlfwWindow()
+        LayoutManager.getInstance().layout(leguiFrame)
+        leguiInitializer.renderer.render(leguiFrame, leguiInitializer.context)
     }
 
     override fun close() {

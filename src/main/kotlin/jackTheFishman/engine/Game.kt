@@ -45,6 +45,8 @@ open class Game {
 
                 update()
                 draw()
+
+                Window.draw()
             }
         } finally {
             IFinalized.finalizeAll()
