@@ -83,6 +83,7 @@ data class ModelRenderer(var mesh: Mesh? = null, var material: Material = defaul
             shader.setUniform("SpecularTexture", defaultAlbedo)
         }
         shader.setUniform("NormalIntensity", material.normalIntensity)
+        shader.setUniform("EmissionColor", material.emissionColor)
     }
 
     private fun uploadFogUniforms(shader: Shader) {
@@ -105,7 +106,8 @@ data class ModelRenderer(var mesh: Mesh? = null, var material: Material = defaul
                 null,
                 null,
                 null,
-                1f
+                1f,
+                Vector3fConst.zero
             )
     }
 }

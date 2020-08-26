@@ -78,7 +78,7 @@ fun loadDefaultScene() {
         }
 
         gameObject.addComponent<PointLight>().apply {
-            color = Vector3f(ColorPalette.ORANGE) * 1f
+            color = Vector3f(ColorPalette.ORANGE)
         }
         Scene.active.spawn(gameObject)
     }
