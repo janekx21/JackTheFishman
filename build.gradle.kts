@@ -26,6 +26,9 @@ allprojects {
     repositories {
         jcenter()
         mavenCentral()
+        maven {
+            url = uri("https://raw.github.com/SpinyOwl/repo/releases")
+        }
     }
 
     dependencies {
@@ -53,6 +56,9 @@ allprojects {
 
         // 2D Physics
         implementation("org.jbox2d:jbox2d-library:2.2.1.1")
+
+        // legui
+        implementation("org.liquidengine:legui:2.1.0")
 
         // LWJGL is a collection of game library's
         val lwjglVersion = "3.2.3"
