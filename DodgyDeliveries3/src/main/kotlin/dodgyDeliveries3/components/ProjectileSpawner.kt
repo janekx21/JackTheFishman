@@ -25,7 +25,7 @@ class ProjectileSpawner(var timer: Float = 0f, var type: Type = Type.STANDARD) :
 
     override fun start() {
         // TODO make it not name dependent
-        musicComponent = Scene.active.findViaName("Music").getComponent()
+        musicComponent = Scene.active.findViaName("Music")?.getComponent()
         resetTimer()
     }
 
@@ -40,9 +40,12 @@ class ProjectileSpawner(var timer: Float = 0f, var type: Type = Type.STANDARD) :
     }
 
     private fun isBeatCloseEnough(): Boolean {
-        val beatClamped = musicComponent!!.beat % 1f
-        val closenessToTheBeat = (cos(beatClamped * 2 * PI) * .5 + .5).toFloat()
-        return closenessToTheBeat.pow(20) > .9f
+        if (musicComponent != null) {
+            val beatClamped = musicComponent!!.beat % 1f
+            val closenessToTheBeat = (cos(beatClamped * 2 * PI) * .5 + .5).toFloat()
+            return closenessToTheBeat.pow(20) > .9f
+        }
+        return true
     }
 
     private fun resetTimer() {

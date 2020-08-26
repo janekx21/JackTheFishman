@@ -19,16 +19,22 @@ data class PointLight(var color: Vector3fc = Vector3f(0f, 0f, 0f)) : Component()
     var animatedColor: Vector3fc = Vector3fConst.zero
     var targetColor: Vector3fc = Vector3fConst.zero
     var alive = true
+    private var musicComponent: Music? = null
 
     override fun start() {
         all.add(this)
+        musicComponent = Scene.active.findViaName("Music")?.getComponent()
     }
 
     override fun update() {
-        val beat = Scene.active.findViaName("Music").getComponent<Music>().beat
-        val timeTillBeat = (cos(beat % 1f * 2 * PI) * .5 + .5).toFloat()
+        if (musicComponent != null) {
+            val beat = musicComponent!!.beat
+            val timeTillBeat = (cos(beat % 1f * 2 * PI) * .5 + .5).toFloat()
 
-        targetColor = (if (alive) color else Vector3fConst.zero) + ColorPalette.WHITE * timeTillBeat.pow(10) * 4f
+            targetColor = (if (alive) color + ColorPalette.WHITE * timeTillBeat.pow(10) * 2f else Vector3fConst.zero)
+        } else {
+            targetColor = (if (alive) color else Vector3fConst.zero)
+        }
         animatedColor = animatedColor.moveTowards(targetColor, Time.deltaTime / colorSwitchTime)
     }
 
@@ -45,6 +51,6 @@ data class PointLight(var color: Vector3fc = Vector3f(0f, 0f, 0f)) : Component()
     companion object {
         const val max = 32
         val all = arrayListOf<PointLight>()
-        const val colorSwitchTime = .00002f
+        const val colorSwitchTime = .08f
     }
 }
