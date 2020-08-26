@@ -109,5 +109,12 @@ fun makePlayer(): GameObject {
             it.fontName = FontRegistry.ROBOTO_BOLD
             it.scaledPosition = Vector2f(8f, 8f + 5f /* zusätzlich 5f vertikal, da das Text-Rendering irgendwie nicht präzise ist */)
         }
+        gameObject.addComponent<Button>().also {
+            it.scaledFontSize = 32F
+            it.fontName = FontRegistry.ROBOTO_BOLD
+            it.text = "Press Me"
+            it.scaledPosition = Vector2f(100f, 100f)
+            it.scaledSize = Vector2f(100f, 100f)
+        }
     }
 }
