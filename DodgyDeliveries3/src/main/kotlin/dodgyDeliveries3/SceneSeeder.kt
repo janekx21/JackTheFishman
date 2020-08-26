@@ -1,12 +1,10 @@
 package dodgyDeliveries3
 
 import dodgyDeliveries3.components.*
-import dodgyDeliveries3.graphics.Material
 import dodgyDeliveries3.util.ColorPalette
 import jackTheFishman.engine.Loader
-import jackTheFishman.engine.graphics.Texture
 import jackTheFishman.engine.graphics.Texture2D
-import jackTheFishman.engine.math.plus
+import jackTheFishman.engine.math.Vector3fConst
 import jackTheFishman.engine.math.times
 import org.joml.Vector2f
 import org.joml.Vector3f
@@ -19,14 +17,8 @@ fun loadDefaultScene() {
     val player = makePlayer()
     Scene.active.spawn(player)
 
-    GameObject("StandardEnemy").also { gameObject ->
-        gameObject.addComponent<Transform>().apply {
-            position = Vector3f(0f, 0f, -20f)
-        }
-        gameObject.addComponent<ModelRenderer>().apply {
-            mesh = Loader.createViaPath("models/standardenemy.fbx") // TODO: add player mesh
-        }
-        gameObject.addComponent<ProjectileSpawner>()
+    GameObject("Enemy Spawner").also { gameObject ->
+        gameObject.addComponent<EnemySpawner>()
         Scene.active.spawn(gameObject)
     }
 
@@ -62,16 +54,17 @@ fun loadDefaultScene() {
     }
 
     GameObject("Camera").also { gameObject ->
-        Scene.active.spawn(gameObject)
         gameObject.addComponent<Transform>().apply {
-            position = Vector3f(0f, 2f, 4f)
+            position = Vector3f(0f, 2f, 2f)
         }
         gameObject.addComponent<AudioListener>()
         gameObject.addComponent<DebugCameraMovement>()
         gameObject.addComponent<LookAt>().apply {
             target = player.transform
+            offset = Vector3fConst.forward * 5f
         }
         Camera.main = gameObject.addComponent()
+        Scene.active.spawn(gameObject)
     }
     GameObject("Light").also { gameObject ->
         gameObject.addComponent<Transform>()
@@ -95,15 +88,18 @@ fun loadDefaultScene() {
 
 fun makePlayer(): GameObject {
     return GameObject("Player").also { gameObject ->
-        gameObject.addComponent<Transform>()
-        gameObject.addComponent<ModelRenderer>().apply {
-            mesh = Loader.createViaPath("models/monkey.fbx") // TODO: add player mesh
+        gameObject.addComponent<Transform>().also {
+            it.scale = Vector3fConst.one * .8f
         }
-        gameObject.addComponent<CircleCollider>().apply {
+        gameObject.addComponent<ModelRenderer>().also {
+            it.mesh = Loader.createViaPath("models/player.fbx")
+        }
+        gameObject.addComponent<CircleCollider>().also {
+            it.radius = .5f
         }
         gameObject.addComponent<Health>().also {
-            it.hp = 100f
-            it.maxHp = 100f
+            it.hp = 10f
+            it.maxHp = 10f
         }
         gameObject.addComponent<HpText>().also {
             it.scaledFontSize = 32F
@@ -121,5 +117,6 @@ fun makePlayer(): GameObject {
             it.path = Loader.resourceFileViaPath("logos/logo.png").path
             it.scaledSize = Vector2f(200f, 200f)
         }
+        gameObject.addComponent<Player>()
     }
 }

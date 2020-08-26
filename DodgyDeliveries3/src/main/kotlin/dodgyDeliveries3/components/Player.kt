@@ -2,11 +2,17 @@ package dodgyDeliveries3.components
 
 import dodgyDeliveries3.Component
 import jackTheFishman.engine.Input
+import jackTheFishman.engine.Time
 import jackTheFishman.engine.Window
 import jackTheFishman.engine.math.Vector2fConst
+import jackTheFishman.engine.math.Vector3fConst
 import jackTheFishman.engine.math.plus
 import jackTheFishman.engine.math.times
+import org.jbox2d.common.MathUtils.PI
 import org.jbox2d.common.MathUtils.clamp
+import org.joml.Quaternionf
+import org.joml.Vector3f
+import kotlin.math.sin
 
 class Player(var speed: Float = 8f) : Component() {
     var internalcollider: Collider? = null
@@ -26,6 +32,9 @@ class Player(var speed: Float = 8f) : Component() {
     override fun update() {
         handleInput()
         applyVelocityChange()
+        animateRotation()
+        animateYAxis()
+        handleHealth()
     }
 
     private fun handleInput() {
@@ -43,7 +52,25 @@ class Player(var speed: Float = 8f) : Component() {
         collider.velocity += Vector2fConst.right * deltaClamped * speed
     }
 
-    override fun draw() {}
+    private fun animateRotation() {
+        val turnAmount = -collider.velocity.x() * .02f
+        val clampedTurnAmount = clamp(turnAmount, -PI / 4, PI / 4)
+        transform.rotation = Quaternionf()
+            .rotateAxis(clampedTurnAmount + PI, Vector3fConst.up)
+            .rotateAxis(sin(Time.time * 3f) * .1f, Vector3fConst.right)
+    }
+
+    private fun animateYAxis() {
+        val y = sin(Time.time * 3f) * .1f
+        transform.position = Vector3f(transform.position.x(), y, transform.position.z())
+    }
+
+    private fun handleHealth() {
+        val health = gameObject.getComponent<Health>()
+        if (!health.alive) {
+            // TODO handle game over
+        }
+    }
 
     companion object {
         const val maxVelocityChange = 4f

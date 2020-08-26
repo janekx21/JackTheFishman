@@ -15,7 +15,11 @@ import org.joml.Vector2f
 import org.joml.Vector2fc
 import org.joml.Vector3f
 
-class BoxCollider(var internalVelocity: Vector2fc = Vector2f(0f, 0f), var internalIsSensor: Boolean = false, var internalLinearDamping: Float = 0f) : Collider() {
+class BoxCollider(
+    var internalVelocity: Vector2fc = Vector2f(0f, 0f),
+    var internalIsSensor: Boolean = false,
+    var internalLinearDamping: Float = 0f
+) : Collider() {
     override val fixture: Fixture =
         Physics.world.createBody(
             BodyDef().also {

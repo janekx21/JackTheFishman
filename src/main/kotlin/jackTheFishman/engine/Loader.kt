@@ -22,7 +22,6 @@ object Loader {
         val resource = ClassLoader.getSystemResource(pathWithRoot.invariantSeparatorsPath)
         check(resource != null) { "resource at $path not found. root is $rootPath" }
         val resourcePath = resource.path
-        println(resourcePath)
         return File(resourcePath)
     }
 
