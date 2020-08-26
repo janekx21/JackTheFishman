@@ -112,9 +112,13 @@ fun makePlayer(): GameObject {
             it.text = "Press Me"
             it.scaledPosition = Vector2f(100f, 100f)
             it.scaledSize = Vector2f(100f, 100f)
+            it.onPressed = {
+                print("test")
+            }
         }
         gameObject.addComponent<ImageComponent>().also {
-            it.path = Loader.resourceFileViaPath("logos/logo.png").path
+            it.texture = Loader.createViaPath<Texture2D>("logos/logo.png")
+            it.scaledPosition = Vector2f(200f, 200f)
             it.scaledSize = Vector2f(200f, 200f)
         }
         gameObject.addComponent<Player>()
