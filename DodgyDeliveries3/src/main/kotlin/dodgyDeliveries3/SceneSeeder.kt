@@ -81,6 +81,14 @@ fun loadDefaultScene() {
         }
         Scene.active.spawn(gameObject)
     }
+
+    GameObject("Pizza").also {gameObject ->
+        gameObject.addComponent<Transform>().apply {
+            position = Vector3f(50f, 50f, 0f)
+        }
+
+        gameObject.addComponent<HealthIndicator>()
+    }
 }
 
 fun makePlayer(): GameObject {
