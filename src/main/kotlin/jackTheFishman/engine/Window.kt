@@ -1,10 +1,12 @@
 package jackTheFishman.engine
 
 import jackTheFishman.engine.graphics.Texture2D
+import jackTheFishman.engine.util.FloatPointer
 import jackTheFishman.engine.util.IFinalized
 import org.joml.Vector2i
 import org.joml.Vector2ic
 import org.liquidengine.legui.DefaultInitializer
+import org.liquidengine.legui.animation.AnimatorProvider
 import org.liquidengine.legui.component.Frame
 import org.liquidengine.legui.system.layout.LayoutManager
 import org.lwjgl.glfw.*
@@ -94,10 +96,10 @@ object Window : Closeable, IFinalized {
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE) // the window will be resizable
         glfwSwapInterval(1)
 
-        val x = FloatArray(1)
-        val y = FloatArray(1)
-        glfwGetWindowContentScale(pointer, x, y)
-        contentScale = x[0]*0.5F + y[0]*0.5F
+        val x = FloatPointer()
+        val y = FloatPointer()
+        glfwGetWindowContentScale(pointer, x.buffer, y.buffer)
+        contentScale = x.value*0.5F + y.value*0.5F
     }
 
     private fun configOpenGL() {
@@ -113,6 +115,7 @@ object Window : Closeable, IFinalized {
     fun update() {
         updateWindow()
         updateTime()
+        AnimatorProvider.getAnimator().runAnimations()
     }
 
     private fun updateWindow() {

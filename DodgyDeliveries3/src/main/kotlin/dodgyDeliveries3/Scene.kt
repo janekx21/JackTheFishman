@@ -103,8 +103,6 @@ data class Scene(val allGameObjects: ArrayList<GameObject> = arrayListOf()) {
         }
         applyGameObjectsToDestroy()
         applyGameObjectsToSpawn()
-
-        AnimatorProvider.getAnimator().runAnimations()
     }
 
     private fun applyGameObjectsToDestroy() {
