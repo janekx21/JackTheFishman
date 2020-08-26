@@ -38,13 +38,11 @@ object Window : Closeable {
         config()
     }
 
-
     private fun open() {
         glfwMakeContextCurrent(pointer)
         createCapabilities()
         glfwShowWindow(pointer)
     }
-
 
     private fun config() {
         configGLFW()
@@ -72,7 +70,7 @@ object Window : Closeable {
             onResize(this)
         }
 
-        glfwSetWindowCloseCallback(pointer) { _ ->
+        glfwSetWindowCloseCallback(pointer) {
             close()
         }
     }

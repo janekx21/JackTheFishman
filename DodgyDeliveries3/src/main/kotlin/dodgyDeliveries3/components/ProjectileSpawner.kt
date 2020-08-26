@@ -11,6 +11,9 @@ import jackTheFishman.engine.math.Vector3fConst
 import jackTheFishman.engine.math.times
 import org.joml.Vector3f
 import org.joml.Vector3fc
+import kotlin.math.PI
+import kotlin.math.cos
+import kotlin.math.pow
 
 class ProjectileSpawner(var timer: Float = 0f, var type: Type = Type.STANDARD) : Component() {
     enum class Type {
@@ -18,14 +21,31 @@ class ProjectileSpawner(var timer: Float = 0f, var type: Type = Type.STANDARD) :
     }
 
     var projectilesPerSecond = 0.1f
+    var musicComponent: Music? = null
+
+    override fun start() {
+        musicComponent = Scene.active.findViaName("Music").getComponent<Music>()
+        resetTimer()
+    }
 
     override fun update() {
         val canShoot = gameObject.getComponent<EnemyCommander>().canShoot
-        if (canShoot && timer >= 1 / projectilesPerSecond) {
-            timer = 0f
+        val timeout = 1f / projectilesPerSecond
+        if (canShoot && timer >= timeout && isBeatCloseEnough()) {
+            resetTimer()
             spawn()
         }
         timer += Time.deltaTime
+    }
+
+    private fun isBeatCloseEnough(): Boolean {
+        val beat = musicComponent!!.beat % 1f
+        val closenessToTheBeat = (cos(beat * 2 * PI) * .5 + .5).toFloat()
+        return closenessToTheBeat.pow(20) > .9f
+    }
+
+    private fun resetTimer() {
+        timer = 0f
     }
 
     private fun spawn() {
@@ -34,7 +54,6 @@ class ProjectileSpawner(var timer: Float = 0f, var type: Type = Type.STANDARD) :
             Type.WOBBLE -> Scene.active.spawn(makeWobbleProjectile(transform.position))
             Type.LIGHT -> Scene.active.spawn(makeLightBall(transform.position))
         }
-
     }
 
     private fun makeStandardProjectile(startPosition: Vector3fc): GameObject {
