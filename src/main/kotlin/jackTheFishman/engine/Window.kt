@@ -1,6 +1,7 @@
 package jackTheFishman.engine
 
 import jackTheFishman.engine.graphics.Texture2D
+import jackTheFishman.engine.util.IFinalized
 import org.joml.Vector2i
 import org.joml.Vector2ic
 import org.liquidengine.legui.DefaultInitializer
@@ -20,7 +21,7 @@ import kotlin.math.min
 /**
  * Window Wrapper that also manages the open gl context
  */
-object Window : Closeable {
+object Window : Closeable, IFinalized {
     private const val MAX_DELTA_TIME = .1f // translates to 10fps
     private const val title = "Jack the Fishman Framework"
 
@@ -79,6 +80,8 @@ object Window : Closeable {
             it.chainFramebufferSizeCallback.add(framebufferSizeCallback)
             it.chainWindowCloseCallback.add(windowCloseCallback)
         }
+
+        IFinalized.push(this)
     }
 
     private fun config() {
@@ -137,8 +140,12 @@ object Window : Closeable {
     }
 
     override fun close() {
+        shouldClose = true
+    }
+
+    override fun finalize() {
+        leguiInitializer.renderer.destroy()
         glfwDestroyWindow(pointer)
         glfwTerminate()
-        shouldClose = true
     }
 }

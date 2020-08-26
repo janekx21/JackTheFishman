@@ -11,6 +11,7 @@ import jackTheFishman.engine.math.times
 import org.joml.Vector2f
 import org.joml.Vector3f
 import org.liquidengine.legui.style.font.FontRegistry
+import java.io.File
 
 fun loadDefaultScene() {
     Scene.active.allGameObjects.clear()
@@ -115,6 +116,10 @@ fun makePlayer(): GameObject {
             it.text = "Press Me"
             it.scaledPosition = Vector2f(100f, 100f)
             it.scaledSize = Vector2f(100f, 100f)
+        }
+        gameObject.addComponent<ImageComponent>().also {
+            it.path = Loader.resourceFileViaPath("logos/logo.png").path
+            it.scaledSize = Vector2f(200f, 200f)
         }
     }
 }
