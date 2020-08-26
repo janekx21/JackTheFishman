@@ -17,6 +17,8 @@ object Loader {
             return rootFile
         }
 
+    val loadedObjects = mutableMapOf<String, Any>()
+
     fun resourceFileViaPath(path: String): File {
         val resource = ClassLoader.getSystemResource(path)
         check(resource != null) { "resource at $path not found. root is $rootPath" }
@@ -32,14 +34,17 @@ object Loader {
         return obj.createViaPath(moddedPath.path)
     }
 
-    inline fun <reified T> createViaPath(path: String): T {
-        val pathWithRoot = File(rootPath).resolve(path)
-        val moddedPath = resourceFileViaPath(pathWithRoot.invariantSeparatorsPath)
-        check(moddedPath.exists()) { "file not found ${moddedPath.path}" }
-        val obj = T::class.companionObjectInstance
-        check(obj != null) { "Class dose not define a companionObject" }
-        check(obj is ICreateViaPath<*>) { "companionObject dose not implement ICreateViaPath" }
-        @Suppress("UNCHECKED_CAST") val obj2 = obj as ICreateViaPath<T>
-        return obj2.createViaPath(moddedPath.path)
+    inline fun <reified T> createViaPath(path: String): T where T : Any {
+        val instance= loadedObjects.getOrPut(path) {
+            val pathWithRoot = File(rootPath).resolve(path)
+            val moddedPath = resourceFileViaPath(pathWithRoot.invariantSeparatorsPath)
+            check(moddedPath.exists()) { "file not found ${moddedPath.path}" }
+            val possibleFactory= T::class.companionObjectInstance
+            check(possibleFactory != null) { "Class dose not define a companionObject" }
+            check(possibleFactory is ICreateViaPath<*>) { "companionObject dose not implement ICreateViaPath" }
+            @Suppress("UNCHECKED_CAST") val factory = possibleFactory as ICreateViaPath<T>
+            factory.createViaPath(moddedPath.path)
+        }
+        return instance as T
     }
 }
