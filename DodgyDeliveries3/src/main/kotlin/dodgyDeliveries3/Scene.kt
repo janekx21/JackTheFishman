@@ -115,7 +115,7 @@ data class Scene(val allGameObjects: ArrayList<GameObject> = arrayListOf()) {
         override fun createViaPath(path: String): Scene {
             val json = File(path).readText()
             val scene = Serialisation.klaxon.parse<Scene>(json)
-            check(scene != null) { "Scene could not pe loaded at $path" }
+            checkNotNull(scene) { "Scene could not be loaded at $path" }
             return scene
         }
     }
