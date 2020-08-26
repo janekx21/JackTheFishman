@@ -43,8 +43,6 @@ class DebugCameraMovement(var active: Boolean = false) : Component() {
         return speed
     }
 
-    override fun draw() {}
-
     companion object {
         val keyToDirection = mapOf(
             GLFW_KEY_D to Vector3fConst.right,

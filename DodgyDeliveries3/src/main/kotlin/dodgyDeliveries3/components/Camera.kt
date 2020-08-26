@@ -8,21 +8,18 @@ import org.joml.Matrix4f
 import org.joml.Matrix4fc
 import org.joml.Quaternionf
 
-class Camera : Component() {
-    private var matrix: Matrix4fc = Matrix4f().perspective(Math.toRadians(90.0).toFloat(), Window.aspect, .1f, 100f)
+class Camera(var fov: Float = 80f) : Component() {
+    private var matrix: Matrix4fc =
+        Matrix4f().perspective(Math.toRadians(fov.toDouble()).toFloat(), Window.aspect, .1f, 100f)
     private var hash = 0
     private var cached: Matrix4fc = Matrix4f()
-
-    override fun update() {}
-
-    override fun draw() {}
 
     fun getProjectionMatrix(): Matrix4fc {
         return matrix
     }
 
     fun updateProjectionMatrix() {
-        matrix = Matrix4f().perspective(Math.toRadians(90.0).toFloat(), Window.aspect, .1f, 100f)
+        matrix = Matrix4f().perspective(Math.toRadians(fov.toDouble()).toFloat(), Window.aspect, .1f, 100f)
     }
 
     fun generateViewMatrix(): Matrix4fc {

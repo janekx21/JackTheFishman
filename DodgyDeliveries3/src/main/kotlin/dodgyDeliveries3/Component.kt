@@ -28,8 +28,8 @@ abstract class Component : IHasOrigin<GameObject>, IUpdatable, IDrawable, IRunna
 
 
     override fun start() {}
-    abstract override fun update()
-    abstract override fun draw()
+    override fun update() {}
+    override fun draw() {}
     override fun stop() {}
 
     @Json(ignored = true)

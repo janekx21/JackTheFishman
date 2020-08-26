@@ -10,6 +10,7 @@ data class Material(
     val specularRoughness: Float,
     val fresnelIntensity: Float,
     val ambientColor: Vector3fc,
+    val albedoColor: Vector3fc,
     val albedoTexture: Texture?,
     val normalTexture: Texture?,
     val specularTexture: Texture?,

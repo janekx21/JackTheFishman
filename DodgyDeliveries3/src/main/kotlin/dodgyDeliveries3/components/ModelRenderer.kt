@@ -2,9 +2,12 @@ package dodgyDeliveries3.components
 
 import dodgyDeliveries3.graphics.Material
 import jackTheFishman.engine.Loader
+import jackTheFishman.engine.Time
 import jackTheFishman.engine.graphics.Mesh
 import jackTheFishman.engine.graphics.Shader
 import jackTheFishman.engine.graphics.Texture2D
+import jackTheFishman.engine.math.Vector3fConst
+import jackTheFishman.engine.math.moveTowards
 import org.joml.Vector3f
 
 /**
@@ -37,11 +40,21 @@ data class ModelRenderer(var mesh: Mesh? = null, var material: Material = defaul
     private fun uploadLightUniforms(shader: Shader) {
         for ((index, light) in PointLight.all.withIndex()) {
             shader.setUniform("LightPositions[$index]", light.transform.position)
-            shader.setUniform("LightColors[$index]", Vector3f(light.color))
+            shader.setUniform("LightColors[$index]", Vector3f(light.animatedColor))
         }
         for (index in PointLight.all.size until PointLight.max) {
             shader.setUniform("LightColors[$index]", Vector3f(0f, 0f, 0f))
         }
+
+        // TODO refactor
+        for (light in PointLight.all) {
+            if (!light.alive) {
+                light.animatedColor =
+                    light.animatedColor.moveTowards(Vector3fConst.zero, Time.deltaTime * PointLight.animationSpeed)
+            }
+        }
+
+        PointLight.all.removeIf { !it.alive && it.animatedColor.lengthSquared() <= 0 }
     }
 
     private fun uploadMaterialUniforms(shader: Shader) {
@@ -50,6 +63,7 @@ data class ModelRenderer(var mesh: Mesh? = null, var material: Material = defaul
         shader.setUniform("SpecularRoughness", material.specularRoughness)
         shader.setUniform("FresnelIntensity", material.fresnelIntensity)
         shader.setUniform("AmbientColor", material.ambientColor)
+        shader.setUniform("AlbedoColor", material.albedoColor)
 
         if (material.albedoTexture != null) {
             shader.setUniform("AlbedoTexture", material.albedoTexture!!)
@@ -78,6 +92,18 @@ data class ModelRenderer(var mesh: Mesh? = null, var material: Material = defaul
         private val defaultShader = Loader.createViaPath<Shader>("shaders/default.shader")
         private val defaultNormal = Loader.createViaPath<Texture2D>("textures/normal.png")
         private val defaultAlbedo = Loader.createViaPath<Texture2D>("textures/default.png")
-        private val defaultMaterial = Material(defaultShader, .5f, 40f, .3f, Vector3f(.1f, .1f, .1f), null, null, null, .1f)
+        private val defaultMaterial =
+            Material(
+                defaultShader,
+                .5f,
+                40f,
+                .3f,
+                Vector3f(.1f, .1f, .1f),
+                Vector3fConst.one,
+                null,
+                null,
+                null,
+                1f
+            )
     }
 }

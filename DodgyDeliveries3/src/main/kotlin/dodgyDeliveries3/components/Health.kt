@@ -1,30 +1,23 @@
 package dodgyDeliveries3.components
 
 import dodgyDeliveries3.Component
+import kotlin.math.max
+import kotlin.math.min
 
-class Health : Component() {
-    var hp: Float = 0F
-    var maxHp: Float = 0F
+class Health(var maxHp: Float = 3f, var hp: Float = maxHp) : Component() {
 
-    fun takeDamage(dmg: Float) {
-        if (hp > 0) {
-            hp -= dmg
-            if (hp < 0) {
-                hp = 0F
-            }
+    val alive: Boolean
+        get() = hp > 0f
+
+    fun applyDamage(amount: Float) {
+        if (alive) {
+            hp = max(hp - amount, 0f)
         }
     }
 
-    fun heal(heal: Float) {
-        if (hp < maxHp) {
-            hp += heal
-            if (hp > maxHp) {
-                hp = maxHp
-            }
+    fun applyHeal(amount: Float) {
+        if (alive) {
+            hp = min(hp + amount, maxHp)
         }
     }
-
-    override fun update() {}
-
-    override fun draw() {}
 }

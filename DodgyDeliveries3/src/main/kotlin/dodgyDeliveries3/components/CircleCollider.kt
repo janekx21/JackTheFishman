@@ -15,7 +15,12 @@ import org.joml.Vector2f
 import org.joml.Vector2fc
 import org.joml.Vector3f
 
-class CircleCollider(var internalVelocity: Vector2fc = Vector2f(0f, 0f), var internalRadius: Float = 1f, var internalIsSensor: Boolean = false, var internalLinearDamping: Float = 0f) : Collider() {
+class CircleCollider(
+    var internalVelocity: Vector2fc = Vector2f(0f, 0f),
+    var internalRadius: Float = 1f,
+    var internalIsSensor: Boolean = false,
+    var internalLinearDamping: Float = 0f
+) : Collider() {
     override val fixture: Fixture =
         Physics.world.createBody(
             BodyDef().also {
@@ -87,7 +92,9 @@ class CircleCollider(var internalVelocity: Vector2fc = Vector2f(0f, 0f), var int
     override fun draw() {
         if (Debug.active) {
             super.draw()
-            Debug.drawWiredSphere(transform.position, 1f, Vector3f(1f, 0f, 1f))
+            val position = Vector3f(transform.position)
+            position.y = 0f
+            Debug.drawWiredSphere(position, radius, Vector3f(1f, 0f, 1f))
         }
     }
 }

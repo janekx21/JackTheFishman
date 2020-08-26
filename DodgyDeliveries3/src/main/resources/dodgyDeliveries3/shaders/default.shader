@@ -25,6 +25,7 @@ void main() {
 #define MAX_LIGHT_COUNT 32
 uniform vec3 LightPositions[MAX_LIGHT_COUNT];
 uniform vec3 LightColors[MAX_LIGHT_COUNT];
+uniform vec3 AlbedoColor;
 uniform sampler2D AlbedoTexture;
 uniform vec3 CameraPosition;
 uniform float SpecularIntensity;
@@ -49,28 +50,30 @@ float luminance(vec3 rgb) {
 
 void main() {
     vec3 normal = texture(NormalTexture, uv).xyz * 2 - 1;
-    // normal.xy *= NormalIntensity;
+    normal.xy *= NormalIntensity;
+    normal = normalize(normal);
     normal = normalize(TBN * normal);
 
     vec3 light = vec3(0.0);
     vec3 viewDirection = normalize(position - CameraPosition);
-    vec3 albedo = texture(AlbedoTexture, uv).rgb;
+    vec3 albedo = texture(AlbedoTexture, uv).rgb * AlbedoColor;
     vec3 specular = texture(SpecularTexture, uv).rgb;
     for (int i = 0; i < MAX_LIGHT_COUNT; i++) {
         if (LightColors[i] != vec3(0, 0, 0)) {
-            vec3 lightDirection = position - LightPositions[i];
+            vec3 deltaLight = position - LightPositions[i];
+            vec3 lightDirection = normalize(deltaLight);
             float diffuse = dot(normal, -lightDirection);
-            float diffuseLight = max(diffuse / pow(length(lightDirection), 2), 0);
+            float diffuseLight = max(diffuse / pow(length(deltaLight), 2), 0);
 
-            vec3 reflected = normalize(reflect(-lightDirection, normal));
-            float specularLight = max(pow(dot(reflected, viewDirection), SpecularRoughness), 0);
+            vec3 reflected = reflect(-lightDirection, normal);
+            float specularLight = pow(max(dot(reflected, viewDirection), 0), SpecularRoughness);
 
             light += (diffuseLight * albedo + specularLight * SpecularIntensity * specular) * LightColors[i];
         }
     }
     float fresnel = pow(1 - dot(-viewDirection, normal), 4);
 
-    light += fresnel * FresnelIntensity + AmbientColor;
+    light += fresnel * FresnelIntensity * specular + AmbientColor * albedo;
 
     float distance = distance(position, CameraPosition);
     distance = clamp(distance / 100, 0, 1);

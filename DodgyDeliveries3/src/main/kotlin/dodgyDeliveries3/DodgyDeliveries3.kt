@@ -13,11 +13,10 @@ import org.lwjgl.opengl.GL11C.GL_BACK
 import org.lwjgl.opengl.GL11C.GL_CULL_FACE
 
 fun main() {
-    DD3().run()
+    DodgyDeliveries3.run()
 }
 
-class DD3 : Game() {
-
+object DodgyDeliveries3 : Game() {
     init {
         Loader.rootPath = "dodgyDeliveries3"
     }

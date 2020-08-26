@@ -8,7 +8,8 @@ import dodgyDeliveries3.util.IHasOrigin
 import org.jbox2d.dynamics.contacts.Contact
 import kotlin.reflect.full.primaryConstructor
 
-data class GameObject(val name: String, val components: ArrayList<Component> = arrayListOf()) : IHasOrigin<Scene>, ICollisionHandler {
+data class GameObject(val name: String, val components: ArrayList<Component> = arrayListOf()) : IHasOrigin<Scene>,
+    ICollisionHandler {
     @Json(ignored = true)
     val transform: Transform
         get() = getComponent()
