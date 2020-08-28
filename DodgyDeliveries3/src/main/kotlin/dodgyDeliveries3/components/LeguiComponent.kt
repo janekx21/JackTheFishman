@@ -6,7 +6,7 @@ import jackTheFishman.engine.Window
 import org.joml.Vector2f
 import org.joml.Vector2fc
 
-open class LeguiComponent<out T>(protected val leguiComponent: T, var onPressed: () -> Unit = {}) : Component() where T : org.liquidengine.legui.component.Component {
+open class LeguiComponent<out T>(val leguiComponent: T, var onPressed: () -> Unit = {}) : Component() where T : org.liquidengine.legui.component.Component {
     var position: Vector2fc
         get() = Vector2f(leguiComponent.position)
         set(value) {

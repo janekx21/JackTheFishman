@@ -28,6 +28,12 @@ object Window : Closeable {
 
     var shouldClose = false
 
+    var multiSampleCount = 1
+        set(value) {
+            field = value
+            glfwWindowHint(GLFW_SAMPLES, value)
+        }
+
     val aspect: Float
         get() = size.x().toFloat() / size.y().toFloat()
 
@@ -89,6 +95,7 @@ object Window : Closeable {
     private fun configGLFW() {
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE) // the window will stay hidden after creation
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE) // the window will be resizable
+        multiSampleCount = 4
         glfwSwapInterval(1)
 
         val x = FloatArray(1)

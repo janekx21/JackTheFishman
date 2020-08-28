@@ -27,7 +27,7 @@ object DodgyDeliveries3 : Game() {
         // set default texture color to white
         Texture2D.setDefaultTexture2DWhite()
         configCulling()
-        loadDefaultScene()
+        loadMenu()
         configWindow()
     }
 
