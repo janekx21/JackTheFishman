@@ -12,8 +12,10 @@ import jackTheFishman.engine.math.Vector3fConst
 import jackTheFishman.engine.math.times
 import org.jbox2d.common.MathUtils
 import org.joml.*
+import org.liquidengine.legui.component.Panel
 import org.liquidengine.legui.component.optional.align.HorizontalAlign
 import org.liquidengine.legui.component.optional.align.VerticalAlign
+import org.liquidengine.legui.style.Style
 import org.liquidengine.legui.style.font.FontRegistry
 import org.liquidengine.legui.style.length.Length
 import org.liquidengine.legui.style.length.LengthType
@@ -112,13 +114,25 @@ fun loadMenu() {
 }
 
 fun makeMainMenu() {
-    val startButton = makeButton("StartButton", "START", Vector2f(200f,100f)) { loadDefaultScene() }
+
+    /*val panelObject = GameObject("Panel").also { gameObject ->
+        val panel = Panel().also {
+            it.style.display = Style.DisplayType.FLEX
+        }
+
+        panel.add()
+
+        gameObject.addComponent(LeguiComponentWrapper(panel)).also {
+        }
+    }*/
+
+    val startButton = makeButton("StartButton", "START", 100f) { loadDefaultScene() }
     Scene.active.spawn(startButton)
 
-    val quitButton = makeButton("QuitButton", "QUIT", Vector2f(200f, 520f)) { close() }
+    val quitButton = makeButton("QuitButton", "QUIT", 520f) { close() }
     Scene.active.spawn(quitButton)
 
-    val optionsButton = makeButton("OptionsButton", "OPTIONS", Vector2f(200f,310f)) { Scene.active.destroy(it.gameObject); Scene.active.destroy(startButton); Scene.active.destroy(quitButton); makeOptionsMenu() }
+    val optionsButton = makeButton("OptionsButton", "OPTIONS", 310f) { Scene.active.destroy(it.gameObject); Scene.active.destroy(startButton); Scene.active.destroy(quitButton); makeOptionsMenu() }
     Scene.active.spawn(optionsButton)
 }
 
@@ -127,13 +141,14 @@ fun makeOptionsMenu() {
     val volume = GameObject("Volume").also { gameObject ->
         gameObject.addComponent<Slider>().also {
             it.position = Vector2f(100f,100f)
-            it.scaledSize = Vector2f(800f, 100f)
+            it.logicalSize = Vector2f(800f, 100f)
             it.leguiComponent.minValue = 0f
             it.leguiComponent.maxValue = 1f
             it.leguiComponent.stepSize = 0.1f
             it.onChanged = { value ->
                 Audio.Listener.gain = value
             }
+
         }
         Scene.active.spawn(gameObject)
     }
@@ -141,7 +156,7 @@ fun makeOptionsMenu() {
     val multiSampling = GameObject("MultiSampling").also { gameObject ->
         gameObject.addComponent<Slider>().also {
             it.position = Vector2f(100f,300f)
-            it.scaledSize = Vector2f(800f, 100f)
+            it.logicalSize = Vector2f(Window.logicalSize.x() * 0.1f, 100f)
             it.leguiComponent.minValue = 1f
             it.leguiComponent.maxValue = 4f
             it.leguiComponent.stepSize = 1f
@@ -152,26 +167,33 @@ fun makeOptionsMenu() {
         Scene.active.spawn(gameObject)
     }
 
-    val backButton = makeButton("BackButton", "BACK", Vector2f(100f,500f)) { Scene.active.destroy(it.gameObject); Scene.active.destroy(volume); Scene.active.destroy(multiSampling); makeMainMenu() }
+    val backButton = makeButton("BackButton", "BACK", 500f) { Scene.active.destroy(it.gameObject); Scene.active.destroy(volume); Scene.active.destroy(multiSampling); makeMainMenu() }
     Scene.active.spawn(backButton)
 }
 
 
-fun makeButton(name: String, text: String, position: Vector2fc, onPressedFunc: (self: Button) -> Unit) : GameObject {
+fun makeButton(name: String, text: String, yPosition: Float, onPressedFunc: (self: Button) -> Unit) : GameObject {
     return GameObject(name).also {gameObject ->
+        val windowUpdate = gameObject.addComponent<LeguiWindowUpdate>()
         gameObject.addComponent<Button>().also {
-            it.scaledFontSize = 42F
+            it.logicalFontSize = 42F
             it.text = text
-            it.position = position
+            windowUpdate.logicalPosition = {
+                it.scaledPosition = Vector2f(Window.logicalSize.x() * 0.1f, yPosition)
+            }
             it.leguiComponent.style.background.color = Vector4f(ColorPalette.ORANGE,0.7f)
             it.leguiComponent.hoveredStyle.background.color = Vector4f(ColorPalette.BLUE,0.7f)
             it.leguiComponent.style.setBorderRadius(10f)
             it.fontName = "Sugarpunch"
             it.leguiComponent.textState.textColor = Vector4f(ColorPalette.WHITE, 1f)
-            it.scaledSize = Vector2f(400f, 130f)
+            it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 130f)
             it.onPressed = {
                 onPressedFunc(it)
             }
+            windowUpdate.logicalSize = {
+                it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
+            }
+
         }
     }
 }
