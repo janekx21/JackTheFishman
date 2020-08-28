@@ -8,9 +8,9 @@ import org.liquidengine.legui.image.Image
 
 class ImageComponent(texture: Texture2D? = null) : LeguiComponentWrapper<ImageView>(ImageView()) {
     @Json(ignored = true)
-    var image: Image?
+    private var image: Image?
         get() = leguiComponent.image
-        private set(value) {
+        set(value) {
             leguiComponent.image = value
         }
 
