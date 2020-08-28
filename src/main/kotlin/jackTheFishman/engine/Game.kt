@@ -40,13 +40,13 @@ open class Game {
         try {
             while (!Window.shouldClose) {
                 Window.update()
+                Legui.update()
                 Input.update()
                 Physics.update()
 
                 update()
                 draw()
-
-                Window.draw()
+                Legui.draw()
             }
         } finally {
             IFinalized.finalizeAll()

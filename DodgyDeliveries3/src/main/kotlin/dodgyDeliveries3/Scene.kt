@@ -1,6 +1,7 @@
 package dodgyDeliveries3
 
 import dodgyDeliveries3.components.Collider
+import jackTheFishman.engine.Legui
 import jackTheFishman.engine.Physics
 import jackTheFishman.engine.Serialisation
 import jackTheFishman.engine.Window
@@ -11,14 +12,10 @@ import org.jbox2d.dynamics.Fixture
 import org.jbox2d.dynamics.contacts.Contact
 import org.joml.Vector2f
 import org.joml.Vector4f
-import org.liquidengine.legui.DefaultInitializer
-import org.liquidengine.legui.animation.AnimatorProvider
-import org.liquidengine.legui.component.Frame
 import org.liquidengine.legui.component.Panel
 import org.liquidengine.legui.event.WindowSizeEvent
 import org.liquidengine.legui.style.Background
 import org.liquidengine.legui.style.Style
-import org.liquidengine.legui.system.layout.LayoutManager
 import java.io.File
 
 private class SceneContactListener : org.jbox2d.callbacks.ContactListener {
@@ -86,7 +83,7 @@ data class Scene(val allGameObjects: ArrayList<GameObject> = arrayListOf()) {
             gui.size = Vector2f(it.width.toFloat(), it.height.toFloat())
         }
 
-        Window.leguiFrame.container.add(gui)
+        Legui.frame.container.add(gui)
     }
 
     fun spawn(go: GameObject) {

@@ -5,10 +5,6 @@ import jackTheFishman.engine.util.FloatPointer
 import jackTheFishman.engine.util.IFinalized
 import org.joml.Vector2i
 import org.joml.Vector2ic
-import org.liquidengine.legui.DefaultInitializer
-import org.liquidengine.legui.animation.AnimatorProvider
-import org.liquidengine.legui.component.Frame
-import org.liquidengine.legui.system.layout.LayoutManager
 import org.lwjgl.glfw.*
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.opengl.GL.createCapabilities
@@ -16,7 +12,6 @@ import org.lwjgl.opengl.GL46
 import org.lwjgl.opengl.GL46.GL_DEPTH_TEST
 import org.lwjgl.opengl.GL46.glEnable
 import java.io.Closeable
-import java.nio.FloatBuffer
 import kotlin.math.min
 
 
@@ -41,10 +36,6 @@ object Window : Closeable, IFinalized {
     var contentScale: Float = 1.0F
 
     private var lastTime = 0.0
-
-    lateinit var leguiFrame: Frame
-
-    lateinit var leguiInitializer: DefaultInitializer
 
     private val keyCallback = GLFWKeyCallbackI { window, key, _, action, _ ->
         if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
@@ -73,22 +64,13 @@ object Window : Closeable, IFinalized {
         createCapabilities()
         glfwShowWindow(pointer)
 
-        leguiFrame = Frame(size.x().toFloat(), size.y().toFloat())
-        leguiInitializer = DefaultInitializer(pointer, leguiFrame)
-        leguiInitializer.renderer.initialize()
-
-        leguiInitializer.callbackKeeper.also {
-            it.chainKeyCallback.add(keyCallback)
-            it.chainFramebufferSizeCallback.add(framebufferSizeCallback)
-            it.chainWindowCloseCallback.add(windowCloseCallback)
-        }
-
         IFinalized.push(this)
     }
 
     private fun config() {
         configGLFW()
         configOpenGL()
+        configEventCallbacks()
     }
 
     private fun configGLFW() {
@@ -106,6 +88,14 @@ object Window : Closeable, IFinalized {
         glEnable(GL_DEPTH_TEST)
     }
 
+    private fun configEventCallbacks() {
+        Legui.initializer.callbackKeeper.also {
+            it.chainKeyCallback.add(keyCallback)
+            it.chainFramebufferSizeCallback.add(framebufferSizeCallback)
+            it.chainWindowCloseCallback.add(windowCloseCallback)
+        }
+    }
+
     fun setIcon(texture: Texture2D) {
         val buffer = GLFWImage.malloc(1)
         buffer.put(0, texture.asGLFWImage())
@@ -115,14 +105,11 @@ object Window : Closeable, IFinalized {
     fun update() {
         updateWindow()
         updateTime()
-        AnimatorProvider.getAnimator().runAnimations()
     }
 
     private fun updateWindow() {
         glfwSwapBuffers(pointer)
         glfwPollEvents()
-        leguiInitializer.systemEventProcessor.processEvents(leguiFrame, leguiInitializer.context)
-        leguiInitializer.guiEventProcessor.processEvents()
     }
 
     private fun updateTime() {
@@ -136,18 +123,12 @@ object Window : Closeable, IFinalized {
         }
     }
 
-    fun draw() {
-        leguiInitializer.context.updateGlfwWindow()
-        LayoutManager.getInstance().layout(leguiFrame)
-        leguiInitializer.renderer.render(leguiFrame, leguiInitializer.context)
-    }
-
     override fun close() {
         shouldClose = true
     }
 
     override fun finalize() {
-        leguiInitializer.renderer.destroy()
+        Legui.destroy()
         glfwDestroyWindow(pointer)
         glfwTerminate()
     }

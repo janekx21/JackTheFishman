@@ -104,22 +104,7 @@ fun makePlayer(): GameObject {
         gameObject.addComponent<HpText>().also {
             it.scaledFontSize = 32F
             it.fontName = FontRegistry.ROBOTO_BOLD
-            it.scaledPosition = Vector2f(8f, 8f + 5f /* zusätzlich 5f vertikal, da das Text-Rendering irgendwie nicht präzise ist */)
-        }
-        gameObject.addComponent<Button>().also {
-            it.scaledFontSize = 32F
-            it.fontName = FontRegistry.ROBOTO_BOLD
-            it.text = "Press Me"
-            it.scaledPosition = Vector2f(100f, 100f)
-            it.scaledSize = Vector2f(100f, 100f)
-            it.onPressed = {
-                print("test")
-            }
-        }
-        gameObject.addComponent<ImageComponent>().also {
-            it.texture = Loader.createViaPath<Texture2D>("logos/logo.png")
-            it.scaledPosition = Vector2f(200f, 200f)
-            it.scaledSize = Vector2f(200f, 200f)
+            it.scaledPosition = Vector2f(8f, 13f)
         }
         gameObject.addComponent<Player>()
     }

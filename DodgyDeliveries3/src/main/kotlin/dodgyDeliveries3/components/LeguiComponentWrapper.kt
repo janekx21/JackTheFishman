@@ -6,7 +6,7 @@ import jackTheFishman.engine.Window
 import org.joml.Vector2f
 import org.joml.Vector2fc
 
-open class LeguiComponent<out T>(val leguiComponent: T, var onPressed: () -> Unit = {}) : Component() where T : org.liquidengine.legui.component.Component {
+open class LeguiComponentWrapper<out T>(val leguiComponent: T, var onPressed: () -> Unit = {}) : Component() where T : org.liquidengine.legui.component.Component {
     var position: Vector2fc
         get() = Vector2f(leguiComponent.position)
         set(value) {
@@ -31,7 +31,7 @@ open class LeguiComponent<out T>(val leguiComponent: T, var onPressed: () -> Uni
             size = Vector2f(value).mul(Window.contentScale)
         }
 
-    private var wasPressedBefore = false
+    private var wasPressedLastUpdate = false
 
     override fun start() {
         super.start()
@@ -44,11 +44,11 @@ open class LeguiComponent<out T>(val leguiComponent: T, var onPressed: () -> Uni
     }
 
     override fun update() {
-        if (leguiComponent.isPressed && !wasPressedBefore) {
+        if (leguiComponent.isPressed && !wasPressedLastUpdate) {
             onPressed()
-            wasPressedBefore = true
-        } else if (!leguiComponent.isPressed && wasPressedBefore) {
-            wasPressedBefore = false
+            wasPressedLastUpdate = true
+        } else if (!leguiComponent.isPressed && wasPressedLastUpdate) {
+            wasPressedLastUpdate = false
         }
     }
 
