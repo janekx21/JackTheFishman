@@ -1,11 +1,12 @@
 package jackTheFishman.engine
 
+import jackTheFishman.engine.util.IDrawable
 import org.liquidengine.legui.DefaultInitializer
 import org.liquidengine.legui.animation.AnimatorProvider
 import org.liquidengine.legui.component.Frame
 import org.liquidengine.legui.system.layout.LayoutManager
 
-object Legui {
+object Legui : IDrawable {
     val frame: Frame = Frame(Window.size.x().toFloat(), Window.size.y().toFloat())
     val initializer: DefaultInitializer
 
@@ -20,7 +21,7 @@ object Legui {
         AnimatorProvider.getAnimator().runAnimations()
     }
 
-    fun draw() {
+    override fun draw() {
         initializer.context.updateGlfwWindow()
         LayoutManager.getInstance().layout(frame)
         initializer.renderer.render(frame, initializer.context)

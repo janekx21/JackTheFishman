@@ -58,7 +58,7 @@ data class Scene(val allGameObjects: ArrayList<GameObject> = arrayListOf()) {
     private val gameObjectsToSpawn: ArrayList<GameObject> = arrayListOf()
     private val gameObjectsToDestroy: ArrayList<GameObject> = arrayListOf()
 
-    var gui: Panel
+    var rootPanel: Panel
 
     init {
         for (go in allGameObjects) {
@@ -69,21 +69,21 @@ data class Scene(val allGameObjects: ArrayList<GameObject> = arrayListOf()) {
         }
         Physics.world.setContactListener(SceneContactListener())
 
-        gui = Panel()
-        gui.style = Style().also {
+        rootPanel = Panel()
+        rootPanel.style = Style().also {
             it.background = Background().also {
                 it.color = Vector4f(0f, 0f, 0f, 0f)
             }
         }
-        gui.isFocusable = false
-        gui.size = Vector2f(Window.size)
-        gui.listenerMap.addListener(
+        rootPanel.isFocusable = false
+        rootPanel.size = Vector2f(Window.size)
+        rootPanel.listenerMap.addListener(
             WindowSizeEvent::class.java
         ) {
-            gui.size = Vector2f(it.width.toFloat(), it.height.toFloat())
+            rootPanel.size = Vector2f(it.width.toFloat(), it.height.toFloat())
         }
 
-        Legui.frame.container.add(gui)
+        Legui.frame.container.add(rootPanel)
     }
 
     fun spawn(go: GameObject) {

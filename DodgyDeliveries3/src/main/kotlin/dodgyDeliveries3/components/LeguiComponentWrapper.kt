@@ -42,11 +42,11 @@ open class LeguiComponentWrapper<out T>(val leguiComponent: T, var onPressed: ()
 
     override fun start() {
         super.start()
-        Scene.active.gui.add(leguiComponent)
+        Scene.active.rootPanel.add(leguiComponent)
     }
 
     override fun stop() {
-        Scene.active.gui.remove(leguiComponent)
+        Scene.active.rootPanel.remove(leguiComponent)
         super.stop()
     }
 
