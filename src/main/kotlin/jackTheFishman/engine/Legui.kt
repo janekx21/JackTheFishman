@@ -7,7 +7,7 @@ import org.liquidengine.legui.component.Frame
 import org.liquidengine.legui.system.layout.LayoutManager
 
 object Legui : IDrawable {
-    val frame: Frame = Frame(Window.size.x().toFloat(), Window.size.y().toFloat())
+    val frame: Frame = Frame(Window.physicalSize.x().toFloat(), Window.physicalSize.y().toFloat())
     val initializer: DefaultInitializer
 
     init {

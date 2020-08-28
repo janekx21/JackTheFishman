@@ -76,7 +76,7 @@ data class Scene(val allGameObjects: ArrayList<GameObject> = arrayListOf()) {
             }
         }
         rootPanel.isFocusable = false
-        rootPanel.size = Vector2f(Window.size)
+        rootPanel.size = Vector2f(Window.physicalSize)
         rootPanel.listenerMap.addListener(
             WindowSizeEvent::class.java
         ) {
