@@ -50,7 +50,7 @@ object Window : Closeable, IFinalized {
         onResize(this)
     }
 
-    private val windowCloseCallback = GLFWWindowCloseCallbackI {_ ->
+    private val windowCloseCallback = GLFWWindowCloseCallbackI {
         close()
     }
 

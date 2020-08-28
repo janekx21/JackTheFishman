@@ -16,9 +16,10 @@ class ImageComponent(texture: Texture2D? = null) : LeguiComponentWrapper<ImageVi
 
     var texture: Texture2D? = texture
         set(value) {
-            image = when {
-                value != null -> FBOImage(value.pointer, value.size.x(), value.size.y())
-                else -> null
+            image = if (value != null) {
+                FBOImage(value.pointer, value.size.x(), value.size.y())
+            } else {
+                null
             }
             field = value
         }
