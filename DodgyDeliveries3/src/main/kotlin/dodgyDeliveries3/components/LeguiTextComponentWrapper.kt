@@ -4,23 +4,30 @@ import jackTheFishman.engine.Window
 import org.liquidengine.legui.component.Component
 import org.liquidengine.legui.component.TextComponent
 
-open class LeguiTextComponent<out T>(component: T) : LeguiComponent<T>(component) where T : Component, T : TextComponent {
+open class LeguiTextComponentWrapper<out T>(component: T) : LeguiComponentWrapper<T>(component) where T : Component, T : TextComponent {
     var text: String
         get() = leguiComponent.textState.text
         set(value) {
             leguiComponent.textState.text = value
         }
 
-    var fontSize: Float
+    /**
+     * @brief Size of the font in pixels
+     */
+    var physicalFontSize: Float
         get() = leguiComponent.textState.fontSize
         set(value) {
             leguiComponent.textState.fontSize = value
         }
 
-    var scaledFontSize: Float
-        get() = fontSize / Window.contentScale
+    /**
+     * @brief Size of the font in logical pixels, i.e.
+     * physicalSize = logicalSize * Window.contentScale
+     */
+    var logicalFontSize: Float
+        get() = physicalFontSize / Window.contentScale
         set(value) {
-            fontSize = value * Window.contentScale
+            physicalFontSize = value * Window.contentScale
         }
 
     var fontName: String

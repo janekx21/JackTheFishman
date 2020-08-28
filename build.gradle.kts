@@ -63,7 +63,13 @@ allprojects {
         // LWJGL is a collection of game library's
         val lwjglVersion = "3.2.3"
         val jomlVersion = "1.9.25"
-        val lwjglNatives = "natives-windows"
+        val os = org.gradle.nativeplatform.platform.internal.DefaultNativePlatform.getCurrentOperatingSystem()
+        val lwjglNatives = when {
+            os.isWindows -> "natives-windows"
+            os.isMacOsX -> "natives-macos"
+            os.isLinux -> "natives-linux"
+            else -> throw IllegalArgumentException("OS not supported")
+        }
         implementation(platform("org.lwjgl:lwjgl-bom:$lwjglVersion"))
 
         implementation("org.lwjgl", "lwjgl")

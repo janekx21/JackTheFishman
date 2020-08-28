@@ -42,7 +42,7 @@ class Player(var speed: Float = 8f) : Component() {
     }
 
     private fun mapScreenToView(x: Float): Float {
-        return (x / Window.size.x()) * 2f - 1f
+        return (x / Window.physicalSize.x()) * 2f - 1f
     }
 
     private fun applyVelocityChange() {

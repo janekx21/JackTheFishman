@@ -18,7 +18,8 @@ object Loader {
         }
 
     fun resourceFileViaPath(path: String): File {
-        val resource = ClassLoader.getSystemResource(path)
+        val pathWithRoot = File(rootPath).resolve(path)
+        val resource = ClassLoader.getSystemResource(pathWithRoot.invariantSeparatorsPath)
         check(resource != null) { "resource at $path not found. root is $rootPath" }
         val resourcePath = resource.path
         return File(resourcePath)
@@ -26,20 +27,18 @@ object Loader {
 
     @Deprecated("because its symbol is ugly. Replace with `createViaPath<T>(path)`.")
     inline fun <reified T> createViaPath(obj: ICreateViaPath<T>, path: String): T {
-        val pathWithRoot = File(rootPath).resolve(path)
-        val moddedPath = resourceFileViaPath(pathWithRoot.invariantSeparatorsPath)
-        check(moddedPath.exists()) { "file not found ${moddedPath.path}" }
-        return obj.createViaPath(moddedPath.path)
+        val file = resourceFileViaPath(path)
+        check(file.exists()) { "file not found ${file.path}" }
+        return obj.createViaPath(file.path)
     }
 
     inline fun <reified T> createViaPath(path: String): T {
-        val pathWithRoot = File(rootPath).resolve(path)
-        val moddedPath = resourceFileViaPath(pathWithRoot.invariantSeparatorsPath)
-        check(moddedPath.exists()) { "file not found ${moddedPath.path}" }
+        val file = resourceFileViaPath(path)
+        check(file.exists()) { "file not found ${file.path}" }
         val obj = T::class.companionObjectInstance
         check(obj != null) { "Class dose not define a companionObject" }
         check(obj is ICreateViaPath<*>) { "companionObject dose not implement ICreateViaPath" }
         @Suppress("UNCHECKED_CAST") val obj2 = obj as ICreateViaPath<T>
-        return obj2.createViaPath(moddedPath.path)
+        return obj2.createViaPath(file.path)
     }
 }
