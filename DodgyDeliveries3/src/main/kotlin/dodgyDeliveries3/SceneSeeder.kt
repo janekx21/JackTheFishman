@@ -9,7 +9,6 @@ import jackTheFishman.engine.math.times
 import org.joml.Vector2f
 import org.joml.Vector3f
 import org.liquidengine.legui.style.font.FontRegistry
-import java.io.File
 
 fun loadDefaultScene() {
     Scene.active.allGameObjects.clear()
@@ -102,7 +101,7 @@ fun makePlayer(): GameObject {
             it.maxHp = 10f
         }
         gameObject.addComponent<HpText>().also {
-            it.scaledFontSize = 32F
+            it.logicalFontSize = 32F
             it.fontName = FontRegistry.ROBOTO_BOLD
             it.scaledPosition = Vector2f(8f, 13f)
         }

@@ -19,16 +19,23 @@ open class LeguiComponentWrapper<out T>(val leguiComponent: T, var onPressed: ()
             position = Vector2f(value).mul(Window.contentScale)
         }
 
-    var size: Vector2fc
+    /**
+     * @brief Size of the LeguiComponent in Pixels
+     */
+    var physicalSize: Vector2fc
         get() = Vector2f(leguiComponent.size)
         set(value) {
             leguiComponent.size = Vector2f(value)
         }
 
-    var scaledSize: Vector2fc
-        get() = Vector2f(size).div(Window.contentScale)
+    /**
+     * @brief Size of the LeguiComponent in logical pixels, i.e.
+     * physicalSize = logicalSize * Window.contentScale
+     */
+    var logicalSize: Vector2fc
+        get() = Vector2f(physicalSize).div(Window.contentScale)
         set(value) {
-            size = Vector2f(value).mul(Window.contentScale)
+            physicalSize = Vector2f(value).mul(Window.contentScale)
         }
 
     private var wasPressedLastUpdate = false

@@ -11,16 +11,16 @@ open class LeguiTextComponentWrapper<out T>(component: T) : LeguiComponentWrappe
             leguiComponent.textState.text = value
         }
 
-    var fontSize: Float
+    var physicalFontSize: Float
         get() = leguiComponent.textState.fontSize
         set(value) {
             leguiComponent.textState.fontSize = value
         }
 
-    var scaledFontSize: Float
-        get() = fontSize / Window.contentScale
+    var logicalFontSize: Float
+        get() = physicalFontSize / Window.contentScale
         set(value) {
-            fontSize = value * Window.contentScale
+            physicalFontSize = value * Window.contentScale
         }
 
     var fontName: String
