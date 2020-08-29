@@ -2,13 +2,16 @@ package dodgyDeliveries3
 
 import dodgyDeliveries3.components.*
 import dodgyDeliveries3.util.ColorPalette
+import jackTheFishman.engine.Game
 import jackTheFishman.engine.Loader
+import jackTheFishman.engine.Window
 import jackTheFishman.engine.audio.Sample
 import jackTheFishman.engine.graphics.Texture2D
 import jackTheFishman.engine.math.Vector3fConst
 import jackTheFishman.engine.math.times
 import org.joml.Vector2f
 import org.joml.Vector3f
+import org.liquidengine.legui.component.Button
 import org.liquidengine.legui.style.font.FontRegistry
 
 fun loadDefaultScene() {
@@ -114,7 +117,7 @@ fun makePlayer(): GameObject {
         gameObject.addComponent<HpText>().also {
             it.logicalFontSize = 32F
             it.fontName = FontRegistry.ROBOTO_BOLD
-            it.scaledPosition = Vector2f(8f, 13f)
+            it.logicalPosition = Vector2f(8f, 13f)
         }
         gameObject.addComponent<Player>()
     }
