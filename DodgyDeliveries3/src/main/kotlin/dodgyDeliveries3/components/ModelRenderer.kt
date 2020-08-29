@@ -38,19 +38,21 @@ data class ModelRenderer(var mesh: Mesh? = null, var material: Material = defaul
     }
 
     private fun uploadLightUniforms(shader: Shader) {
-        for ((index, light) in PointLight.all.withIndex()) {
-            shader.setUniform("LightPositions[$index]", light.transform.position)
-            shader.setUniform("LightColors[$index]", Vector3f(light.animatedColor))
-        }
-        for (index in PointLight.all.size until PointLight.max) {
-            shader.setUniform("LightColors[$index]", Vector3f(0f, 0f, 0f))
+        for (index in 0 until PointLight.max) {
+            if (index < PointLight.all.size) {
+                val light = PointLight.all[index]
+                shader.setUniform("LightPositions[$index]", light.transform.position)
+                shader.setUniform("LightColors[$index]", Vector3f(light.animatedColor))
+            } else {
+                shader.setUniform("LightColors[$index]", Vector3fConst.zero)
+            }
         }
 
         // TODO refactor
         for (light in PointLight.all) {
             if (!light.alive) {
                 light.animatedColor =
-                    light.animatedColor.moveTowards(Vector3fConst.zero, Time.deltaTime * PointLight.animationSpeed)
+                    light.animatedColor.moveTowards(Vector3fConst.zero, Time.deltaTime * PointLight.colorSwitchTime)
             }
         }
 
@@ -81,6 +83,7 @@ data class ModelRenderer(var mesh: Mesh? = null, var material: Material = defaul
             shader.setUniform("SpecularTexture", defaultAlbedo)
         }
         shader.setUniform("NormalIntensity", material.normalIntensity)
+        shader.setUniform("EmissionColor", material.emissionColor)
     }
 
     private fun uploadFogUniforms(shader: Shader) {
@@ -103,7 +106,8 @@ data class ModelRenderer(var mesh: Mesh? = null, var material: Material = defaul
                 null,
                 null,
                 null,
-                1f
+                1f,
+                Vector3fConst.zero
             )
     }
 }

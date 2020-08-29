@@ -3,6 +3,7 @@ package dodgyDeliveries3
 import dodgyDeliveries3.components.*
 import dodgyDeliveries3.util.ColorPalette
 import jackTheFishman.engine.Loader
+import jackTheFishman.engine.audio.Sample
 import jackTheFishman.engine.graphics.Texture2D
 import jackTheFishman.engine.math.Vector3fConst
 import jackTheFishman.engine.math.times
@@ -14,6 +15,16 @@ fun loadDefaultScene() {
 
     for(gameObject in Scene.active.allGameObjects) {
         Scene.active.destroy(gameObject)
+    }
+
+    GameObject("Music").also { gameObject ->
+        gameObject.addComponent<Music>().also {
+            it.sample = Loader.createViaPath<Sample>("music/Sia&SafriDuo-Chandelier(AlchimystRemix).ogg")
+            it.offset = .082f
+            it.bpm = 138f
+            it.play()
+        }
+        Scene.active.spawn(gameObject)
     }
 
     val player = makePlayer()
@@ -82,7 +93,7 @@ fun loadDefaultScene() {
         }
 
         gameObject.addComponent<PointLight>().apply {
-            color = Vector3f(ColorPalette.ORANGE) * 1f
+            color = Vector3f(ColorPalette.ORANGE)
         }
         Scene.active.spawn(gameObject)
     }
