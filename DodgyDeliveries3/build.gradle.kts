@@ -4,5 +4,5 @@ plugins {
 }
 application {
     // Define the main class for the application
-    mainClassName = "dodgyDeliveries3.DD3Kt"
+    mainClassName = "dodgyDeliveries3.DodgyDeliveries3Kt"
 }

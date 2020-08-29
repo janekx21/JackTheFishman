@@ -11,6 +11,9 @@ import jackTheFishman.engine.math.Vector3fConst
 import jackTheFishman.engine.math.times
 import org.joml.Vector3f
 import org.joml.Vector3fc
+import kotlin.math.PI
+import kotlin.math.cos
+import kotlin.math.pow
 
 class ProjectileSpawner(var timer: Float = 0f, var type: Type = Type.STANDARD) : Component() {
     enum class Type {
@@ -18,14 +21,35 @@ class ProjectileSpawner(var timer: Float = 0f, var type: Type = Type.STANDARD) :
     }
 
     var projectilesPerSecond = 0.1f
+    var musicComponent: Music? = null
+
+    override fun start() {
+        // TODO make it not name dependent
+        musicComponent = Scene.active.findViaName("Music")?.getComponent()
+        resetTimer()
+    }
 
     override fun update() {
         val canShoot = gameObject.getComponent<EnemyCommander>().canShoot
-        if (canShoot && timer >= 1 / projectilesPerSecond) {
-            timer = 0f
+        val timeout = 1f / projectilesPerSecond
+        if (canShoot && timer >= timeout && isBeatCloseEnough()) {
+            resetTimer()
             spawn()
         }
         timer += Time.deltaTime
+    }
+
+    private fun isBeatCloseEnough(): Boolean {
+        if (musicComponent != null) {
+            val beatClamped = musicComponent!!.beat % 1f
+            val closenessToTheBeat = (cos(beatClamped * 2 * PI) * .5 + .5).toFloat()
+            return closenessToTheBeat.pow(20) > .9f
+        }
+        return true
+    }
+
+    private fun resetTimer() {
+        timer = 0f
     }
 
     private fun spawn() {
@@ -34,7 +58,6 @@ class ProjectileSpawner(var timer: Float = 0f, var type: Type = Type.STANDARD) :
             Type.WOBBLE -> Scene.active.spawn(makeWobbleProjectile(transform.position))
             Type.LIGHT -> Scene.active.spawn(makeLightBall(transform.position))
         }
-
     }
 
     private fun makeStandardProjectile(startPosition: Vector3fc): GameObject {
@@ -44,6 +67,7 @@ class ProjectileSpawner(var timer: Float = 0f, var type: Type = Type.STANDARD) :
                 transform.scale = Vector3fConst.one * 0.2f
             }
             it.addComponent<ModelRenderer>().apply {
+                material = material.copy(emissionColor = ColorPalette.RED)
                 mesh = Loader.createViaPath("models/projectiles/standardenemyprojectile.fbx")
             }
             it.addComponent<CircleCollider>().apply {
@@ -67,6 +91,7 @@ class ProjectileSpawner(var timer: Float = 0f, var type: Type = Type.STANDARD) :
                 transform.scale = Vector3fConst.one * 0.5f
             }
             it.addComponent<ModelRenderer>().apply {
+                material = material.copy(emissionColor = ColorPalette.YELLOW)
                 mesh = Loader.createViaPath("models/projectiles/hammerheadprojectile.fbx")
             }
             it.addComponent<CircleCollider>().apply {
@@ -91,7 +116,7 @@ class ProjectileSpawner(var timer: Float = 0f, var type: Type = Type.STANDARD) :
             }
             it.addComponent<ModelRenderer>().apply {
                 mesh = Loader.createViaPath("models/sphere.fbx")
-                material = material.copy(albedoColor = ColorPalette.BLUE)
+                material = material.copy(albedoColor = ColorPalette.BLUE, emissionColor = ColorPalette.BLUE)
             }
             it.addComponent<CircleCollider>().apply {
                 velocity = Vector2fConst.up * 4f

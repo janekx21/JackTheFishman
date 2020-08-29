@@ -11,7 +11,7 @@ import java.nio.ByteBuffer
 
 class Framebuffer : IUsable {
     val buffer = glGenFramebuffers()
-    var size: Vector2ic = Vector2i(Window.size)
+    var size: Vector2ic = Vector2i(Window.physicalSize)
 
     init {
         glBindFramebuffer(GL_FRAMEBUFFER, buffer)
@@ -66,8 +66,8 @@ class Framebuffer : IUsable {
     }
 
     override fun use(callback: () -> Unit) {
-        if (Window.size != size) {
-            size = Vector2i(Window.size)
+        if (Window.physicalSize != size) {
+            size = Vector2i(Window.physicalSize)
             generateTextures()
         }
         glBindFramebuffer(GL_FRAMEBUFFER, buffer)

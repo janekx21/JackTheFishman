@@ -318,7 +318,8 @@ object Input {
             glfwAction: Int
         ) {
             val key = glfwKeyToKey[glfwKey]
-            check(key != null) { "Key not found" }
+                ?: // this key is not in the map and should be ignored
+                return
             val isDown = keyStates[key]?.isDown
             check(isDown != null) { "Key states is missing a key" }
             when (glfwAction) {
