@@ -125,30 +125,53 @@ fun makeMainMenu() {
         gameObject.addComponent<ImageComponent>().also {
             it.texture = Loader.createViaPath<Texture2D>("textures/titleWithBG.png")
             windowUpdate.logicalSize = {
-                it.logicalSize = Vector2f(1600f, 407f)
-
-                //it.logicalSize = Vector2f(Window.logicalSize.x() * 0.5f,(Window.logicalSize.x() * 0.5f) / 3.931f)
+                it.logicalSize = Vector2f(Window.logicalSize.x() * 0.5f, (Window.logicalSize.x() * 0.5f) / 3.931f)
+            }
+            windowUpdate.logicalPosition = {
+                it.scaledPosition = Vector2f(Window.logicalSize.x() * 0.1f, Window.logicalSize.y() * 0.1f)
             }
             it.leguiComponent.style.border.isEnabled = false
         }
     }
     Scene.active.spawn(titelImage)
 
-    val startButton = makeButton("StartButton", "START", { Window.logicalSize.y() * 0.3f }) { loadDefaultScene() }
+    val startButton = makeButton("StartButton", "START", { Window.logicalSize.y() * 0.4f }) { loadDefaultScene() }
     Scene.active.spawn(startButton)
 
-    val quitButton = makeButton("QuitButton", "QUIT", { Window.logicalSize.y() * 0.3f + 260f }) { close() } // 520f
+    val quitButton = makeButton("QuitButton", "QUIT", { Window.logicalSize.y() * 0.4f + 260f }) { close() } // 520f
     Scene.active.spawn(quitButton)
+
+    val creditButton: GameObject // Just declaring
 
     val optionsButton = makeButton(
         "OptionsButton",
         "OPTIONS",
-        { Window.logicalSize.y() * 0.3f + 130f }) {
+        { Window.logicalSize.y() * 0.4f + 130f }) {
         Scene.active.destroy(it.gameObject); Scene.active.destroy(
         startButton
     ); Scene.active.destroy(quitButton); makeOptionsMenu()
     }
     Scene.active.spawn(optionsButton)   // 310f
+
+    creditButton = GameObject("CreditButton").also { gameObject ->
+        val windowUpdate = gameObject.addComponent<LeguiWindowUpdate>()
+        gameObject.addComponent<ImageComponent>().also {
+            it.texture = Loader.createViaPath<Texture2D>("textures/krakula-xl.png")
+            windowUpdate.logicalSize = {
+                it.logicalSize = Vector2f(Window.logicalSize.x() * 0.1f, Window.logicalSize.x() * 0.1f)
+            }
+            windowUpdate.logicalPosition = {
+                it.scaledPosition = Vector2f(
+                    Window.logicalSize.x() * 0.88f,
+                    Window.logicalSize.y() - (Window.logicalSize.x() - (Window.logicalSize.x() * 0.88f))
+                )
+            }
+            it.onPressed = {
+                Scene.active.destroy(it.gameObject); Scene.active.
+            }
+        }
+    }
+    Scene.active.spawn(creditButton)
 }
 
 fun makeOptionsMenu() {
@@ -193,6 +216,10 @@ fun makeOptionsMenu() {
     Scene.active.spawn(backButton)
 }
 
+fun makeCredits() {
+
+}
+
 
 fun makeButton(name: String, text: String, yPosition: () -> Float, onPressedFunc: (self: Button) -> Unit): GameObject {
     return GameObject(name).also { gameObject ->
@@ -201,7 +228,7 @@ fun makeButton(name: String, text: String, yPosition: () -> Float, onPressedFunc
             it.logicalFontSize = 42F
             it.text = text
             windowUpdate.logicalPosition = {
-                it.scaledPosition = Vector2f(Window.logicalSize.x() * 0.1f, yPosition())
+                it.scaledPosition = Vector2f(Window.logicalSize.x() * 0.2f, yPosition())
             }
             it.leguiComponent.style.background.color = Vector4f(ColorPalette.ORANGE, 0.7f)
             it.leguiComponent.hoveredStyle.background.color = Vector4f(ColorPalette.BLUE, 0.7f)
