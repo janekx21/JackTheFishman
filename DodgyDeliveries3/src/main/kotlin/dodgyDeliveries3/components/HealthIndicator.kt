@@ -1,6 +1,7 @@
 package dodgyDeliveries3.components
 
 import dodgyDeliveries3.Component
+import dodgyDeliveries3.Scene
 import jackTheFishman.engine.Loader
 import jackTheFishman.engine.graphics.Texture2D
 import org.joml.Vector2f
@@ -19,10 +20,11 @@ class HealthIndicator(var images: Array<Texture2D> = emptyArray(), var healthCom
             images[i] = Loader.createViaPath<Texture2D>("textures/healthIndication/pizza" + i.toString() + ".png")
         }
         displayImage()
+        healthComponent = Scene.active.findViaName("Player")?.getComponent<Health>()
     }
 
     override fun update() {
-        //changeImage()
+        changeImage()
     }
 
     fun displayImage(){
