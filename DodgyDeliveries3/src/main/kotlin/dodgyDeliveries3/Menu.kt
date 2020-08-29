@@ -167,7 +167,9 @@ fun makeMainMenu() {
                 )
             }
             it.onPressed = {
-                Scene.active.destroy(it.gameObject); Scene.active.
+                Scene.active.destroy(it.gameObject); Scene.active.destroy(startButton); Scene.active.destroy(
+                optionsButton
+            ); Scene.active.destroy(quitButton); makeCredits()
             }
         }
     }
@@ -217,14 +219,93 @@ fun makeOptionsMenu() {
 }
 
 fun makeCredits() {
+    val titleText = GameObject("TitleText").also { gameObject ->
+        val windowUpdate = gameObject.addComponent<LeguiWindowUpdate>()
+        gameObject.addComponent(Text().also {
+            it.text = "CREDITS"
+            it.fontName = "Sugarpunch"
+            it.leguiComponent.textState.textColor = Vector4f(ColorPalette.WHITE, 1f)
+            it.logicalFontSize = 42f
+            windowUpdate.logicalPosition = {
+                it.scaledPosition = Vector2f(Window.logicalSize.x() * 0.3f, Window.logicalSize.y() * 0.4f)
+            }
+        })
+    }
+    Scene.active.spawn(titleText)
 
+    val arneText = GameObject("ArneText").also { gameObject ->
+        val windowUpdate = gameObject.addComponent<LeguiWindowUpdate>()
+        gameObject.addComponent(Text().also {
+            it.text = "ARNE SCHAUMBURG"
+            it.fontName = "Sugarpunch"
+            it.leguiComponent.textState.textColor = Vector4f(ColorPalette.WHITE, 1f)
+            it.logicalFontSize = 36f
+            windowUpdate.logicalPosition = {
+                it.scaledPosition = Vector2f(Window.logicalSize.x() * 0.25f, Window.logicalSize.y() * 0.4f + 50f)
+            }
+        })
+    }
+    Scene.active.spawn(arneText)
+
+    val bennetText = GameObject("BennetText").also { gameObject ->
+        val windowUpdate = gameObject.addComponent<LeguiWindowUpdate>()
+        gameObject.addComponent(Text().also {
+            it.text = "BENNET MEIER"
+            it.fontName = "Sugarpunch"
+            it.leguiComponent.textState.textColor = Vector4f(ColorPalette.WHITE, 1f)
+            it.logicalFontSize = 36f
+            windowUpdate.logicalPosition = {
+                it.scaledPosition = Vector2f(Window.logicalSize.x() * 0.25f, Window.logicalSize.y() * 0.4f + 100f)
+            }
+        })
+    }
+    Scene.active.spawn(bennetText)
+
+    val janekText = GameObject("JanekText").also { gameObject ->
+        val windowUpdate = gameObject.addComponent<LeguiWindowUpdate>()
+        gameObject.addComponent(Text().also {
+
+            it.text = "JANEK WINKLER"
+            it.fontName = "Sugarpunch"
+            it.leguiComponent.textState.textColor = Vector4f(ColorPalette.WHITE, 1f)
+            it.logicalFontSize = 36f
+            windowUpdate.logicalPosition = {
+                it.scaledPosition = Vector2f(Window.logicalSize.x() * 0.25f, Window.logicalSize.y() * 0.4f + 150f)
+            }
+        })
+    }
+    Scene.active.spawn(janekText)
+
+    val hannesText = GameObject("HannesText").also { gameObject ->
+        val windowUpdate = gameObject.addComponent<LeguiWindowUpdate>()
+        gameObject.addComponent(Text().also {
+            it.text = "HANNES WINKLER"
+            it.fontName = "Sugarpunch"
+            it.leguiComponent.textState.textColor = Vector4f(ColorPalette.WHITE, 1f)
+            it.logicalFontSize = 36f
+            windowUpdate.logicalPosition = {
+                it.scaledPosition = Vector2f(Window.logicalSize.x() * 0.25f, Window.logicalSize.y() * 0.4f + 200f)
+            }
+        })
+    }
+    Scene.active.spawn(hannesText)
+
+    val backButton = makeButton(
+        "BackButton",
+        "BACK",
+        { 500f }) {
+        Scene.active.destroy(it.gameObject); Scene.active.destroy(titleText); Scene.active.destroy(arneText);Scene.active.destroy(
+        bennetText
+    );Scene.active.destroy(janekText);Scene.active.destroy(hannesText); makeMainMenu()
+    }
+    Scene.active.spawn(backButton)
 }
 
 
 fun makeButton(name: String, text: String, yPosition: () -> Float, onPressedFunc: (self: Button) -> Unit): GameObject {
     return GameObject(name).also { gameObject ->
         val windowUpdate = gameObject.addComponent<LeguiWindowUpdate>()
-        gameObject.addComponent<Button>().also {
+        gameObject.addComponent(Button().also {
             it.logicalFontSize = 42F
             it.text = text
             windowUpdate.logicalPosition = {
@@ -242,8 +323,7 @@ fun makeButton(name: String, text: String, yPosition: () -> Float, onPressedFunc
             windowUpdate.logicalSize = {
                 it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
             }
-
-        }
+        })
     }
 }
 
