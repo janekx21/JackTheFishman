@@ -67,6 +67,7 @@ fun loadMenu() {
         gameObject.addComponent<MenuPlayerAnimation>()
         Scene.active.spawn(gameObject)
     }
+
     GameObject("Tunnel1").also { gameObject ->
         gameObject.addComponent<Transform>().apply {
             position = Vector3f(0f, 0f, -50f)
@@ -109,16 +110,15 @@ fun loadMenu() {
 
 fun makeMainMenu() {
 
-    /*val panelObject = GameObject("Panel").also { gameObject ->
-        val panel = Panel().also {
-            it.style.display = Style.DisplayType.FLEX
+    GameObject("MainMenu").also { gameObject ->
+        gameObject.addComponent<ImageComponent>().also { image ->
+            image.texture = Loader.createViaPath("textures/titleWithBG.png")
+            image.leguiComponent.style.background.color = Vector4f(0f, 0f, 0f, 0f)
+            image.leguiComponent.style.border.isEnabled = false
         }
 
-        panel.add()
-
-        gameObject.addComponent(LeguiComponentWrapper(panel)).also {
-        }
-    }*/
+        Scene.active.spawn(gameObject)
+    }
 
     val titelImage = GameObject("TitleImage").also { gameObject ->
         val windowUpdate = gameObject.addComponent<LeguiWindowUpdate>()
@@ -182,6 +182,7 @@ fun makeOptionsMenu() {
         gameObject.addComponent<Slider>().also {
             it.position = Vector2f(100f,100f)
             it.logicalSize = Vector2f(800f, 100f)
+            it.leguiComponent.value = Audio.Listener.gain
             it.leguiComponent.minValue = 0f
             it.leguiComponent.maxValue = 1f
             it.leguiComponent.stepSize = 0.1f

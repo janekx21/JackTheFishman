@@ -13,8 +13,13 @@ import org.liquidengine.legui.style.font.FontRegistry
 
 fun loadDefaultScene() {
 
-    for(gameObject in Scene.active.allGameObjects) {
+    for (gameObject in Scene.active.allGameObjects) {
         Scene.active.destroy(gameObject)
+    }
+
+    GameObject("PauseController").also { gameObject ->
+        gameObject.addComponent<PauseController>()
+        Scene.active.spawn(gameObject)
     }
 
     GameObject("Music").also { gameObject ->

@@ -44,7 +44,7 @@ in vec3 position;
 in vec2 uv;
 out vec4 outColor;
 
-vec3 generateFresnel(vec3 viewDirection, vec3 normal) {
+float generateFresnel(vec3 viewDirection, vec3 normal) {
     return pow(1 - dot(-viewDirection, normal), 4);
 }
 
