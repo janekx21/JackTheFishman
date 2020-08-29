@@ -45,7 +45,8 @@ in vec2 uv;
 out vec4 outColor;
 
 vec3 generateFresnel(vec3 viewDirection, vec3 normal) {
-    return pow(1 - dot(-viewDirection, normal), 4);
+    float intensity = pow(1 - dot(-viewDirection, normal), 4);
+    return vec3(intensity);
 }
 
 vec3 generateAmbient() {
