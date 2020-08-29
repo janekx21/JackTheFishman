@@ -27,7 +27,7 @@ object Window : Closeable, IFinalized {
     private const val MAX_DELTA_TIME = .1f // translates to 10fps
     private const val title = "Jack the Fishman Framework"
 
-    var physicalSize: Vector2ic = Vector2i(680, 460)
+    var physicalSize: Vector2ic = Vector2i(640, 480)
 
     var shouldClose = false
 
