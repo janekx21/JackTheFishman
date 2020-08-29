@@ -7,8 +7,11 @@ import org.joml.Vector2f
 import org.joml.Vector2fc
 import org.joml.Vector2i
 import org.joml.Vector2ic
-import org.lwjgl.glfw.*
 import org.lwjgl.glfw.GLFW.*
+import org.lwjgl.glfw.GLFWFramebufferSizeCallbackI
+import org.lwjgl.glfw.GLFWImage
+import org.lwjgl.glfw.GLFWKeyCallbackI
+import org.lwjgl.glfw.GLFWWindowCloseCallbackI
 import org.lwjgl.opengl.GL.createCapabilities
 import org.lwjgl.opengl.GL46
 import org.lwjgl.opengl.GL46.GL_DEPTH_TEST
@@ -24,7 +27,7 @@ object Window : Closeable, IFinalized {
     private const val MAX_DELTA_TIME = .1f // translates to 10fps
     private const val title = "Jack the Fishman Framework"
 
-    var physicalSize: Vector2ic = Vector2i(680, 460)
+    var physicalSize: Vector2ic = Vector2i(640, 480)
 
     var shouldClose = false
 
@@ -79,6 +82,7 @@ object Window : Closeable, IFinalized {
     }
 
     private fun configGLFW() {
+        glfwSetWindowSizeLimits(pointer, 640, 480, GLFW_DONT_CARE, GLFW_DONT_CARE) // set only the minimum window size
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE) // the window will stay hidden after creation
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE) // the window will be resizable
         glfwSwapInterval(1)
@@ -86,7 +90,7 @@ object Window : Closeable, IFinalized {
         val x = FloatPointer()
         val y = FloatPointer()
         glfwGetWindowContentScale(pointer, x.buffer, y.buffer)
-        contentScale = x.value*0.5F + y.value*0.5F
+        contentScale = x.value * 0.5F + y.value * 0.5F
     }
 
     private fun configOpenGL() {
