@@ -14,7 +14,12 @@ import java.nio.ByteBuffer
 open class Texture2D : Texture(), IUsable {
     @Json(ignored = true)
     override val pointer = glGenTextures()
-    private var internalSize: Vector2ic = Vector2i(0, 0)
+
+    @Json(ignored = true)
+    var size: Vector2ic = Vector2i(0, 0)
+        private set
+
+    @Json(ignored = true)
     private var internalData = ByteArray(0)
 
     init {
@@ -42,27 +47,27 @@ open class Texture2D : Texture(), IUsable {
         internalData = ByteArray(data.remaining())
         data.get(internalData)
         data.rewind()
-        internalSize = Vector2i(size)
+        this.size = Vector2i(size)
     }
 
     fun fillWithNull(size: Vector2ic) {
-        internalSize = Vector2i(size)
+        this.size = Vector2i(size)
         use {
             val n: ByteBuffer? = null
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, internalSize.x(), internalSize.y(), 0, GL_RGBA, GL_UNSIGNED_BYTE, n)
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, this.size.x(), this.size.y(), 0, GL_RGBA, GL_UNSIGNED_BYTE, n)
         }
     }
 
     fun fillWithZeroDepth(size: Vector2ic) {
-        internalSize = Vector2i(size)
+        this.size = Vector2i(size)
         use {
             val n: ByteBuffer? = null
             glTexImage2D(
                 GL_TEXTURE_2D,
                 0,
                 GL_DEPTH24_STENCIL8,
-                internalSize.x(),
-                internalSize.y(),
+                this.size.x(),
+                this.size.y(),
                 0,
                 GL_DEPTH_STENCIL,
                 GL_UNSIGNED_INT_24_8,
@@ -80,17 +85,17 @@ open class Texture2D : Texture(), IUsable {
 
     fun asGLFWImage(): GLFWImage {
         val image = GLFWImage.create()
-        val bb = BufferUtils.createByteBuffer(internalSize.x() * internalSize.y() * 4)
+        val bb = BufferUtils.createByteBuffer(size.x() * size.y() * 4)
         // copy and flip the image
-        for (i in 0 until internalSize.x() * internalSize.y() * 4) {
-            val x = i / 4 % internalSize.x()
-            val y = internalSize.y() - 1 - i / 4 / internalSize.x() // flip y
+        for (i in 0 until size.x() * size.y() * 4) {
+            val x = i / 4 % size.x()
+            val y = size.y() - 1 - i / 4 / size.x() // flip y
             val b = i % 4
 
-            bb.put(i, internalData[(x + y * internalSize.x()) * 4 + b])
+            bb.put(i, internalData[(x + y * size.x()) * 4 + b])
         }
 
-        image.set(internalSize.x(), internalSize.y(), bb)
+        image.set(size.x(), size.y(), bb)
         return image
     }
 
