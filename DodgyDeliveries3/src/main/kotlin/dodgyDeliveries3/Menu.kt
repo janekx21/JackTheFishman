@@ -2,6 +2,7 @@ package dodgyDeliveries3
 
 import dodgyDeliveries3.components.*
 import dodgyDeliveries3.util.ColorPalette
+import jackTheFishman.engine.Audio
 import jackTheFishman.engine.Loader
 import jackTheFishman.engine.Window
 import jackTheFishman.engine.Window.close
@@ -108,7 +109,6 @@ fun loadMenu() {
 }
 
 fun makeMainMenu() {
-
     GameObject("MainMenu").also { gameObject ->
         gameObject.addComponent<ImageComponent>().also { image ->
             image.texture = Loader.createViaPath("textures/titleWithBG.png")
@@ -160,23 +160,35 @@ fun makeMainMenu() {
     }
 }
 
-fun makeOptionsMenu() {}/*
-
-    val volume = GameObject("Volume").also { gameObject ->
-        gameObject.addComponent<Slider>().also {
-            it.position = Vector2f(100f,100f)
-            it.logicalSize = Vector2f(800f, 100f)
-            it.leguiComponent.value = Audio.Listener.gain
-            it.leguiComponent.minValue = 0f
-            it.leguiComponent.maxValue = 1f
-            it.leguiComponent.stepSize = 0.1f
-            it.onChanged = { value ->
+fun makeOptionsMenu() {
+    GameObject("OptionsMenu").also { gameObject ->
+        // Volumeslider
+        gameObject.addComponent<Slider>().also { slider ->
+            slider.onLayout = {
+                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.2f, Window.logicalSize.y() * 0.4f)
+                it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
+            }
+            slider.leguiComponent.value = Audio.Listener.gain
+            slider.leguiComponent.minValue = 0f
+            slider.leguiComponent.maxValue = 1f
+            slider.leguiComponent.stepSize = 0.1f
+            slider.onChanged = { value ->
                 Audio.Listener.gain = value
             }
-
         }
+        // BackButton
+        gameObject.addComponent(makeButton("BACK",
+            {
+                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.2f, Window.logicalSize.y() * 0.4f + 130f)
+                it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
+            }) { Scene.active.destroy(gameObject); makeMainMenu() })
         Scene.active.spawn(gameObject)
     }
+
+
+}/*
+
+
 
     val multiSampling = GameObject("MultiSampling").also { gameObject ->
         gameObject.addComponent<Slider>().also {
