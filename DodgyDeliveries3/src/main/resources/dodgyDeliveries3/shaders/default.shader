@@ -37,15 +37,27 @@ uniform float FogDistance;
 uniform vec3 AmbientColor;
 uniform sampler2D NormalTexture;
 uniform float NormalIntensity;
+uniform vec3 EmissionColor;
 
 in mat3 TBN;
 in vec3 position;
 in vec2 uv;
 out vec4 outColor;
 
-float luminance(vec3 rgb) {
-    const vec3 W = vec3(0.2125, 0.7154, 0.0721);
-    return dot(rgb, W);
+vec3 generateFresnel(vec3 viewDirection, vec3 normal) {
+    return pow(1 - dot(-viewDirection, normal), 4);
+}
+
+vec3 generateAmbient() {
+   return AmbientColor;
+}
+
+float generateFogIntensity(vec3 fragmentPosition, vec3 cameraPosition) {
+    float distance = distance(position, CameraPosition);
+    distance = clamp(distance / 100, 0, 1);
+    float density = 5;
+    float gradient = 1.5;
+    return 1 - exp(-pow((distance * density), gradient));
 }
 
 void main() {
@@ -73,15 +85,11 @@ void main() {
     }
     float fresnel = pow(1 - dot(-viewDirection, normal), 4);
 
-    light += fresnel * FresnelIntensity * specular + AmbientColor * albedo;
+    light += generateFresnel(viewDirection, normal) * FresnelIntensity * specular;
+    light += generateAmbient() * albedo;
+    light += EmissionColor;
 
-    float distance = distance(position, CameraPosition);
-    distance = clamp(distance / 100, 0, 1);
-    float density = 5;
-    float gradient = 1.5;
-    float fogIntensity = 1 - exp(-pow((distance * density), gradient));
-
-    light = mix(light, FogColor, fogIntensity);
+    light = mix(light, FogColor, generateFogIntensity(position, CameraPosition));
 
     outColor = vec4(light, 1);
 }

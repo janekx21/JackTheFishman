@@ -126,9 +126,8 @@ data class Scene(val allGameObjects: ArrayList<GameObject> = arrayListOf()) {
         }
     }
 
-    fun findViaName(name: String): GameObject {
+    fun findViaName(name: String): GameObject? {
         val gameObject = allGameObjects.find { it.name == name }
-        check(gameObject != null) { "dodgyDeliveries3.GameObject not found" }
         return gameObject
     }
 

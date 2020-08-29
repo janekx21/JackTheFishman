@@ -17,6 +17,8 @@ object Loader {
             return rootFile
         }
 
+    val loadedObjects = mutableMapOf<String, Any>()
+
     fun resourceFileViaPath(path: String): File {
         val pathWithRoot = File(rootPath).resolve(path)
         val resource = ClassLoader.getSystemResource(pathWithRoot.invariantSeparatorsPath)
@@ -32,13 +34,16 @@ object Loader {
         return obj.createViaPath(file.path)
     }
 
-    inline fun <reified T> createViaPath(path: String): T {
-        val file = resourceFileViaPath(path)
-        check(file.exists()) { "file not found ${file.path}" }
-        val obj = T::class.companionObjectInstance
-        check(obj != null) { "Class dose not define a companionObject" }
-        check(obj is ICreateViaPath<*>) { "companionObject dose not implement ICreateViaPath" }
-        @Suppress("UNCHECKED_CAST") val obj2 = obj as ICreateViaPath<T>
-        return obj2.createViaPath(file.path)
+    inline fun <reified T> createViaPath(path: String): T where T : Any {
+        val instance= loadedObjects.getOrPut(path) {
+            val file = resourceFileViaPath(path)
+            check(file.exists()) { "file not found ${file.path}" }
+            val possibleFactory= T::class.companionObjectInstance
+            check(possibleFactory != null) { "Class dose not define a companionObject" }
+            check(possibleFactory is ICreateViaPath<*>) { "companionObject dose not implement ICreateViaPath" }
+            @Suppress("UNCHECKED_CAST") val factory = possibleFactory as ICreateViaPath<T>
+            factory.createViaPath(file.path)
+        }
+        return instance as T
     }
 }
