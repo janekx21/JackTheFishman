@@ -94,7 +94,10 @@ fun makePlayer(): GameObject {
             it.scale = Vector3fConst.one * .8f
         }
         gameObject.addComponent<ModelRenderer>().also {
-            it.mesh = Loader.createViaPath("models/player.fbx")
+            it.mesh = Loader.createViaPath("models/playerColoured.fbx")
+            it.material = it.material.copy(
+                albedoTexture = Loader.createViaPath<Texture2D>("textures/playerUV.png")
+            )
         }
         gameObject.addComponent<CircleCollider>().also {
             it.radius = .5f

@@ -27,7 +27,7 @@ object Window : Closeable, IFinalized {
     private const val MAX_DELTA_TIME = .1f // translates to 10fps
     private const val title = "Jack the Fishman Framework"
 
-    var physicalSize: Vector2ic = Vector2i(640, 480)
+    var physicalSize: Vector2ic = Vector2i(1280, 720)
 
     var shouldClose = false
 
@@ -88,7 +88,8 @@ object Window : Closeable, IFinalized {
     }
 
     private fun configGLFW() {
-        glfwSetWindowSizeLimits(pointer, 640, 480, GLFW_DONT_CARE, GLFW_DONT_CARE) // set only the minimum window size
+        glfwSetWindowSizeLimits(pointer, 1280, 720, GLFW_DONT_CARE, GLFW_DONT_CARE) // set only the minimum window size
+        //glfwSetWindowAspectRatio(pointer, 16, 9)
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE) // the window will stay hidden after creation
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE) // the window will be resizable
         multiSampleCount = 4
@@ -129,7 +130,7 @@ object Window : Closeable, IFinalized {
     }
 
     private fun updateTime() {
-        glfwGetTime().also {time ->
+        glfwGetTime().also { time ->
             // when the window should close the time jumps to 0
             if (time > 0.0) {
                 val deltaTime = (time - lastTime).toFloat()

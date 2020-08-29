@@ -4,24 +4,15 @@ import dodgyDeliveries3.components.*
 import dodgyDeliveries3.util.ColorPalette
 import jackTheFishman.engine.Audio
 import jackTheFishman.engine.Loader
-import jackTheFishman.engine.Time
 import jackTheFishman.engine.Window
 import jackTheFishman.engine.Window.close
 import jackTheFishman.engine.graphics.Texture2D
 import jackTheFishman.engine.math.Vector3fConst
 import jackTheFishman.engine.math.times
-import org.jbox2d.common.MathUtils
-import org.joml.*
-import org.liquidengine.legui.component.Panel
-import org.liquidengine.legui.component.optional.align.HorizontalAlign
-import org.liquidengine.legui.component.optional.align.VerticalAlign
-import org.liquidengine.legui.style.Style
+import org.joml.Vector2f
+import org.joml.Vector3f
+import org.joml.Vector4f
 import org.liquidengine.legui.style.font.FontRegistry
-import org.liquidengine.legui.style.length.Length
-import org.liquidengine.legui.style.length.LengthType
-import java.awt.Menu
-import java.lang.Math
-import kotlin.math.sin
 
 fun loadMenu() {
 
@@ -68,7 +59,10 @@ fun loadMenu() {
             it.position = Vector3f(2f,-0.5f,-0.1f)
         }
         gameObject.addComponent<ModelRenderer>().also {
-            it.mesh = Loader.createViaPath("models/player.fbx")
+            it.mesh = Loader.createViaPath("models/playerColoured.fbx")
+            it.material = it.material.copy(
+                albedoTexture = Loader.createViaPath<Texture2D>("textures/playerUV.png")
+            )
         }
         gameObject.addComponent<MenuPlayerAnimation>()
         Scene.active.spawn(gameObject)
@@ -126,14 +120,35 @@ fun makeMainMenu() {
         }
     }*/
 
-    val startButton = makeButton("StartButton", "START", 100f) { loadDefaultScene() }
+    val titelImage = GameObject("TitleImage").also { gameObject ->
+        val windowUpdate = gameObject.addComponent<LeguiWindowUpdate>()
+        gameObject.addComponent<ImageComponent>().also {
+            it.texture = Loader.createViaPath<Texture2D>("textures/titleWithBG.png")
+            windowUpdate.logicalSize = {
+                it.logicalSize = Vector2f(1600f, 407f)
+
+                //it.logicalSize = Vector2f(Window.logicalSize.x() * 0.5f,(Window.logicalSize.x() * 0.5f) / 3.931f)
+            }
+            it.leguiComponent.style.border.isEnabled = false
+        }
+    }
+    Scene.active.spawn(titelImage)
+
+    val startButton = makeButton("StartButton", "START", { Window.logicalSize.y() * 0.3f }) { loadDefaultScene() }
     Scene.active.spawn(startButton)
 
-    val quitButton = makeButton("QuitButton", "QUIT", 520f) { close() }
+    val quitButton = makeButton("QuitButton", "QUIT", { Window.logicalSize.y() * 0.3f + 260f }) { close() } // 520f
     Scene.active.spawn(quitButton)
 
-    val optionsButton = makeButton("OptionsButton", "OPTIONS", 310f) { Scene.active.destroy(it.gameObject); Scene.active.destroy(startButton); Scene.active.destroy(quitButton); makeOptionsMenu() }
-    Scene.active.spawn(optionsButton)
+    val optionsButton = makeButton(
+        "OptionsButton",
+        "OPTIONS",
+        { Window.logicalSize.y() * 0.3f + 130f }) {
+        Scene.active.destroy(it.gameObject); Scene.active.destroy(
+        startButton
+    ); Scene.active.destroy(quitButton); makeOptionsMenu()
+    }
+    Scene.active.spawn(optionsButton)   // 310f
 }
 
 fun makeOptionsMenu() {
@@ -167,22 +182,29 @@ fun makeOptionsMenu() {
         Scene.active.spawn(gameObject)
     }
 
-    val backButton = makeButton("BackButton", "BACK", 500f) { Scene.active.destroy(it.gameObject); Scene.active.destroy(volume); Scene.active.destroy(multiSampling); makeMainMenu() }
+    val backButton = makeButton(
+        "BackButton",
+        "BACK",
+        { 500f }) {
+        Scene.active.destroy(it.gameObject); Scene.active.destroy(volume); Scene.active.destroy(
+        multiSampling
+    ); makeMainMenu()
+    }
     Scene.active.spawn(backButton)
 }
 
 
-fun makeButton(name: String, text: String, yPosition: Float, onPressedFunc: (self: Button) -> Unit) : GameObject {
-    return GameObject(name).also {gameObject ->
+fun makeButton(name: String, text: String, yPosition: () -> Float, onPressedFunc: (self: Button) -> Unit): GameObject {
+    return GameObject(name).also { gameObject ->
         val windowUpdate = gameObject.addComponent<LeguiWindowUpdate>()
         gameObject.addComponent<Button>().also {
             it.logicalFontSize = 42F
             it.text = text
             windowUpdate.logicalPosition = {
-                it.scaledPosition = Vector2f(Window.logicalSize.x() * 0.1f, yPosition)
+                it.scaledPosition = Vector2f(Window.logicalSize.x() * 0.1f, yPosition())
             }
-            it.leguiComponent.style.background.color = Vector4f(ColorPalette.ORANGE,0.7f)
-            it.leguiComponent.hoveredStyle.background.color = Vector4f(ColorPalette.BLUE,0.7f)
+            it.leguiComponent.style.background.color = Vector4f(ColorPalette.ORANGE, 0.7f)
+            it.leguiComponent.hoveredStyle.background.color = Vector4f(ColorPalette.BLUE, 0.7f)
             it.leguiComponent.style.setBorderRadius(10f)
             it.fontName = "Sugarpunch"
             it.leguiComponent.textState.textColor = Vector4f(ColorPalette.WHITE, 1f)
