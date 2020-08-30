@@ -53,7 +53,7 @@ object Window : Closeable, IFinalized {
 
     private val keyCallback = GLFWKeyCallbackI { _, key, _, action, _ ->
         if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
-            close()
+            //close()
         }
         Input.Keyboard.onKeyChanged(key, action)
     }
