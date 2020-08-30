@@ -24,8 +24,6 @@ class Player(var speed: Float = 8f) : Component() {
 
     var targetPosition = 0f
 
-    private val turnSpeed = 60f
-
     override fun start() {
         internalcollider = gameObject.getComponent()
         check(internalcollider != null) { "Player Component needs a Collider" }
@@ -56,7 +54,7 @@ class Player(var speed: Float = 8f) : Component() {
 
     private fun animateRotation() {
         val turnAmount = -collider.velocity.x() * .02f
-        val clampedTurnAmount = clamp(turnAmount, -PI / 4, PI / 4) * turnSpeed * Time.deltaTime
+        val clampedTurnAmount = clamp(turnAmount, -PI / 4, PI / 4) * Time.timeScale
         transform.rotation = Quaternionf()
             .rotateAxis(clampedTurnAmount + PI, Vector3fConst.up)
             .rotateAxis(sin(Time.time * 3f) * .1f, Vector3fConst.right)
