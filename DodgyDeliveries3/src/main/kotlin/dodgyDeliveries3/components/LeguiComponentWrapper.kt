@@ -7,7 +7,11 @@ import org.joml.Vector2f
 import org.joml.Vector2fc
 import org.joml.Vector2ic
 
-open class LeguiComponentWrapper<T>(leguiComponent: T, var onPressed: () -> Unit = {}, val onLayout: ((LeguiComponentWrapper<T>) -> Unit)? = null) : Component() where T : org.liquidengine.legui.component.Component {
+open class LeguiComponentWrapper<T>(
+    leguiComponent: T,
+    var onPressed: () -> Unit = {},
+    var onLayout: ((LeguiComponentWrapper<T>) -> Unit)? = null
+) : Component() where T : org.liquidengine.legui.component.Component {
     private var isEnabled: Boolean = false
     private var isAddedToScene: Boolean = false
     private var physicalSizeLastFrame: Vector2ic = Window.physicalSize
