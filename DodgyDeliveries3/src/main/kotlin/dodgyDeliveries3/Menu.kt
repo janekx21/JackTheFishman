@@ -67,6 +67,7 @@ fun loadMenu() {
                 albedoTexture = Loader.createViaPath<Texture2D>("textures/playerUV.png")
             )
         }
+        gameObject.addComponent<MenuPlayerAnimation>()
         Scene.active.spawn(gameObject)
     }
 
