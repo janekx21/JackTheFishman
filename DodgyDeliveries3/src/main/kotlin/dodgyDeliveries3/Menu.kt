@@ -415,10 +415,11 @@ fun makeCredits() {
 
 fun makeLogo(): Component {
     return ImageComponent().also { image ->
-        image.texture = Loader.createViaPath("textures/titleWithBG.png")
+        image.texture = Loader.createViaPath("textures/title.png")
         image.texture!!.makeLinear()
         image.leguiComponent.style.background.color = Vector4f(0f, 0f, 0f, 0f)
         image.leguiComponent.style.border.isEnabled = false
+        image.leguiComponent.style.shadow.color = Vector4f(0f, 0f, 0f, 0f)
         image.onLayout = {
             image.logicalSize = Vector2f(Window.logicalSize.x() * 0.5f, (Window.logicalSize.x() * 0.5f) / 3.931f)
             image.logicalPosition = Vector2f(Window.logicalSize.x() * 0.1f, Window.logicalSize.y() * 0.1f)
