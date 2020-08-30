@@ -22,6 +22,8 @@ fun loadDefaultScene() {
         Scene.active.destroy(gameObject)
     }
 
+    Window.disableCursor = true
+
     makePauseOpener()
 
     GameObject("Music").also { gameObject ->
@@ -127,6 +129,7 @@ fun makePauseOpener() {
     GameObject("Pause").also { gameObject ->
         gameObject.addComponent<EscapeHandler>().also {
             it.action = {
+                Window.disableCursor = false
                 Time.timeScale = 0f
                 makePauseMenu()
                 Scene.active.destroy(gameObject)
@@ -167,6 +170,7 @@ fun makePauseMenu() {
     GameObject("PauseMenu").also { gameObject ->
         gameObject.addComponent<EscapeHandler>().also {
             it.action = {
+                Window.disableCursor = true
                 Time.timeScale = 1f
                 makePauseOpener()
                 Scene.active.destroy(gameObject)
@@ -179,6 +183,7 @@ fun makePauseMenu() {
                 it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.35f, Window.logicalSize.y() * 0.2f)
                 it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
             }) {
+            Window.disableCursor = true
             Time.timeScale = 1f
             makePauseOpener()
             Scene.active.destroy(gameObject)
@@ -213,14 +218,12 @@ fun makePauseOptions() {
             }
         }
 
-
-
-
         gameObject.addComponent<Text>().also { text ->
             text.fontName = "Sugarpunch"
             text.leguiComponent.textState.horizontalAlign = HorizontalAlign.CENTER
             text.leguiComponent.textState.textColor = Vector4f(ColorPalette.WHITE, 1f)
             text.logicalFontSize = 25f
+            text.text = "VOLUME: " + "%.2f".format(Audio.Listener.gain)
             text.onLayout = {
                 it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.25f, Window.logicalSize.y() * 0.25f)
                 it.logicalSize = Vector2f(Window.logicalSize.x() * 0.5f, 0.1f)
@@ -242,7 +245,6 @@ fun makePauseOptions() {
             slider.leguiComponent.sliderActiveColor = Vector4f(ColorPalette.WHITE, 0.7f)
             slider.onChanged = { value ->
                 Audio.Listener.gain = value
-
                 gameObject.getComponent<Text>().text = "VOLUME: " + "%.2f".format(Audio.Listener.gain)
             }
         }
