@@ -63,8 +63,7 @@ object Window : Closeable, IFinalized {
                 )
             } else {
                 physicalSize = Vector2i(1280, 720)
-                glfwSetWindowMonitor(pointer, 0, 0, 0, physicalSize.x(), physicalSize.y(), GLFW_DONT_CARE)
-                glfwSetWindowPos(pointer, 100, 100)
+                glfwSetWindowMonitor(pointer, 0, 100, 100, physicalSize.x(), physicalSize.y(), GLFW_DONT_CARE)
             }
             field = value
         }
@@ -121,7 +120,6 @@ object Window : Closeable, IFinalized {
 
     private fun configGLFW() {
         glfwSetWindowSizeLimits(pointer, 1280, 720, GLFW_DONT_CARE, GLFW_DONT_CARE) // set only the minimum window size
-        //glfwSetWindowAspectRatio(pointer, 16, 9)
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE) // the window will stay hidden after creation
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE) // the window will be resizable
         multiSampleCount = 4

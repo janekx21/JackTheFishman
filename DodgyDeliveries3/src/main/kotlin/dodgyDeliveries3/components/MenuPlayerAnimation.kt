@@ -11,6 +11,5 @@ class MenuPlayerAnimation : Component() {
         transform.rotation = Quaternionf()
             .rotateY(Math.toRadians(-70.0).toFloat())
             .rotateAxis(sin(Time.time * 3f) * .1f, Vector3fConst.right)
-
     }
 }
