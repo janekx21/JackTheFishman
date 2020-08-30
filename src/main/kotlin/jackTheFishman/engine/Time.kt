@@ -16,9 +16,9 @@ object Time {
 
     var timeScale = 1f
 
-    fun update(deltaTime: Float) {
-        check(deltaTime >= 0f) { "Time can not flow in reverse" }
-        Time.deltaTime = deltaTime
-        time += deltaTime * timeScale
+    fun update(newDeltaTime: Float) {
+        check(newDeltaTime >= 0f) { "Time can not flow in reverse" }
+        deltaTime = newDeltaTime * timeScale
+        time += deltaTime
     }
 }

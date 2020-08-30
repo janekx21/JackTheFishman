@@ -2,8 +2,9 @@ package dodgyDeliveries3
 
 import dodgyDeliveries3.components.*
 import dodgyDeliveries3.util.ColorPalette
-import jackTheFishman.engine.Game
+import jackTheFishman.engine.Audio
 import jackTheFishman.engine.Loader
+import jackTheFishman.engine.Time
 import jackTheFishman.engine.Window
 import jackTheFishman.engine.audio.Sample
 import jackTheFishman.engine.graphics.Texture2D
@@ -11,7 +12,8 @@ import jackTheFishman.engine.math.Vector3fConst
 import jackTheFishman.engine.math.times
 import org.joml.Vector2f
 import org.joml.Vector3f
-import org.liquidengine.legui.component.Button
+import org.joml.Vector4f
+import org.liquidengine.legui.component.optional.align.HorizontalAlign
 import org.liquidengine.legui.style.font.FontRegistry
 
 fun loadDefaultScene() {
@@ -20,10 +22,7 @@ fun loadDefaultScene() {
         Scene.active.destroy(gameObject)
     }
 
-    GameObject("PauseController").also { gameObject ->
-        gameObject.addComponent<PauseController>()
-        Scene.active.spawn(gameObject)
-    }
+    makePauseOpener()
 
     GameObject("Music").also { gameObject ->
         gameObject.addComponent<Music>().also {
@@ -107,6 +106,19 @@ fun loadDefaultScene() {
     }
 }
 
+fun makePauseOpener() {
+    GameObject("Pause").also { gameObject ->
+        gameObject.addComponent<EscapeHandler>().also {
+            it.action = {
+                Time.timeScale = 0f
+                makePauseMenu()
+                Scene.active.destroy(gameObject)
+            }
+        }
+        Scene.active.spawn(gameObject)
+    }
+}
+
 fun makePlayer(): GameObject {
     return GameObject("Player").also { gameObject ->
         gameObject.addComponent<Transform>().also {
@@ -131,5 +143,97 @@ fun makePlayer(): GameObject {
             it.fontName = FontRegistry.ROBOTO_BOLD
             it.logicalPosition = Vector2f(8f, 13f)
         }
+    }
+}
+
+fun makePauseMenu() {
+    GameObject("PauseMenu").also { gameObject ->
+        gameObject.addComponent<EscapeHandler>().also {
+            it.action = {
+                Time.timeScale = 1f
+                makePauseOpener()
+                Scene.active.destroy(gameObject)
+            }
+        }
+
+        // Resumebutton
+        gameObject.addComponent(makeButton("RESUME",
+            {
+                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.35f, Window.logicalSize.y() * 0.2f)
+                it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
+            }) {
+            Time.timeScale = 1f
+            makePauseOpener()
+            Scene.active.destroy(gameObject)
+        })
+
+        // Optionsbutton
+        gameObject.addComponent(makeButton("OPTIONS",
+            {
+                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.35f, Window.logicalSize.y() * 0.2f + 130f)
+                it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
+            }) {
+            Scene.active.destroy(gameObject)
+            makePauseOptions()
+        })
+
+        // Quitbutton
+        gameObject.addComponent(makeButton("TO MAIN MENU",
+            {
+                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.35f, Window.logicalSize.y() * 0.2f + 260f)
+                it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
+            }) { Time.timeScale = 1f; loadMenu() })
+        Scene.active.spawn(gameObject)
+    }
+}
+
+fun makePauseOptions() {
+    GameObject("OptionsMenu").also { gameObject ->
+        gameObject.addComponent<EscapeHandler>().also {
+            it.action = {
+                Scene.active.destroy(gameObject)
+                makeMainMenu()
+            }
+        }
+
+        gameObject.addComponent<Text>().also { text ->
+            text.fontName = "Sugarpunch"
+            text.leguiComponent.textState.horizontalAlign = HorizontalAlign.CENTER
+            text.leguiComponent.textState.textColor = Vector4f(ColorPalette.WHITE, 1f)
+            text.logicalFontSize = 25f
+            text.onLayout = {
+                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.25f, Window.logicalSize.y() * 0.35f)
+                it.logicalSize = Vector2f(Window.logicalSize.x() * 0.5f, 0.1f)
+            }
+        }
+
+        // Volumeslider
+        gameObject.addComponent<Slider>().also { slider ->
+            slider.onLayout = {
+                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.35f, Window.logicalSize.y() * 0.35f)
+                it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
+            }
+            slider.leguiComponent.value = Audio.Listener.gain
+            slider.leguiComponent.minValue = 0f
+            slider.leguiComponent.maxValue = 1f
+            slider.leguiComponent.stepSize = 0.1f
+            slider.leguiComponent.sliderColor = Vector4f(ColorPalette.ORANGE, 1f)
+            slider.leguiComponent.sliderSize = 35f
+            slider.leguiComponent.sliderActiveColor = Vector4f(ColorPalette.WHITE, 0.7f)
+            slider.onChanged = { value ->
+                Audio.Listener.gain = value
+
+                gameObject.getComponent<Text>().text = "VOLUME: " + "%.2f".format(Audio.Listener.gain)
+            }
+        }
+
+        // BackButton
+        gameObject.addComponent(makeButton("BACK",
+            {
+                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.35f, Window.logicalSize.y() * 0.6f)
+                it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
+            }) { Scene.active.destroy(gameObject); makePauseMenu() })
+
+        Scene.active.spawn(gameObject)
     }
 }
