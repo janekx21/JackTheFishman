@@ -32,7 +32,8 @@ class Player(var speed: Float = 8f) : Component() {
     override fun update() {
         handleInput()
         applyVelocityChange()
-        animateRotation()
+        if (Time.timeScale != 0f)
+            animateRotation()
         animateYAxis()
         handleHealth()
     }
@@ -54,7 +55,7 @@ class Player(var speed: Float = 8f) : Component() {
 
     private fun animateRotation() {
         val turnAmount = -collider.velocity.x() * .02f
-        val clampedTurnAmount = clamp(turnAmount, -PI / 4, PI / 4) * Time.timeScale
+        val clampedTurnAmount = clamp(turnAmount, -PI / 4, PI / 4)
         transform.rotation = Quaternionf()
             .rotateAxis(clampedTurnAmount + PI, Vector3fConst.up)
             .rotateAxis(sin(Time.time * 3f) * .1f, Vector3fConst.right)
