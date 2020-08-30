@@ -39,8 +39,6 @@ class HealthIndicator : Component() {
             style.border.isEnabled = false
             style.shadow.color = Vector4f(0f, 0f, 0f, 0f)
         }
-        //it.scaledPosition = Vector2f(Window.logicalSize.x() - 10f, Window.logicalSize.y() - 10f)
-        it.logicalSize = Vector2f(100f, 100f)
         it.onLayout = {
             it.logicalSize = Vector2f(Window.logicalSize.x() * 0.1f, Window.logicalSize.x() * 0.1f)
             it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.05f, Window.logicalSize.y() * 0.05f)
