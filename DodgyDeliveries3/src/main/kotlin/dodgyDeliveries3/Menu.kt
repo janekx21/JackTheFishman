@@ -19,7 +19,7 @@ import java.net.URI
 
 fun loadMenu() {
 
-    for(gameObject in Scene.active.allGameObjects) {
+    for (gameObject in Scene.active.allGameObjects) {
         Scene.active.destroy(gameObject)
     }
 
@@ -38,7 +38,7 @@ fun loadMenu() {
 
     GameObject("Light").also { gameObject ->
         gameObject.addComponent<Transform>().apply {
-            position = Vector3f(0f,0f, -5f)
+            position = Vector3f(0f, 0f, -5f)
         }
         gameObject.addComponent<PointLight>().apply {
             color = Vector3f(ColorPalette.BLUE) * 2f
@@ -48,7 +48,7 @@ fun loadMenu() {
 
     GameObject("Light").also { gameObject ->
         gameObject.addComponent<Transform>().apply {
-            position = Vector3f(0f,0f, -1f)
+            position = Vector3f(0f, 0f, -1f)
         }
         gameObject.addComponent<PointLight>().apply {
             color = Vector3f(ColorPalette.ORANGE) * 2f
@@ -67,7 +67,6 @@ fun loadMenu() {
                 albedoTexture = Loader.createViaPath<Texture2D>("textures/playerUV.png")
             )
         }
-        gameObject.addComponent<MenuPlayerAnimation>()
         Scene.active.spawn(gameObject)
     }
 
@@ -161,7 +160,7 @@ fun makeMainMenu() {
                 {
                     it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.2f, Window.logicalSize.y() * 0.4f + 260f)
                     it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
-            }) { close() })
+                }) { close() })
 
         // Creditbutton (KrakulaLogo)
         gameObject.addComponent<ImageComponent>().also { image ->
@@ -413,7 +412,7 @@ fun makeCredits() {
     }
 }
 
-fun makeLogo() : Component {
+fun makeLogo(): Component {
     return ImageComponent().also { image ->
         image.texture = Loader.createViaPath("textures/titleWithBG.png")
         image.texture!!.makeLinear()
@@ -456,6 +455,3 @@ fun makeButton(
     }
 
 }
-
-
-
