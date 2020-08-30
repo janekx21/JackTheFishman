@@ -215,7 +215,102 @@ fun makeOptionsMenu() {
     Scene.active.spawn(backButton)
 }
 */
-fun makeCredits() {}/*
+
+fun makeCredits() {
+    GameObject("CreditMenu").also { gameObject ->
+        gameObject.addComponent<ImageComponent>().also { image ->
+            image.texture = Loader.createViaPath("textures/titleWithBG.png")
+            image.leguiComponent.style.background.color = Vector4f(0f, 0f, 0f, 0f)
+            image.leguiComponent.style.border.isEnabled = false
+            image.onLayout = {
+                image.logicalSize = Vector2f(Window.logicalSize.x() * 0.5f, (Window.logicalSize.x() * 0.5f) / 3.931f)
+                image.logicalPosition = Vector2f(Window.logicalSize.x() * 0.1f, Window.logicalSize.y() * 0.1f)
+            }
+        }
+
+        gameObject.addComponent(Text().also { text ->
+            text.text = "CREDITS"
+            text.fontName = "Sugarpunch"
+            text.leguiComponent.textState.textColor = Vector4f(ColorPalette.WHITE, 1f)
+            text.logicalFontSize = 42f
+            text.onLayout = {
+                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.25f, Window.logicalSize.y() * 0.4f)
+            }
+        })
+        gameObject.addComponent(Text().also { text ->
+            text.text = "ARNE SCHAUMBURG"
+            text.fontName = "Sugarpunch"
+            text.leguiComponent.textState.textColor = Vector4f(ColorPalette.ORANGE, 1f)
+            text.logicalFontSize = 36f
+            text.onLayout = {
+                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.25f, Window.logicalSize.y() * 0.4f + 50f)
+            }
+        })
+        gameObject.addComponent(Text().also { text ->
+            text.text = "BENNET MEIER"
+            text.fontName = "Sugarpunch"
+            text.leguiComponent.textState.textColor = Vector4f(ColorPalette.ORANGE, 1f)
+            text.logicalFontSize = 36f
+            text.onLayout = {
+                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.25f, Window.logicalSize.y() * 0.4f + 100f)
+            }
+        })
+        gameObject.addComponent(Text().also { text ->
+            text.text = "JANEK WINKLER"
+            text.fontName = "Sugarpunch"
+            text.leguiComponent.textState.textColor = Vector4f(ColorPalette.ORANGE, 1f)
+            text.logicalFontSize = 36f
+            text.onLayout = {
+                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.25f, Window.logicalSize.y() * 0.4f + 150f)
+            }
+        })
+        gameObject.addComponent(Text().also { text ->
+            text.text = "HANNES WINKLER"
+            text.fontName = "Sugarpunch"
+            text.leguiComponent.textState.textColor = Vector4f(ColorPalette.ORANGE, 1f)
+            text.logicalFontSize = 36f
+            text.onLayout = {
+                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.25f, Window.logicalSize.y() * 0.4f + 200f)
+            }
+        })
+
+        gameObject.addComponent<ImageComponent>().also { image ->
+            image.texture = Loader.createViaPath("textures/legui_logo.png")
+            image.leguiComponent.style.background.color = Vector4f(0f, 0f, 0f, 0f)
+            image.leguiComponent.style.border.isEnabled = false
+            image.leguiComponent.style.shadow.color = Vector4f(0f, 0f, 0f, 0f)
+            image.onLayout = {
+                image.logicalSize = Vector2f(200f, 50f)
+                image.logicalPosition = Vector2f(Window.logicalSize.x() * 0.6f, Window.logicalSize.y() * 0.6f)
+            }
+        }
+
+        gameObject.addComponent<ImageComponent>().also { image ->
+            image.texture = Loader.createViaPath("textures/klaxon_logo.png")
+            image.leguiComponent.style.background.color = Vector4f(0f, 0f, 0f, 0f)
+            image.leguiComponent.style.border.isEnabled = false
+            image.leguiComponent.style.shadow.color = Vector4f(0f, 0f, 0f, 0f)
+            image.onLayout = {
+                image.logicalSize = Vector2f(200f, 50f)
+                image.logicalPosition = Vector2f(Window.logicalSize.x() * 0.7f, Window.logicalSize.y() * 0.6f)
+            }
+        }
+
+        gameObject.addComponent<ImageComponent>().also { image ->
+            image.texture = Loader.createViaPath("textures/lwjgl_logo.png")
+            image.leguiComponent.style.background.color = Vector4f(0f, 0f, 0f, 0f)
+            image.leguiComponent.style.border.isEnabled = false
+            image.leguiComponent.style.shadow.color = Vector4f(0f, 0f, 0f, 0f)
+            image.onLayout = {
+                image.logicalSize = Vector2f(200f, 50f)
+                image.logicalPosition = Vector2f(Window.logicalSize.x() * 0.6f, Window.logicalSize.y() * 0.7f)
+            }
+        }
+
+        Scene.active.spawn(gameObject)
+    }
+
+}/*
     val titleText = GameObject("TitleText").also { gameObject ->
         val windowUpdate = gameObject.addComponent<LeguiWindowUpdate>()
         gameObject.addComponent(Text().also {
