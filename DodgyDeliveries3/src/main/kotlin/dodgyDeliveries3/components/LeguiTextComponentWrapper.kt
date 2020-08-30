@@ -4,7 +4,7 @@ import jackTheFishman.engine.Window
 import org.liquidengine.legui.component.Component
 import org.liquidengine.legui.component.TextComponent
 
-open class LeguiTextComponentWrapper<out T>(component: T) : LeguiComponentWrapper<T>(component) where T : Component, T : TextComponent {
+open class LeguiTextComponentWrapper<T>(component: T) : LeguiComponentWrapper<T>(component) where T : Component, T : TextComponent {
     var text: String
         get() = leguiComponent.textState.text
         set(value) {
