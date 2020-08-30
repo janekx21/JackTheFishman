@@ -143,7 +143,10 @@ fun makeMainMenu() {
             {
                 it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.2f, Window.logicalSize.y() * 0.4f)
                 it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
-            }) { Scene.active.destroy(gameObject); makeSelectLevelMenu() })
+            }) {
+            Scene.active.destroy(gameObject)
+            makeSelectLevelMenu()
+        })
 
         // Optionsbutton
         gameObject.addComponent(
@@ -152,7 +155,10 @@ fun makeMainMenu() {
                 {
                     it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.2f, Window.logicalSize.y() * 0.4f + 130f)
                     it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
-                }) { Scene.active.destroy(gameObject); makeOptionsMenu() })
+                }) {
+                Scene.active.destroy(gameObject)
+                makeOptionsMenu()
+            })
 
         // Quitbutton
         gameObject.addComponent(
@@ -176,7 +182,8 @@ fun makeMainMenu() {
                 )
             }
             image.onPressed = {
-                Scene.active.destroy(gameObject); makeCredits()
+                Scene.active.destroy(gameObject)
+                makeCredits()
             }
         }
 
@@ -272,7 +279,10 @@ fun makeSelectLevelMenu() {
             {
                 it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.2f, Window.logicalSize.y() * 0.4f)
                 it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
-            }) { Scene.active.destroy(gameObject); loadDefaultScene() })
+            }) {
+            Scene.active.destroy(gameObject)
+            loadDefaultScene()
+        })
 
         // LEVEL 2
         gameObject.addComponent(makeButton("LEVEL 2",
@@ -432,7 +442,10 @@ fun makeBackButton(gameObject: GameObject, yPosition: () -> Float): Component {
         {
             it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.2f, yPosition())
             it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
-        }) { Scene.active.destroy(gameObject); makeMainMenu() }
+        }) {
+        Scene.active.destroy(gameObject)
+        makeMainMenu()
+    }
 }
 
 fun makeButton(

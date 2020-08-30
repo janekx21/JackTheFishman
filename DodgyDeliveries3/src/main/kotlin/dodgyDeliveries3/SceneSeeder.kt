@@ -204,7 +204,10 @@ fun makePauseMenu() {
             {
                 it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.35f, Window.logicalSize.y() * 0.2f + 260f)
                 it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
-            }) { Time.timeScale = 1f; loadMenu() })
+            }) {
+            Time.timeScale = 1f
+            loadMenu()
+        })
         Scene.active.spawn(gameObject)
     }
 }
@@ -260,7 +263,10 @@ fun makePauseOptions() {
             {
                 it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.35f, Window.logicalSize.y() * 0.45f + 130f)
                 it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
-            }) { Scene.active.destroy(gameObject); makePauseMenu() })
+            }) {
+            Scene.active.destroy(gameObject)
+            makePauseMenu()
+        })
 
         Scene.active.spawn(gameObject)
     }
