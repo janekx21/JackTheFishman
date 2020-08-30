@@ -4,6 +4,7 @@ import dodgyDeliveries3.Component
 import dodgyDeliveries3.GameObject
 import dodgyDeliveries3.Scene
 import jackTheFishman.engine.Loader
+import jackTheFishman.engine.Window
 import jackTheFishman.engine.graphics.Texture2D
 import org.joml.Vector2f
 import org.joml.Vector4f
@@ -38,8 +39,12 @@ class HealthIndicator : Component() {
             style.border.isEnabled = false
             style.shadow.color = Vector4f(0f, 0f, 0f, 0f)
         }
-        it.scaledPosition = Vector2f(8f, 8f)
+        it.scaledPosition = Vector2f(Window.logicalSize.x() - 10f, Window.logicalSize.y() - 10f)
         it.logicalSize = Vector2f(100f, 100f)
+        //it.onLayout = {
+         //   it.logicalSize = Vector2f(Window.logicalSize.x() * 0.5f, (Window.logicalSize.x() * 0.5f) / 3.931f)
+          //  it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.1f, Window.logicalSize.y() * 0.1f)
+        //}
     }
 
     override fun setOrigin(origin: GameObject) {
