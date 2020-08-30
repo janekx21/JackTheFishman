@@ -3,7 +3,6 @@ package dodgyDeliveries3
 import dodgyDeliveries3.components.*
 import dodgyDeliveries3.util.ColorPalette
 import jackTheFishman.engine.Audio
-import jackTheFishman.engine.Game
 import jackTheFishman.engine.Loader
 import jackTheFishman.engine.Window
 import jackTheFishman.engine.Window.close
@@ -63,7 +62,12 @@ fun loadMenu() {
         gameObject.addComponent<ModelRenderer>().also {
             it.mesh = Loader.createViaPath("models/playerColoured.fbx")
             it.material = it.material.copy(
-                albedoTexture = Loader.createViaPath<Texture2D>("textures/playerUV.png")
+                albedoTexture = Loader.createViaPath<Texture2D>("textures/player/AlbedoMap.png"),
+                specularTexture = Loader.createViaPath<Texture2D>("textures/player/SpecularMap.png"),
+                normalTexture = Loader.createViaPath<Texture2D>("textures/player/NormalMap.png"),
+                normalIntensity = .1f,
+                specularRoughness = 10f,
+                ambientColor = Vector3f(.3f, .3f, .3f)
             )
         }
         gameObject.addComponent<MenuPlayerAnimation>()

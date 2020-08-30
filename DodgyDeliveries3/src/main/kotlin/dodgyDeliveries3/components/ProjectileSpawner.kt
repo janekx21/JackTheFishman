@@ -67,7 +67,7 @@ class ProjectileSpawner(var timer: Float = 0f, var type: Type = Type.STANDARD) :
                 transform.scale = Vector3fConst.one * 0.2f
             }
             it.addComponent<ModelRenderer>().apply {
-                material = material.copy(emissionColor = ColorPalette.RED)
+                material = material.copy(emissionColor = ColorPalette.RED * 1.5f)
                 mesh = Loader.createViaPath("models/projectiles/standardenemyprojectile.fbx")
             }
             it.addComponent<CircleCollider>().apply {
@@ -91,7 +91,7 @@ class ProjectileSpawner(var timer: Float = 0f, var type: Type = Type.STANDARD) :
                 transform.scale = Vector3fConst.one * 0.5f
             }
             it.addComponent<ModelRenderer>().apply {
-                material = material.copy(emissionColor = ColorPalette.YELLOW)
+                material = material.copy(emissionColor = ColorPalette.YELLOW * 1.5f)
                 mesh = Loader.createViaPath("models/projectiles/hammerheadprojectile.fbx")
             }
             it.addComponent<CircleCollider>().apply {
@@ -116,7 +116,10 @@ class ProjectileSpawner(var timer: Float = 0f, var type: Type = Type.STANDARD) :
             }
             it.addComponent<ModelRenderer>().apply {
                 mesh = Loader.createViaPath("models/sphere.fbx")
-                material = material.copy(albedoColor = ColorPalette.BLUE, emissionColor = ColorPalette.BLUE)
+                material = material.copy(
+                    albedoColor = ColorPalette.BLUE,
+                    emissionColor = ColorPalette.BLUE * 1.5f
+                )
             }
             it.addComponent<CircleCollider>().apply {
                 velocity = Vector2fConst.up * 4f

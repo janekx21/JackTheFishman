@@ -2,16 +2,13 @@ package dodgyDeliveries3
 
 import dodgyDeliveries3.components.*
 import dodgyDeliveries3.util.ColorPalette
-import jackTheFishman.engine.Game
 import jackTheFishman.engine.Loader
-import jackTheFishman.engine.Window
 import jackTheFishman.engine.audio.Sample
 import jackTheFishman.engine.graphics.Texture2D
 import jackTheFishman.engine.math.Vector3fConst
 import jackTheFishman.engine.math.times
 import org.joml.Vector2f
 import org.joml.Vector3f
-import org.liquidengine.legui.component.Button
 import org.liquidengine.legui.style.font.FontRegistry
 
 fun loadDefaultScene() {
@@ -115,7 +112,11 @@ fun makePlayer(): GameObject {
         gameObject.addComponent<ModelRenderer>().also {
             it.mesh = Loader.createViaPath("models/playerColoured.fbx")
             it.material = it.material.copy(
-                albedoTexture = Loader.createViaPath<Texture2D>("textures/playerUV.png")
+                albedoTexture = Loader.createViaPath<Texture2D>("textures/player/AlbedoMap.png"),
+                specularTexture = Loader.createViaPath<Texture2D>("textures/player/SpecularMap.png"),
+                normalTexture = Loader.createViaPath<Texture2D>("textures/player/NormalMap.png"),
+                normalIntensity = .1f,
+                specularRoughness = 10f
             )
         }
         gameObject.addComponent<CircleCollider>().also {
