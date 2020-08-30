@@ -24,7 +24,7 @@ class Player(var speed: Float = 8f) : Component() {
 
     var targetPosition = 0f
 
-    private val turnSpeed = 1f
+    private val turnSpeed = 60f
 
     override fun start() {
         internalcollider = gameObject.getComponent()
