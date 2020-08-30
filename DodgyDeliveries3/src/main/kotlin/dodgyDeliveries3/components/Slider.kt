@@ -13,6 +13,7 @@ open class Slider(var onChanged: (value: Float) -> Unit = {}) : LeguiComponentWr
     private var lastValue = 0f
 
     override fun update() {
+        super.update()
         if(leguiComponent.value != lastValue) {
             onChanged(leguiComponent.value)
             lastValue = leguiComponent.value

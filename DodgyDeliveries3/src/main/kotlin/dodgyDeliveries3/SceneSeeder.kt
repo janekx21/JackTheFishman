@@ -37,6 +37,23 @@ fun loadDefaultScene() {
     val player = makePlayer()
     Scene.active.spawn(player)
 
+    GameObject("PlayerBox").also { gameObject ->
+        gameObject.addComponent<Transform>().also {
+            it.scale = Vector3fConst.one * .23f
+            it.parent = player.transform
+            it.position = Vector3f(0f, .73f, -.63f)
+        }
+        gameObject.addComponent<ModelRenderer>().also {
+            it.mesh = Loader.createViaPath("models/box.fbx")
+            val texture: Texture2D = Loader.createViaPath("textures/boxAlbedo.jpg")
+            texture.makeLinear()
+            it.material = it.material.copy(
+                albedoTexture = texture
+            )
+        }
+        Scene.active.spawn(gameObject)
+    }
+
     GameObject("Enemy Spawner").also { gameObject ->
         gameObject.addComponent<EnemySpawner>()
         Scene.active.spawn(gameObject)
@@ -196,13 +213,16 @@ fun makePauseOptions() {
             }
         }
 
+
+
+
         gameObject.addComponent<Text>().also { text ->
             text.fontName = "Sugarpunch"
             text.leguiComponent.textState.horizontalAlign = HorizontalAlign.CENTER
             text.leguiComponent.textState.textColor = Vector4f(ColorPalette.WHITE, 1f)
             text.logicalFontSize = 25f
             text.onLayout = {
-                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.25f, Window.logicalSize.y() * 0.35f)
+                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.25f, Window.logicalSize.y() * 0.25f)
                 it.logicalSize = Vector2f(Window.logicalSize.x() * 0.5f, 0.1f)
             }
         }
@@ -210,7 +230,7 @@ fun makePauseOptions() {
         // Volumeslider
         gameObject.addComponent<Slider>().also { slider ->
             slider.onLayout = {
-                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.35f, Window.logicalSize.y() * 0.35f)
+                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.35f, Window.logicalSize.y() * 0.25f)
                 it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
             }
             slider.leguiComponent.value = Audio.Listener.gain
@@ -227,10 +247,16 @@ fun makePauseOptions() {
             }
         }
 
+        gameObject.addComponent(makeButton("FULLSCREEN TOGGLE",
+            {
+                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.35f, Window.logicalSize.y() * 0.45f)
+                it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
+            }) { Window.fullscreen = !Window.fullscreen })
+
         // BackButton
         gameObject.addComponent(makeButton("BACK",
             {
-                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.35f, Window.logicalSize.y() * 0.6f)
+                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.35f, Window.logicalSize.y() * 0.45f + 130f)
                 it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
             }) { Scene.active.destroy(gameObject); makePauseMenu() })
 

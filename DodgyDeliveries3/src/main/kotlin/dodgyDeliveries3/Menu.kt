@@ -79,8 +79,10 @@ fun loadMenu() {
         }
         gameObject.addComponent<ModelRenderer>().also {
             it.mesh = Loader.createViaPath("models/box.fbx")
+            val texture: Texture2D = Loader.createViaPath("textures/boxAlbedo.jpg")
+            texture.makeLinear()
             it.material = it.material.copy(
-                albedoTexture = Loader.createViaPath<Texture2D>("textures/boxAlbedo.jpg")
+                albedoTexture = texture
             )
         }
         Scene.active.spawn(gameObject)
@@ -163,7 +165,9 @@ fun makeMainMenu() {
 
         // Creditbutton (KrakulaLogo)
         gameObject.addComponent<ImageComponent>().also { image ->
-            image.texture = Loader.createViaPath<Texture2D>("textures/krakula-xl.png")
+            val texture: Texture2D = Loader.createViaPath("textures/krakula-xl.png")
+            texture.makeLinear()
+            image.texture = texture
             image.onLayout = {
                 it.logicalSize = Vector2f(Window.logicalSize.x() * 0.1f, Window.logicalSize.x() * 0.1f)
                 it.logicalPosition = Vector2f(
@@ -202,12 +206,15 @@ fun makeOptionsMenu() {
             }
         }
 
+        gameObject.addComponent(makeButton("FULLSCREEN TOGGLE",
+            {
+                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.2f, Window.logicalSize.y() * 0.6f)
+                it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
+            }) { Window.fullscreen = !Window.fullscreen })
+
+
         // Volumeslider
         gameObject.addComponent<Slider>().also { slider ->
-            slider.onLayout = {
-                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.2f, Window.logicalSize.y() * 0.45f)
-                it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
-            }
             slider.leguiComponent.value = Audio.Listener.gain
             slider.leguiComponent.minValue = 0f
             slider.leguiComponent.maxValue = 1f
@@ -217,14 +224,19 @@ fun makeOptionsMenu() {
             slider.leguiComponent.sliderActiveColor = Vector4f(ColorPalette.WHITE, 0.7f)
             slider.onChanged = { value ->
                 Audio.Listener.gain = value
-
                 gameObject.getComponent<Text>().text = "VOLUME: " + "%.2f".format(Audio.Listener.gain)
+            }
+            slider.onLayout = {
+                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.2f, Window.logicalSize.y() * 0.45f)
+                it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
             }
         }
 
         // KrakulaLogo
         gameObject.addComponent<ImageComponent>().also { image ->
-            image.texture = Loader.createViaPath<Texture2D>("textures/krakula-xl.png")
+            val texture: Texture2D = Loader.createViaPath("textures/krakula-xl.png")
+            texture.makeLinear()
+            image.texture = texture
             image.onLayout = {
                 it.logicalSize = Vector2f(Window.logicalSize.x() * 0.1f, Window.logicalSize.x() * 0.1f)
                 it.logicalPosition = Vector2f(
@@ -242,6 +254,7 @@ fun makeOptionsMenu() {
 
 
 }
+
 
 fun makeSelectLevelMenu() {
     GameObject("OptionsMenu").also { gameObject ->
@@ -273,7 +286,9 @@ fun makeSelectLevelMenu() {
 
         // KrakulaLogo
         gameObject.addComponent<ImageComponent>().also { image ->
-            image.texture = Loader.createViaPath<Texture2D>("textures/krakula-xl.png")
+            val texture: Texture2D = Loader.createViaPath("textures/krakula-xl.png")
+            texture.makeLinear()
+            image.texture = texture
             image.onLayout = {
                 it.logicalSize = Vector2f(Window.logicalSize.x() * 0.1f, Window.logicalSize.x() * 0.1f)
                 it.logicalPosition = Vector2f(

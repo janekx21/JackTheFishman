@@ -37,6 +37,28 @@ object Window : Closeable, IFinalized {
             glfwWindowHint(GLFW_SAMPLES, value)
         }
 
+    var fullscreen = false
+        set(value) {
+            if (value) {
+                val mode = glfwGetVideoMode(glfwGetPrimaryMonitor())
+                checkNotNull(mode)
+                glfwSetWindowMonitor(
+                    pointer,
+                    glfwGetPrimaryMonitor(),
+                    0,
+                    0,
+                    mode.width(),
+                    mode.height(),
+                    GLFW_DONT_CARE
+                )
+            } else {
+                physicalSize = Vector2i(1280, 720)
+                glfwSetWindowMonitor(pointer, 0, 0, 0, physicalSize.x(), physicalSize.y(), GLFW_DONT_CARE)
+                glfwSetWindowPos(pointer, 100, 100)
+            }
+            field = value
+        }
+
     val aspect: Float
         get() = physicalSize.x().toFloat() / physicalSize.y().toFloat()
 
@@ -52,9 +74,9 @@ object Window : Closeable, IFinalized {
     private var lastTime = 0.0
 
     private val keyCallback = GLFWKeyCallbackI { _, key, _, action, _ ->
-        if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
-            //close()
-        }
+        /*if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+            close()
+        }*/
         Input.Keyboard.onKeyChanged(key, action)
     }
 
