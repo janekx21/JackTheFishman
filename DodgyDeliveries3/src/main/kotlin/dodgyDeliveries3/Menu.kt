@@ -73,9 +73,9 @@ fun loadMenu() {
 
     GameObject("PlayerBox").also { gameObject ->
         gameObject.addComponent<Transform>().also {
-            it.scale = Vector3fConst.one * .8f
+            it.scale = Vector3fConst.one * .23f
             it.parent = player.transform
-            it.position = Vector3f(2f, -0.5f, -0.1f)
+            it.position = Vector3f(0f, .73f, -.63f)
         }
         gameObject.addComponent<ModelRenderer>().also {
             it.mesh = Loader.createViaPath("models/box.fbx")

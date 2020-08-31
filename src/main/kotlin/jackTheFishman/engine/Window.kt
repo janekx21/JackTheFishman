@@ -37,16 +37,6 @@ object Window : Closeable, IFinalized {
             glfwWindowHint(GLFW_SAMPLES, value)
         }
 
-    var disableCursor = false
-        set(value) {
-            if (value) {
-                glfwSetInputMode(pointer, GLFW_CURSOR, GLFW_CURSOR_HIDDEN)
-            } else {
-                glfwSetInputMode(pointer, GLFW_CURSOR, GLFW_CURSOR_NORMAL)
-            }
-            field = value
-        }
-
     var fullscreen = false
         set(value) {
             if (value) {
@@ -83,9 +73,6 @@ object Window : Closeable, IFinalized {
     private var lastTime = 0.0
 
     private val keyCallback = GLFWKeyCallbackI { _, key, _, action, _ ->
-        /*if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
-            close()
-        }*/
         Input.Keyboard.onKeyChanged(key, action)
     }
 

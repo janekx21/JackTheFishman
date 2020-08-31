@@ -2,10 +2,8 @@ package dodgyDeliveries3
 
 import dodgyDeliveries3.components.*
 import dodgyDeliveries3.util.ColorPalette
+import jackTheFishman.engine.*
 import jackTheFishman.engine.Audio
-import jackTheFishman.engine.Loader
-import jackTheFishman.engine.Time
-import jackTheFishman.engine.Window
 import jackTheFishman.engine.audio.Sample
 import jackTheFishman.engine.graphics.Texture2D
 import jackTheFishman.engine.math.Vector3fConst
@@ -22,7 +20,7 @@ fun loadDefaultScene() {
         Scene.active.destroy(gameObject)
     }
 
-    Window.disableCursor = true
+    Input.Mouse.setMode(Input.Mouse.CursorMode.HIDDEN)
 
     makePauseOpener()
 
@@ -129,7 +127,7 @@ fun makePauseOpener() {
     GameObject("Pause").also { gameObject ->
         gameObject.addComponent<EscapeHandler>().also {
             it.action = {
-                Window.disableCursor = false
+                Input.Mouse.setMode(Input.Mouse.CursorMode.NORMAL)
                 Time.timeScale = 0f
                 makePauseMenu()
                 Scene.active.destroy(gameObject)
@@ -170,7 +168,7 @@ fun makePauseMenu() {
     GameObject("PauseMenu").also { gameObject ->
         gameObject.addComponent<EscapeHandler>().also {
             it.action = {
-                Window.disableCursor = true
+                Input.Mouse.setMode(Input.Mouse.CursorMode.HIDDEN)
                 Time.timeScale = 1f
                 makePauseOpener()
                 Scene.active.destroy(gameObject)
@@ -183,7 +181,7 @@ fun makePauseMenu() {
                 it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.35f, Window.logicalSize.y() * 0.2f)
                 it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
             }) {
-            Window.disableCursor = true
+            Input.Mouse.setMode(Input.Mouse.CursorMode.HIDDEN)
             Time.timeScale = 1f
             makePauseOpener()
             Scene.active.destroy(gameObject)
