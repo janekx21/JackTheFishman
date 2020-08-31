@@ -64,7 +64,12 @@ fun loadMenu() {
         gameObject.addComponent<ModelRenderer>().also {
             it.mesh = Loader.createViaPath("models/playerColoured.fbx")
             it.material = it.material.copy(
-                albedoTexture = Loader.createViaPath<Texture2D>("textures/playerUV.png")
+                albedoTexture = Loader.createViaPath<Texture2D>("textures/player/AlbedoMap.png"),
+                specularTexture = Loader.createViaPath<Texture2D>("textures/player/SpecularMap.png"),
+                normalTexture = Loader.createViaPath<Texture2D>("textures/player/NormalMap.png"),
+                normalIntensity = .1f,
+                specularRoughness = 10f,
+                ambientColor = Vector3f(.3f, .3f, .3f)
             )
         }
         gameObject.addComponent<MenuPlayerAnimation>()

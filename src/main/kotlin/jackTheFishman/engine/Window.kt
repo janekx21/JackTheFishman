@@ -13,6 +13,7 @@ import org.lwjgl.glfw.GLFWImage
 import org.lwjgl.glfw.GLFWKeyCallbackI
 import org.lwjgl.glfw.GLFWWindowCloseCallbackI
 import org.lwjgl.opengl.GL.createCapabilities
+import org.lwjgl.opengl.GL11.GL_BLEND
 import org.lwjgl.opengl.GL46
 import org.lwjgl.opengl.GL46.GL_DEPTH_TEST
 import org.lwjgl.opengl.GL46.glEnable
@@ -119,6 +120,7 @@ object Window : Closeable, IFinalized {
     }
 
     private fun configOpenGL() {
+        glEnable(GL_BLEND)
         glEnable(GL_DEPTH_TEST)
     }
 
