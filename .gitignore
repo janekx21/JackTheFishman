@@ -64,3 +64,4 @@ libraries/tools/kotlin-source-map-loader/lib/
 local.properties
 .idea/misc.xml
 .idea/codeStyles/Project.xml
+**/logs/*.log
