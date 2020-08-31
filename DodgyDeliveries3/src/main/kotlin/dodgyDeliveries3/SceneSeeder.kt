@@ -122,6 +122,12 @@ fun loadDefaultScene() {
         }
         Scene.active.spawn(gameObject)
     }
+
+    GameObject("HealthIndicator").also { gameObject ->
+        gameObject.addComponent<HealthIndicator>()
+
+        Scene.active.spawn(gameObject)
+    }
 }
 
 fun makePauseOpener() {
