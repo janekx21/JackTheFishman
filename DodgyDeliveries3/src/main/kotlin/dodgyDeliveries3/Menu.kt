@@ -25,6 +25,14 @@ fun loadMenu() {
 
     FontRegistry.registerFont("Sugarpunch", "dodgyDeliveries3/fonts/Sugarpunch.otf")
 
+    GameObject("Main Menu Music").also { gameObject ->
+        gameObject.addComponent<Music>().also {
+            it.sample = Loader.createViaPath("music/mainMenuMusic.ogg")
+            it.play()
+        }
+        Scene.active.spawn(gameObject)
+    }
+
     GameObject("Camera").also { gameObject ->
         gameObject.addComponent<Transform>().apply {
             position = Vector3f(0f, 0f, 2f)

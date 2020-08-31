@@ -22,7 +22,7 @@ class Music : Component(), IPlayable {
     val secondsPerBeat: Float
         get() = 60f / bpm
 
-    private var source = Source()
+    private var source = Source().also { it.looping = true }
 
     override fun play() = source.play()
     override fun pause() = source.pause()
