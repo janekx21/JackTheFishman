@@ -293,20 +293,25 @@ fun makeSelectLevelMenu() {
             {
                 it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.2f, Window.logicalSize.y() * 0.4f)
                 it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
-            }) {
-            Scene.active.destroy(gameObject)
-            loadDefaultScene()
-        })
+            }, {
+                Scene.active.destroy(gameObject)
+                loadDefaultScene(Difficulty.EASY)
+            })
+        )
 
         // LEVEL 2
         gameObject.addComponent(makeButton("LEVEL 2",
             {
                 it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.2f, Window.logicalSize.y() * 0.4f + 130f)
                 it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
-            }) { })
+            }, {
+                Scene.active.destroy(gameObject)
+                loadDefaultScene(Difficulty.HARD)
+            })
+        )
 
         // BackButton
-        gameObject.addComponent(makeBackButton( Window.logicalSize.y() * 0.4f + 260f))
+        gameObject.addComponent(makeBackButton(Window.logicalSize.y() * 0.4f + 260f))
 
         // KrakulaLogo
         gameObject.addComponent<ImageComponent>().also { image ->

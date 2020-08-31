@@ -6,10 +6,10 @@ import jackTheFishman.engine.Input
 import jackTheFishman.engine.math.times
 import org.joml.Vector3f
 
-fun loadDefaultScene() {
+fun loadDefaultScene(difficulty: Difficulty) {
     removeAllGameObjects()
     config()
-    makeDefaultScene().forEach { Scene.active.spawn(it) }
+    makeDefaultScene(difficulty).forEach { Scene.active.spawn(it) }
 }
 
 fun removeAllGameObjects() {
@@ -22,14 +22,25 @@ fun config() {
     Input.Mouse.setMode(Input.Mouse.CursorMode.HIDDEN)
 }
 
-fun makeDefaultScene(): Array<GameObject> {
+fun makeDefaultScene(difficulty: Difficulty): Array<GameObject> {
     val (player, box) = makePlayerWithBox()
+
+    val track = when (difficulty) {
+        Difficulty.EASY -> makeTrack1()
+        Difficulty.HARD -> makeTrack2()
+    }
+
+    val enemySpawner = when (difficulty) {
+        Difficulty.EASY -> makeEasyEnemySpawner()
+        Difficulty.HARD -> makeHardEnemySpawner()
+    }
+
     return arrayOf(
         makePauseMenuOpener(),
-        makeTrack1(),
+        track,
         player,
         box,
-        makeEnemySpawner(),
+        enemySpawner,
         makeTunnel(50f),
         makeTunnel(-50f),
         makeCamera(player.transform),

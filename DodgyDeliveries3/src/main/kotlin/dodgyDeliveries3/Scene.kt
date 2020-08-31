@@ -54,7 +54,6 @@ private class SceneContactListener : org.jbox2d.callbacks.ContactListener {
 }
 
 data class Scene(val allGameObjects: ArrayList<GameObject> = arrayListOf()) {
-
     private val gameObjectsToSpawn: ArrayList<GameObject> = arrayListOf()
     private val gameObjectsToDestroy: ArrayList<GameObject> = arrayListOf()
 
@@ -127,8 +126,7 @@ data class Scene(val allGameObjects: ArrayList<GameObject> = arrayListOf()) {
     }
 
     fun findViaName(name: String): GameObject? {
-        val gameObject = allGameObjects.find { it.name == name }
-        return gameObject
+        return allGameObjects.find { it.name == name }
     }
 
     fun find(predicate: (GameObject) -> Boolean): GameObject? {
