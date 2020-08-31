@@ -20,7 +20,7 @@ fun loadDefaultScene() {
         Scene.active.destroy(gameObject)
     }
 
-    Input.Mouse.setMode(Input.Mouse.CursorMode.HIDDEN)
+    Input.Mouse.setMode(Input.Mouse.CursorMode.DISABLED)
 
     makePauseOpener()
 
@@ -168,7 +168,7 @@ fun makePauseMenu() {
     GameObject("PauseMenu").also { gameObject ->
         gameObject.addComponent<EscapeHandler>().also {
             it.action = {
-                Input.Mouse.setMode(Input.Mouse.CursorMode.HIDDEN)
+                Input.Mouse.setMode(Input.Mouse.CursorMode.DISABLED)
                 Time.timeScale = 1f
                 makePauseOpener()
                 Scene.active.destroy(gameObject)
@@ -181,7 +181,7 @@ fun makePauseMenu() {
                 it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.35f, Window.logicalSize.y() * 0.2f)
                 it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
             }) {
-            Input.Mouse.setMode(Input.Mouse.CursorMode.HIDDEN)
+            Input.Mouse.setMode(Input.Mouse.CursorMode.DISABLED)
             Time.timeScale = 1f
             makePauseOpener()
             Scene.active.destroy(gameObject)
