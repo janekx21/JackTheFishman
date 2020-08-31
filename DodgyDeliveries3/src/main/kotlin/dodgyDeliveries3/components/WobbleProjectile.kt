@@ -8,6 +8,9 @@ import kotlin.math.sin
 
 class WobbleProjectile : Projectile() {
     private var internalCollider: Collider? = null
+
+    var speed = 20f
+
     val collider: Collider
         get() {
             check(internalCollider != null)
@@ -22,6 +25,6 @@ class WobbleProjectile : Projectile() {
     override fun update() {
         super.update()
 
-        collider.velocity = collider.velocity + Vector2fConst.right * sin(Time.time * 10f) * .2f
+        collider.velocity = Vector2fConst.right * sin(Time.time * 30f) * 5f + Vector2fConst.up * speed
     }
 }

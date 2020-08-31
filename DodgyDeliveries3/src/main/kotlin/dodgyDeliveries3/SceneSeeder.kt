@@ -37,6 +37,22 @@ fun loadDefaultScene() {
     val player = makePlayer()
     Scene.active.spawn(player)
 
+    GameObject("Grid").also { gameObject ->
+        gameObject.addComponent<Transform>().also {
+            it.scale = it.scale * 1.4f
+            it.position = Vector3f(0f, -0.5f, -3.5f)
+        }
+        gameObject.addComponent<ModelRenderer>().also {
+            it.mesh = Loader.createViaPath("models/grid.fbx")
+            it.material = it.material.copy(
+                albedoColor = ColorPalette.ORANGE,
+                emissionColor = Vector3f(102f, 51f, 0f) * (1f / 255f)
+            )
+        }
+
+        Scene.active.spawn(gameObject)
+    }
+
     GameObject("PlayerBox").also { gameObject ->
         gameObject.addComponent<Transform>().also {
             it.scale = Vector3fConst.one * .23f
@@ -161,6 +177,8 @@ fun makePlayer(): GameObject {
             it.fontName = FontRegistry.ROBOTO_BOLD
             it.logicalPosition = Vector2f(8f, 13f)
         }
+        gameObject.addComponent<dodgyDeliveries3.components.Audio>().also {
+        }
     }
 }
 
@@ -215,7 +233,7 @@ fun makePauseOptions() {
         gameObject.addComponent<EscapeHandler>().also {
             it.action = {
                 Scene.active.destroy(gameObject)
-                makeMainMenu()
+                makePauseMenu()
             }
         }
 

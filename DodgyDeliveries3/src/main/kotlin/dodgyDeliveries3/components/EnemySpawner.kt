@@ -17,7 +17,7 @@ import kotlin.random.asKotlinRandom
 
 class EnemySpawner : Component() {
     var timer = 0f
-    var spawnInterval = 6f
+    var spawnInterval = 4f
     private val random = Random().asKotlinRandom()
 
     override fun update() {
@@ -115,7 +115,7 @@ class EnemySpawner : Component() {
             }
             gameObject.addComponent<ProjectileSpawner>().also {
                 it.timer = timeOffset
-                it.projectilesPerSecond = .2f
+                it.projectilesPerSecond = .5f
             }
             gameObject.addComponent<EnemyCommander>().also {
                 it.speed = .6f
