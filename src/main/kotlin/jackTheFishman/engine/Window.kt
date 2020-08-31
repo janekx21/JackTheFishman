@@ -27,9 +27,36 @@ object Window : Closeable, IFinalized {
     private const val MAX_DELTA_TIME = .1f // translates to 10fps
     private const val title = "Jack the Fishman Framework"
 
-    var physicalSize: Vector2ic = Vector2i(640, 480)
+    var physicalSize: Vector2ic = Vector2i(1280, 720)
 
     var shouldClose = false
+
+    var multiSampleCount = 1
+        set(value) {
+            field = value
+            glfwWindowHint(GLFW_SAMPLES, value)
+        }
+
+    var fullscreen = false
+        set(value) {
+            if (value) {
+                val mode = glfwGetVideoMode(glfwGetPrimaryMonitor())
+                checkNotNull(mode)
+                glfwSetWindowMonitor(
+                    pointer,
+                    glfwGetPrimaryMonitor(),
+                    0,
+                    0,
+                    mode.width(),
+                    mode.height(),
+                    GLFW_DONT_CARE
+                )
+            } else {
+                physicalSize = Vector2i(1280, 720)
+                glfwSetWindowMonitor(pointer, 0, 100, 100, physicalSize.x(), physicalSize.y(), GLFW_DONT_CARE)
+            }
+            field = value
+        }
 
     val aspect: Float
         get() = physicalSize.x().toFloat() / physicalSize.y().toFloat()
@@ -46,9 +73,6 @@ object Window : Closeable, IFinalized {
     private var lastTime = 0.0
 
     private val keyCallback = GLFWKeyCallbackI { _, key, _, action, _ ->
-        if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
-            close()
-        }
         Input.Keyboard.onKeyChanged(key, action)
     }
 
@@ -82,9 +106,10 @@ object Window : Closeable, IFinalized {
     }
 
     private fun configGLFW() {
-        glfwSetWindowSizeLimits(pointer, 640, 480, GLFW_DONT_CARE, GLFW_DONT_CARE) // set only the minimum window size
+        glfwSetWindowSizeLimits(pointer, 1280, 720, GLFW_DONT_CARE, GLFW_DONT_CARE) // set only the minimum window size
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE) // the window will stay hidden after creation
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE) // the window will be resizable
+        multiSampleCount = 4
         glfwSwapInterval(1)
 
         val x = FloatPointer()
@@ -122,7 +147,7 @@ object Window : Closeable, IFinalized {
     }
 
     private fun updateTime() {
-        glfwGetTime().also {time ->
+        glfwGetTime().also { time ->
             // when the window should close the time jumps to 0
             if (time > 0.0) {
                 val deltaTime = (time - lastTime).toFloat()

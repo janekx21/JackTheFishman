@@ -69,6 +69,12 @@ object Audio : IFinalized {
                 field = value
             }
 
+        var gain: Float = 1f
+            set(value) {
+                alListenerf(AL_GAIN, value)
+                field = value
+            }
+
         var rotation: Quaternionfc = Quaternionf()
             set(value) {
                 val direction = Vector3f(Vector3fConst.forward) // default direction
