@@ -45,9 +45,6 @@ fun makeDefaultScene(difficulty: Difficulty): Array<GameObject> {
         makeTunnel(-50f),
         makeCamera(player.transform),
         makeLight(Vector3f(0f, 0f, 0f), Vector3f(ColorPalette.BLUE) * 2f),
-        makeLight(Vector3f(0f, 0f, 10f), Vector3f(ColorPalette.ORANGE)),
-        GameObject("HealthIndicator").also { gameObject ->
-            // gameObject.addComponent<HealthIndicator>()
-        }
+        makeLight(Vector3f(0f, 0f, 10f), Vector3f(ColorPalette.ORANGE))
     )
 }
