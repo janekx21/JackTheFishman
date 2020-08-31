@@ -268,7 +268,7 @@ fun makeOptionsMenu() {
         }
 
         // BackButton
-        gameObject.addComponent(makeBackButton(gameObject) { Window.logicalSize.y() * 0.8f })
+        gameObject.addComponent(makeBackButton(Window.logicalSize.y() * 0.8f))
 
         Scene.active.spawn(gameObject)
     }
@@ -306,7 +306,7 @@ fun makeSelectLevelMenu() {
             }) { })
 
         // BackButton
-        gameObject.addComponent(makeBackButton(gameObject) { Window.logicalSize.y() * 0.4f + 260f })
+        gameObject.addComponent(makeBackButton( Window.logicalSize.y() * 0.4f + 260f))
 
         // KrakulaLogo
         gameObject.addComponent<ImageComponent>().also { image ->
@@ -417,7 +417,7 @@ fun makeCredits() {
 
         // Creditbutton
         gameObject.addComponent<ImageComponent>().also { image ->
-            image.texture = Loader.createViaPath<Texture2D>("textures/krakula-xl.png")
+            image.texture = Loader.createViaPath("textures/krakula-xl.png")
             image.onSizeChange = {
                 it.logicalSize = Vector2f(Window.logicalSize.x() * 0.1f, Window.logicalSize.x() * 0.1f)
                 it.logicalPosition = Vector2f(
@@ -431,7 +431,7 @@ fun makeCredits() {
         }
 
         // BackButton
-        gameObject.addComponent(makeBackButton(gameObject) { Window.logicalSize.y() * 0.8f })
+        gameObject.addComponent(makeBackButton(Window.logicalSize.y() * 0.8f))
 
         Scene.active.spawn(gameObject)
     }
@@ -451,15 +451,15 @@ fun makeLogo(): Component {
     }
 }
 
-fun makeBackButton(gameObject: GameObject, yPosition: () -> Float): Component {
+fun makeBackButton(yPosition: Float): Component {
     return makeButton("BACK",
         {
-            it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.2f, yPosition())
+            it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.2f, yPosition)
             it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
-        }) {
-        Scene.active.destroy(gameObject)
-        makeMainMenu()
-    }
+        }, {
+            Scene.active.destroy(it.gameObject)
+            makeMainMenu()
+        })
 }
 
 fun makeButton(
