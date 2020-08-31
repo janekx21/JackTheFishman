@@ -1,6 +1,5 @@
 package dodgyDeliveries3
 
-import dodgyDeliveries3.components.EnemySpawner
 import dodgyDeliveries3.prefabs.*
 import dodgyDeliveries3.util.ColorPalette
 import jackTheFishman.engine.Input
@@ -30,9 +29,7 @@ fun makeDefaultScene(): Array<GameObject> {
         makeTrack1(),
         player,
         box,
-        GameObject("Enemy Spawner").also { gameObject ->
-            gameObject.addComponent<EnemySpawner>()
-        },
+        makeEnemySpawner(),
         makeTunnel(50f),
         makeTunnel(-50f),
         makeCamera(player.transform),

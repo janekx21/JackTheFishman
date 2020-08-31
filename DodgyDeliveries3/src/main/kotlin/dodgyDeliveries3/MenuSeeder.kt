@@ -18,12 +18,9 @@ import java.awt.Desktop
 import java.net.URI
 
 fun loadMenu() {
+    removeAllGameObjects()
 
-    for (gameObject in Scene.active.allGameObjects) {
-        Scene.active.destroy(gameObject)
-    }
-
-    FontRegistry.registerFont("Sugarpunch", "dodgyDeliveries3/fonts/Sugarpunch.otf")
+    configFont()
 
     GameObject("Main Menu Music").also { gameObject ->
         gameObject.addComponent<Music>().also {
@@ -139,6 +136,10 @@ fun loadMenu() {
     }
 
     makeMainMenu()
+}
+
+fun configFont() {
+    FontRegistry.registerFont("Sugarpunch", "dodgyDeliveries3/fonts/Sugarpunch.otf")
 }
 
 fun makeMainMenu() {
