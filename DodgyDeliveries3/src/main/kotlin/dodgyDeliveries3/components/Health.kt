@@ -5,11 +5,9 @@ import kotlin.math.max
 import kotlin.math.min
 
 class Health(var maxHp: Float = 3f, var hp: Float = maxHp) : Component() {
+
     val alive: Boolean
         get() = hp > 0f
-
-    val percentage: Float
-        get() = hp / maxHp
 
     fun applyDamage(amount: Float) {
         if (alive) {
