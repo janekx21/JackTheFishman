@@ -1,0 +1,60 @@
+package dodgyDeliveries3.prefabs
+
+import dodgyDeliveries3.GameObject
+import dodgyDeliveries3.components.*
+import jackTheFishman.engine.Loader
+import jackTheFishman.engine.graphics.Texture2D
+import jackTheFishman.engine.math.Vector3fConst
+import jackTheFishman.engine.math.times
+import org.joml.Vector2f
+import org.joml.Vector3f
+import org.liquidengine.legui.style.font.FontRegistry
+
+fun makePlayerWithBox(): Pair<GameObject, GameObject> {
+    val player = GameObject("Player").also { gameObject ->
+        gameObject.addComponent<Transform>().also {
+            it.scale = Vector3fConst.one * .8f
+        }
+        gameObject.addComponent<ModelRenderer>().also {
+            it.mesh = Loader.createViaPath("models/playerColoured.fbx")
+            it.material = it.material.copy(
+                albedoTexture = Loader.createViaPath<Texture2D>("textures/player/AlbedoMap.png"),
+                specularTexture = Loader.createViaPath<Texture2D>("textures/player/SpecularMap.png"),
+                normalTexture = Loader.createViaPath<Texture2D>("textures/player/NormalMap.png"),
+                normalIntensity = .1f,
+                specularRoughness = 10f
+            )
+        }
+        gameObject.addComponent<CircleCollider>().also {
+            it.radius = .5f
+        }
+        gameObject.addComponent<Health>().also {
+            it.hp = 10f
+            it.maxHp = 10f
+        }
+        gameObject.addComponent<Player>()
+        gameObject.addComponent<HpText>().also {
+            it.logicalFontSize = 32F
+            it.fontName = FontRegistry.ROBOTO_BOLD
+            it.logicalPosition = Vector2f(8f, 13f)
+        }
+    }
+
+    val box = GameObject("Player Box").also { gameObject ->
+        gameObject.addComponent<Transform>().also {
+            it.scale = Vector3fConst.one * .23f
+            it.parent = player.transform
+            it.position = Vector3f(0f, .73f, -.63f)
+        }
+        gameObject.addComponent<ModelRenderer>().also {
+            it.mesh = Loader.createViaPath("models/box.fbx")
+            val texture: Texture2D = Loader.createViaPath("textures/boxAlbedo.jpg")
+            texture.makeLinear()
+            it.material = it.material.copy(
+                albedoTexture = texture
+            )
+        }
+    }
+
+    return Pair(player, box)
+}

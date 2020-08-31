@@ -187,7 +187,7 @@ fun makeMainMenu() {
             val texture: Texture2D = Loader.createViaPath("textures/krakula-xl.png")
             texture.makeLinear()
             image.texture = texture
-            image.onLayout = {
+            image.onSizeChange = {
                 it.logicalSize = Vector2f(Window.logicalSize.x() * 0.1f, Window.logicalSize.x() * 0.1f)
                 it.logicalPosition = Vector2f(
                     Window.logicalSize.x() * 0.88f,
@@ -220,7 +220,7 @@ fun makeOptionsMenu() {
             text.leguiComponent.textState.horizontalAlign = HorizontalAlign.CENTER
             text.leguiComponent.textState.textColor = Vector4f(ColorPalette.WHITE, 1f)
             text.logicalFontSize = 25f
-            text.onLayout = {
+            text.onSizeChange = {
                 it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.1f, Window.logicalSize.y() * 0.45f)
                 it.logicalSize = Vector2f(Window.logicalSize.x() * 0.5f, 0.1f)
             }
@@ -246,7 +246,7 @@ fun makeOptionsMenu() {
                 Audio.Listener.gain = value
                 gameObject.getComponent<Text>().text = "VOLUME: " + "%.2f".format(Audio.Listener.gain)
             }
-            slider.onLayout = {
+            slider.onSizeChange = {
                 it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.2f, Window.logicalSize.y() * 0.45f)
                 it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
             }
@@ -257,7 +257,7 @@ fun makeOptionsMenu() {
             val texture: Texture2D = Loader.createViaPath("textures/krakula-xl.png")
             texture.makeLinear()
             image.texture = texture
-            image.onLayout = {
+            image.onSizeChange = {
                 it.logicalSize = Vector2f(Window.logicalSize.x() * 0.1f, Window.logicalSize.x() * 0.1f)
                 it.logicalPosition = Vector2f(
                     Window.logicalSize.x() * 0.88f,
@@ -312,7 +312,7 @@ fun makeSelectLevelMenu() {
             val texture: Texture2D = Loader.createViaPath("textures/krakula-xl.png")
             texture.makeLinear()
             image.texture = texture
-            image.onLayout = {
+            image.onSizeChange = {
                 it.logicalSize = Vector2f(Window.logicalSize.x() * 0.1f, Window.logicalSize.x() * 0.1f)
                 it.logicalPosition = Vector2f(
                     Window.logicalSize.x() * 0.88f,
@@ -344,7 +344,7 @@ fun makeCredits() {
             image.leguiComponent.style.background.color = Vector4f(0f, 0f, 0f, 0f)
             image.leguiComponent.style.border.isEnabled = false
             image.leguiComponent.style.shadow.color = Vector4f(0f, 0f, 0f, 0f)
-            image.onLayout = {
+            image.onSizeChange = {
                 it.logicalSize = Vector2f(Window.logicalSize.x() * 0.55f, (Window.logicalSize.x() * 0.55f) / 3.72f)
                 it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.075f, Window.logicalSize.y() * 0.35f)
             }
@@ -357,7 +357,7 @@ fun makeCredits() {
             image.leguiComponent.style.background.color = Vector4f(0f, 0f, 0f, 0f)
             image.leguiComponent.style.border.isEnabled = false
             image.leguiComponent.style.shadow.color = Vector4f(0f, 0f, 0f, 0f)
-            image.onLayout = {
+            image.onSizeChange = {
                 it.logicalSize = Vector2f(Window.logicalSize.x() * 0.1f, (Window.logicalSize.x() * 0.1f) / 2.77f)
                 it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.075f, Window.logicalSize.y() * 0.65f)
             }
@@ -373,7 +373,7 @@ fun makeCredits() {
             image.leguiComponent.style.background.color = Vector4f(0f, 0f, 0f, 0f)
             image.leguiComponent.style.border.isEnabled = false
             image.leguiComponent.style.shadow.color = Vector4f(0f, 0f, 0f, 0f)
-            image.onLayout = {
+            image.onSizeChange = {
                 it.logicalSize = Vector2f(Window.logicalSize.x() * 0.1f, (Window.logicalSize.x() * 0.1f) / 2.77f)
                 it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.225f, Window.logicalSize.y() * 0.65f)
             }
@@ -389,7 +389,7 @@ fun makeCredits() {
             image.leguiComponent.style.background.color = Vector4f(0f, 0f, 0f, 0f)
             image.leguiComponent.style.border.isEnabled = false
             image.leguiComponent.style.shadow.color = Vector4f(0f, 0f, 0f, 0f)
-            image.onLayout = {
+            image.onSizeChange = {
                 it.logicalSize = Vector2f(Window.logicalSize.x() * 0.1f, (Window.logicalSize.x() * 0.1f) / 2.77f)
                 it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.375f, Window.logicalSize.y() * 0.65f)
             }
@@ -405,7 +405,7 @@ fun makeCredits() {
             image.leguiComponent.style.background.color = Vector4f(0f, 0f, 0f, 0f)
             image.leguiComponent.style.border.isEnabled = false
             image.leguiComponent.style.shadow.color = Vector4f(0f, 0f, 0f, 0f)
-            image.onLayout = {
+            image.onSizeChange = {
                 it.logicalSize = Vector2f(Window.logicalSize.x() * 0.1f, (Window.logicalSize.x() * 0.1f) / 2.77f)
                 it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.525f, Window.logicalSize.y() * 0.65f)
             }
@@ -417,7 +417,7 @@ fun makeCredits() {
         // Creditbutton
         gameObject.addComponent<ImageComponent>().also { image ->
             image.texture = Loader.createViaPath<Texture2D>("textures/krakula-xl.png")
-            image.onLayout = {
+            image.onSizeChange = {
                 it.logicalSize = Vector2f(Window.logicalSize.x() * 0.1f, Window.logicalSize.x() * 0.1f)
                 it.logicalPosition = Vector2f(
                     Window.logicalSize.x() * 0.88f,
@@ -443,7 +443,7 @@ fun makeLogo(): Component {
         image.leguiComponent.style.background.color = Vector4f(0f, 0f, 0f, 0f)
         image.leguiComponent.style.border.isEnabled = false
         image.leguiComponent.style.shadow.color = Vector4f(0f, 0f, 0f, 0f)
-        image.onLayout = {
+        image.onSizeChange = {
             image.logicalSize = Vector2f(Window.logicalSize.x() * 0.5f, (Window.logicalSize.x() * 0.5f) / 3.931f)
             image.logicalPosition = Vector2f(Window.logicalSize.x() * 0.1f, Window.logicalSize.y() * 0.1f)
         }
@@ -463,14 +463,14 @@ fun makeBackButton(gameObject: GameObject, yPosition: () -> Float): Component {
 
 fun makeButton(
     text: String,
-    onLayout: (self: Button) -> Unit,
-    onPressedFunc: (self: Button) -> Unit
+    onSizeChange: (self: Button) -> Unit,
+    onClick: (self: Button) -> Unit
 ): Component {
     return Button().also { button ->
         button.logicalFontSize = 42F
         button.text = text
-        button.onLayout = {
-            onLayout(button)
+        button.onSizeChange = {
+            onSizeChange(button)
         }
         button.leguiComponent.style.background.color = Vector4f(ColorPalette.ORANGE, 0.7f)
         button.leguiComponent.hoveredStyle.background.color = Vector4f(ColorPalette.BLUE, 0.7f)
@@ -478,8 +478,7 @@ fun makeButton(
         button.fontName = "Sugarpunch"
         button.leguiComponent.textState.textColor = Vector4f(ColorPalette.WHITE, 1f)
         button.onPressed = {
-            onPressedFunc(button)
+            onClick(button)
         }
     }
-
 }
