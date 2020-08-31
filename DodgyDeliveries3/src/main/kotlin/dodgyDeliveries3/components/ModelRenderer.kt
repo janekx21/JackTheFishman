@@ -101,7 +101,7 @@ data class ModelRenderer(var mesh: Mesh? = null, var material: Material = defaul
                 .5f,
                 40f,
                 .3f,
-                Vector3f(.1f, .1f, .1f),
+                Vector3f(.2f, .2f, .2f),
                 Vector3fConst.one,
                 null,
                 null,
