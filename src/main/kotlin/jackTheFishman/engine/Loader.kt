@@ -2,6 +2,7 @@ package jackTheFishman.engine
 
 import jackTheFishman.engine.util.ICreateViaPath
 import java.io.File
+import kotlin.math.absoluteValue
 import kotlin.reflect.full.companionObjectInstance
 
 /**
@@ -20,11 +21,24 @@ object Loader {
     val loadedObjects = mutableMapOf<String, Any>()
 
     fun resourceFileViaPath(path: String): File {
+        checkFileResourceExists(path)
+        return File(wrapResourceInTempFile(path))
+    }
+
+    private fun checkFileResourceExists(path: String) {
         val pathWithRoot = File(rootPath).resolve(path)
         val resource = ClassLoader.getSystemResource(pathWithRoot.invariantSeparatorsPath)
         check(resource != null) { "resource at $path not found. root is $rootPath" }
-        val resourcePath = resource.path
-        return File(resourcePath)
+    }
+
+    private fun wrapResourceInTempFile(path: String): String {
+        val pathWithRoot = File(rootPath).resolve(path)
+        val hash = path.hashCode()
+        val tempFile = File.createTempFile("resource_${hash.absoluteValue}", ".${pathWithRoot.extension}")
+        val stream = ClassLoader.getSystemResourceAsStream(pathWithRoot.invariantSeparatorsPath)
+        checkNotNull(stream) { "File stream could not be opened to resource at $path" }
+        tempFile.writeBytes(stream.readAllBytes())
+        return tempFile.path
     }
 
     @Deprecated("because its symbol is ugly. Replace with `createViaPath<T>(path)`.")
@@ -35,10 +49,10 @@ object Loader {
     }
 
     inline fun <reified T> createViaPath(path: String): T where T : Any {
-        val instance= loadedObjects.getOrPut(path) {
+        val instance = loadedObjects.getOrPut(path) {
             val file = resourceFileViaPath(path)
             check(file.exists()) { "file not found ${file.path}" }
-            val possibleFactory= T::class.companionObjectInstance
+            val possibleFactory = T::class.companionObjectInstance
             check(possibleFactory != null) { "Class dose not define a companionObject" }
             check(possibleFactory is ICreateViaPath<*>) { "companionObject dose not implement ICreateViaPath" }
             @Suppress("UNCHECKED_CAST") val factory = possibleFactory as ICreateViaPath<T>
