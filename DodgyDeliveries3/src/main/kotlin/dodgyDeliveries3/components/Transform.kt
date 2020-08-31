@@ -24,16 +24,16 @@ data class Transform(
         if (hash == getMatrixHash()) {
             return cached
         }
-        val matrix = Matrix4f().translate(position).scale(scale).rotate(rotation)
         hash = getMatrixHash()
+        val matrix = Matrix4f()
         return if (parent != null) {
-            matrix.mul(parent!!.generateMatrix())
+            matrix.mul(parent!!.generateMatrix()).translate(position).scale(scale).rotate(rotation)
         } else {
-            matrix
+            matrix.translate(position).scale(scale).rotate(rotation)
         }.also { cached.set(matrix) }
     }
 
     fun getMatrixHash(): Int {
-        return position.hashCode() + rotation.hashCode() + scale.hashCode()
+        return position.hashCode() + rotation.hashCode() + scale.hashCode() + if (parent != null) parent!!.getMatrixHash() else 0
     }
 }
