@@ -14,7 +14,7 @@ import java.io.Closeable
 class ImageFile(path: String) : Closeable {
     private val width = IntPointer()
     private val height = IntPointer()
-    val channels = IntPointer()
+    private val channels = IntPointer()
 
     init {
         stbi_set_flip_vertically_on_load(true)
@@ -23,7 +23,7 @@ class ImageFile(path: String) : Closeable {
     private val possiblyData = STBImage.stbi_load(path, width.buffer, height.buffer, channels.buffer, 4)
 
     init {
-        check(possiblyData != null) { "image could not be loaded at path: $path" }
+        check(possiblyData != null) { "Image could not be loaded at path: $path" }
     }
 
     val data = possiblyData!!

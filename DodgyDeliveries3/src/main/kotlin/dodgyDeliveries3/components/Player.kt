@@ -32,7 +32,8 @@ class Player(var speed: Float = 8f) : Component() {
     override fun update() {
         handleInput()
         applyVelocityChange()
-        animateRotation()
+        if (Time.timeScale != 0f)
+            animateRotation()
         animateYAxis()
         handleHealth()
     }

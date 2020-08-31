@@ -38,6 +38,27 @@ object Window : Closeable, IFinalized {
             glfwWindowHint(GLFW_SAMPLES, value)
         }
 
+    var fullscreen = false
+        set(value) {
+            if (value) {
+                val mode = glfwGetVideoMode(glfwGetPrimaryMonitor())
+                checkNotNull(mode)
+                glfwSetWindowMonitor(
+                    pointer,
+                    glfwGetPrimaryMonitor(),
+                    0,
+                    0,
+                    mode.width(),
+                    mode.height(),
+                    GLFW_DONT_CARE
+                )
+            } else {
+                physicalSize = Vector2i(1280, 720)
+                glfwSetWindowMonitor(pointer, 0, 100, 100, physicalSize.x(), physicalSize.y(), GLFW_DONT_CARE)
+            }
+            field = value
+        }
+
     val aspect: Float
         get() = physicalSize.x().toFloat() / physicalSize.y().toFloat()
 
@@ -53,9 +74,6 @@ object Window : Closeable, IFinalized {
     private var lastTime = 0.0
 
     private val keyCallback = GLFWKeyCallbackI { _, key, _, action, _ ->
-        if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
-            //close()
-        }
         Input.Keyboard.onKeyChanged(key, action)
     }
 
@@ -90,7 +108,6 @@ object Window : Closeable, IFinalized {
 
     private fun configGLFW() {
         glfwSetWindowSizeLimits(pointer, 1280, 720, GLFW_DONT_CARE, GLFW_DONT_CARE) // set only the minimum window size
-        //glfwSetWindowAspectRatio(pointer, 16, 9)
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE) // the window will stay hidden after creation
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE) // the window will be resizable
         multiSampleCount = 4

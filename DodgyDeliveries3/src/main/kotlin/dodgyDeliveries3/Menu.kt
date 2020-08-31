@@ -14,10 +14,12 @@ import org.joml.Vector3f
 import org.joml.Vector4f
 import org.liquidengine.legui.component.optional.align.HorizontalAlign
 import org.liquidengine.legui.style.font.FontRegistry
+import java.awt.Desktop
+import java.net.URI
 
 fun loadMenu() {
 
-    for(gameObject in Scene.active.allGameObjects) {
+    for (gameObject in Scene.active.allGameObjects) {
         Scene.active.destroy(gameObject)
     }
 
@@ -36,7 +38,7 @@ fun loadMenu() {
 
     GameObject("Light").also { gameObject ->
         gameObject.addComponent<Transform>().apply {
-            position = Vector3f(0f,0f, -5f)
+            position = Vector3f(0f, 0f, -5f)
         }
         gameObject.addComponent<PointLight>().apply {
             color = Vector3f(ColorPalette.BLUE) * 2f
@@ -46,7 +48,7 @@ fun loadMenu() {
 
     GameObject("Light").also { gameObject ->
         gameObject.addComponent<Transform>().apply {
-            position = Vector3f(0f,0f, -1f)
+            position = Vector3f(0f, 0f, -1f)
         }
         gameObject.addComponent<PointLight>().apply {
             color = Vector3f(ColorPalette.ORANGE) * 2f
@@ -54,10 +56,10 @@ fun loadMenu() {
         Scene.active.spawn(gameObject)
     }
 
-    GameObject("Player").also { gameObject ->
+    val player = GameObject("Player").also { gameObject ->
         gameObject.addComponent<Transform>().also {
             it.scale = Vector3fConst.one * .8f
-            it.position = Vector3f(2f,-0.5f,-0.1f)
+            it.position = Vector3f(2f, -0.5f, -0.1f)
         }
         gameObject.addComponent<ModelRenderer>().also {
             it.mesh = Loader.createViaPath("models/playerColoured.fbx")
@@ -71,6 +73,23 @@ fun loadMenu() {
             )
         }
         gameObject.addComponent<MenuPlayerAnimation>()
+        Scene.active.spawn(gameObject)
+    }
+
+    GameObject("PlayerBox").also { gameObject ->
+        gameObject.addComponent<Transform>().also {
+            it.scale = Vector3fConst.one * .23f
+            it.parent = player.transform
+            it.position = Vector3f(0f, .73f, -.63f)
+        }
+        gameObject.addComponent<ModelRenderer>().also {
+            it.mesh = Loader.createViaPath("models/box.fbx")
+            val texture: Texture2D = Loader.createViaPath("textures/boxAlbedo.jpg")
+            texture.makeLinear()
+            it.material = it.material.copy(
+                albedoTexture = texture
+            )
+        }
         Scene.active.spawn(gameObject)
     }
 
@@ -118,26 +137,274 @@ fun makeMainMenu() {
     GameObject("MainMenu").also { gameObject ->
         gameObject.addComponent(makeLogo())
 
+        gameObject.addComponent<EscapeHandler>().also {
+            it.action = {
+                close()
+            }
+        }
+
         // Startbutton
         gameObject.addComponent(makeButton("START",
             {
                 it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.2f, Window.logicalSize.y() * 0.4f)
                 it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
-            }) { loadDefaultScene() })
+            }) {
+            Scene.active.destroy(gameObject)
+            makeSelectLevelMenu()
+        })
 
         // Optionsbutton
-        gameObject.addComponent(makeButton("OPTIONS",
+        gameObject.addComponent(
+            makeButton(
+                "OPTIONS",
+                {
+                    it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.2f, Window.logicalSize.y() * 0.4f + 130f)
+                    it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
+                }) {
+                Scene.active.destroy(gameObject)
+                makeOptionsMenu()
+            })
+
+        // Quitbutton
+        gameObject.addComponent(
+            makeButton(
+                "QUIT",
+                {
+                    it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.2f, Window.logicalSize.y() * 0.4f + 260f)
+                    it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
+                }) { close() })
+
+        // Creditbutton (KrakulaLogo)
+        gameObject.addComponent<ImageComponent>().also { image ->
+            val texture: Texture2D = Loader.createViaPath("textures/krakula-xl.png")
+            texture.makeLinear()
+            image.texture = texture
+            image.onLayout = {
+                it.logicalSize = Vector2f(Window.logicalSize.x() * 0.1f, Window.logicalSize.x() * 0.1f)
+                it.logicalPosition = Vector2f(
+                    Window.logicalSize.x() * 0.88f,
+                    Window.logicalSize.y() - (Window.logicalSize.x() - (Window.logicalSize.x() * 0.88f))
+                )
+            }
+            image.onPressed = {
+                Scene.active.destroy(gameObject)
+                makeCredits()
+            }
+        }
+
+        Scene.active.spawn(gameObject)
+    }
+}
+
+fun makeOptionsMenu() {
+    GameObject("OptionsMenu").also { gameObject ->
+        gameObject.addComponent(makeLogo())
+
+        gameObject.addComponent<EscapeHandler>().also {
+            it.action = {
+                Scene.active.destroy(gameObject)
+                makeMainMenu()
+            }
+        }
+
+        gameObject.addComponent<Text>().also { text ->
+            text.fontName = "Sugarpunch"
+            text.leguiComponent.textState.horizontalAlign = HorizontalAlign.CENTER
+            text.leguiComponent.textState.textColor = Vector4f(ColorPalette.WHITE, 1f)
+            text.logicalFontSize = 25f
+            text.onLayout = {
+                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.1f, Window.logicalSize.y() * 0.45f)
+                it.logicalSize = Vector2f(Window.logicalSize.x() * 0.5f, 0.1f)
+            }
+        }
+
+        gameObject.addComponent(makeButton("FULLSCREEN TOGGLE",
+            {
+                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.2f, Window.logicalSize.y() * 0.6f)
+                it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
+            }) { Window.fullscreen = !Window.fullscreen })
+
+
+        // Volumeslider
+        gameObject.addComponent<Slider>().also { slider ->
+            slider.leguiComponent.value = Audio.Listener.gain
+            slider.leguiComponent.minValue = 0f
+            slider.leguiComponent.maxValue = 1f
+            slider.leguiComponent.stepSize = 0.1f
+            slider.leguiComponent.sliderColor = Vector4f(ColorPalette.ORANGE, 1f)
+            slider.leguiComponent.sliderSize = 35f
+            slider.leguiComponent.sliderActiveColor = Vector4f(ColorPalette.WHITE, 0.7f)
+            slider.onChanged = { value ->
+                Audio.Listener.gain = value
+                gameObject.getComponent<Text>().text = "VOLUME: " + "%.2f".format(Audio.Listener.gain)
+            }
+            slider.onLayout = {
+                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.2f, Window.logicalSize.y() * 0.45f)
+                it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
+            }
+        }
+
+        // KrakulaLogo
+        gameObject.addComponent<ImageComponent>().also { image ->
+            val texture: Texture2D = Loader.createViaPath("textures/krakula-xl.png")
+            texture.makeLinear()
+            image.texture = texture
+            image.onLayout = {
+                it.logicalSize = Vector2f(Window.logicalSize.x() * 0.1f, Window.logicalSize.x() * 0.1f)
+                it.logicalPosition = Vector2f(
+                    Window.logicalSize.x() * 0.88f,
+                    Window.logicalSize.y() - (Window.logicalSize.x() - (Window.logicalSize.x() * 0.88f))
+                )
+            }
+        }
+
+        // BackButton
+        gameObject.addComponent(makeBackButton(gameObject) { Window.logicalSize.y() * 0.8f })
+
+        Scene.active.spawn(gameObject)
+    }
+
+
+}
+
+
+fun makeSelectLevelMenu() {
+    GameObject("OptionsMenu").also { gameObject ->
+        gameObject.addComponent(makeLogo())
+
+        gameObject.addComponent<EscapeHandler>().also {
+            it.action = {
+                Scene.active.destroy(gameObject)
+                makeMainMenu()
+            }
+        }
+
+        // LEVEL 1
+        gameObject.addComponent(makeButton("LEVEL 1",
+            {
+                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.2f, Window.logicalSize.y() * 0.4f)
+                it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
+            }) {
+            Scene.active.destroy(gameObject)
+            loadDefaultScene()
+        })
+
+        // LEVEL 2
+        gameObject.addComponent(makeButton("LEVEL 2",
             {
                 it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.2f, Window.logicalSize.y() * 0.4f + 130f)
                 it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
-            }) { Scene.active.destroy(gameObject); makeOptionsMenu() })
+            }) { })
 
-        // Quitbutton
-        gameObject.addComponent(makeButton("QUIT",
-            {
-                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.2f, Window.logicalSize.y() * 0.4f + 260f)
-                it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
-            }) { close() })
+        // BackButton
+        gameObject.addComponent(makeBackButton(gameObject) { Window.logicalSize.y() * 0.4f + 260f })
+
+        // KrakulaLogo
+        gameObject.addComponent<ImageComponent>().also { image ->
+            val texture: Texture2D = Loader.createViaPath("textures/krakula-xl.png")
+            texture.makeLinear()
+            image.texture = texture
+            image.onLayout = {
+                it.logicalSize = Vector2f(Window.logicalSize.x() * 0.1f, Window.logicalSize.x() * 0.1f)
+                it.logicalPosition = Vector2f(
+                    Window.logicalSize.x() * 0.88f,
+                    Window.logicalSize.y() - (Window.logicalSize.x() - (Window.logicalSize.x() * 0.88f))
+                )
+            }
+        }
+
+        Scene.active.spawn(gameObject)
+    }
+
+}
+
+fun makeCredits() {
+    GameObject("CreditMenu").also { gameObject ->
+        gameObject.addComponent(makeLogo())
+
+        gameObject.addComponent<EscapeHandler>().also {
+            it.action = {
+                Scene.active.destroy(gameObject)
+                makeMainMenu()
+            }
+        }
+
+        gameObject.addComponent<ImageComponent>().also { image ->
+            val texture: Texture2D = Loader.createViaPath("textures/credits.png")
+            texture.makeLinear()
+            image.texture = texture
+            image.leguiComponent.style.background.color = Vector4f(0f, 0f, 0f, 0f)
+            image.leguiComponent.style.border.isEnabled = false
+            image.leguiComponent.style.shadow.color = Vector4f(0f, 0f, 0f, 0f)
+            image.onLayout = {
+                it.logicalSize = Vector2f(Window.logicalSize.x() * 0.55f, (Window.logicalSize.x() * 0.55f) / 3.72f)
+                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.075f, Window.logicalSize.y() * 0.35f)
+            }
+        }
+
+        gameObject.addComponent<ImageComponent>().also { image ->
+            val texture: Texture2D = Loader.createViaPath("textures/lwjgl_logo.png")
+            texture.makeLinear()
+            image.texture = texture
+            image.leguiComponent.style.background.color = Vector4f(0f, 0f, 0f, 0f)
+            image.leguiComponent.style.border.isEnabled = false
+            image.leguiComponent.style.shadow.color = Vector4f(0f, 0f, 0f, 0f)
+            image.onLayout = {
+                it.logicalSize = Vector2f(Window.logicalSize.x() * 0.1f, (Window.logicalSize.x() * 0.1f) / 2.77f)
+                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.075f, Window.logicalSize.y() * 0.65f)
+            }
+            image.onPressed = {
+                Desktop.getDesktop().browse(URI("https://www.lwjgl.org/"))
+            }
+        }
+
+        gameObject.addComponent<ImageComponent>().also { image ->
+            val texture: Texture2D = Loader.createViaPath("textures/klaxon_logo.png")
+            texture.makeLinear()
+            image.texture = texture
+            image.leguiComponent.style.background.color = Vector4f(0f, 0f, 0f, 0f)
+            image.leguiComponent.style.border.isEnabled = false
+            image.leguiComponent.style.shadow.color = Vector4f(0f, 0f, 0f, 0f)
+            image.onLayout = {
+                it.logicalSize = Vector2f(Window.logicalSize.x() * 0.1f, (Window.logicalSize.x() * 0.1f) / 2.77f)
+                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.225f, Window.logicalSize.y() * 0.65f)
+            }
+            image.onPressed = {
+                Desktop.getDesktop().browse(URI("https://github.com/cbeust/klaxon/"))
+            }
+        }
+
+        gameObject.addComponent<ImageComponent>().also { image ->
+            val texture: Texture2D = Loader.createViaPath("textures/legui_logo.png")
+            texture.makeLinear()
+            image.texture = texture
+            image.leguiComponent.style.background.color = Vector4f(0f, 0f, 0f, 0f)
+            image.leguiComponent.style.border.isEnabled = false
+            image.leguiComponent.style.shadow.color = Vector4f(0f, 0f, 0f, 0f)
+            image.onLayout = {
+                it.logicalSize = Vector2f(Window.logicalSize.x() * 0.1f, (Window.logicalSize.x() * 0.1f) / 2.77f)
+                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.375f, Window.logicalSize.y() * 0.65f)
+            }
+            image.onPressed = {
+                Desktop.getDesktop().browse(URI("https://github.com/SpinyOwl/legui"))
+            }
+        }
+
+        gameObject.addComponent<ImageComponent>().also { image ->
+            val texture: Texture2D = Loader.createViaPath("textures/jbox2d_logo.png")
+            texture.makeLinear()
+            image.texture = texture
+            image.leguiComponent.style.background.color = Vector4f(0f, 0f, 0f, 0f)
+            image.leguiComponent.style.border.isEnabled = false
+            image.leguiComponent.style.shadow.color = Vector4f(0f, 0f, 0f, 0f)
+            image.onLayout = {
+                it.logicalSize = Vector2f(Window.logicalSize.x() * 0.1f, (Window.logicalSize.x() * 0.1f) / 2.77f)
+                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.525f, Window.logicalSize.y() * 0.65f)
+            }
+            image.onPressed = {
+                Desktop.getDesktop().browse(URI("http://www.jbox2d.org/"))
+            }
+        }
 
         // Creditbutton
         gameObject.addComponent<ImageComponent>().also { image ->
@@ -150,160 +417,24 @@ fun makeMainMenu() {
                 )
             }
             image.onPressed = {
-                Scene.active.destroy(gameObject); makeCredits()
-            }
-        }
-
-        Scene.active.spawn(gameObject)
-    }
-}
-
-fun makeOptionsMenu() {
-    GameObject("OptionsMenu").also { gameObject ->
-        // Volumeslider
-        gameObject.addComponent<Slider>().also { slider ->
-            slider.onLayout = {
-                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.2f, Window.logicalSize.y() * 0.4f)
-                it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
-            }
-            slider.leguiComponent.value = Audio.Listener.gain
-            slider.leguiComponent.minValue = 0f
-            slider.leguiComponent.maxValue = 1f
-            slider.leguiComponent.stepSize = 0.1f
-            slider.onChanged = { value ->
-                Audio.Listener.gain = value
-            }
-        }
-        // BackButton
-        gameObject.addComponent(makeBackButton(gameObject))
-        Scene.active.spawn(gameObject)
-    }
-
-
-}/*
-
-
-
-    val multiSampling = GameObject("MultiSampling").also { gameObject ->
-        gameObject.addComponent<Slider>().also {
-            it.position = Vector2f(100f,300f)
-            it.logicalSize = Vector2f(Window.logicalSize.x() * 0.1f, 100f)
-            it.leguiComponent.minValue = 1f
-            it.leguiComponent.maxValue = 4f
-            it.leguiComponent.stepSize = 1f
-            it.onChanged = { value ->
-                Window.multiSampleCount = value.toInt()
-            }
-        }
-        Scene.active.spawn(gameObject)
-    }
-
-    val backButton = makeButton(
-        "BackButton",
-        "BACK",
-        { 500f }) {
-        Scene.active.destroy(it.gameObject); Scene.active.destroy(volume); Scene.active.destroy(
-        multiSampling
-    ); makeMainMenu()
-    }
-    Scene.active.spawn(backButton)
-}
-*/
-fun makeCredits() {
-    GameObject("CreditMenu").also { gameObject ->
-        gameObject.addComponent(makeLogo())
-        gameObject.addComponent<Text>().also { text ->
-            text.fontName = "Sugarpunch"
-            text.text = "CREDITS"
-            text.leguiComponent.textState.horizontalAlign = HorizontalAlign.CENTER
-            text.leguiComponent.textState.textColor = Vector4f(ColorPalette.WHITE, 1f)
-            text.logicalFontSize = 42f
-            text.onLayout = {
-                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.3f, Window.logicalSize.y() * 0.4f)
-                it.logicalSize = Vector2f(Window.logicalSize.x() * 0.2f, 100f)
-            }
-        }
-        gameObject.addComponent<Text>().also { text ->
-            text.fontName = "Sugarpunch"
-            text.text = "ARNE S"
-            text.leguiComponent.textState.horizontalAlign = HorizontalAlign.CENTER
-            text.leguiComponent.textState.textColor = Vector4f(ColorPalette.ORANGE, 1f)
-            text.logicalFontSize = 36f
-            text.onLayout = {
-                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.3f, Window.logicalSize.y() * 0.4f + 50f)
-                it.logicalSize = Vector2f(Window.logicalSize.x() * 0.2f, 100f)
-            }
-        }
-
-        gameObject.addComponent<Text>().also { text ->
-            text.fontName = "Sugarpunch"
-            text.text = "BENNET M"
-            text.leguiComponent.textState.horizontalAlign = HorizontalAlign.CENTER
-            text.leguiComponent.textState.textColor = Vector4f(ColorPalette.ORANGE, 1f)
-            text.logicalFontSize = 36f
-            text.onLayout = {
-                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.3f, Window.logicalSize.y() * 0.4f + 100f)
-                it.logicalSize = Vector2f(Window.logicalSize.x() * 0.2f, 100f)
-            }
-        }
-
-        gameObject.addComponent<Text>().also { text ->
-            text.fontName = "Sugarpunch"
-            text.text = "HANNES W"
-            text.leguiComponent.textState.horizontalAlign = HorizontalAlign.CENTER
-            text.leguiComponent.textState.textColor = Vector4f(ColorPalette.ORANGE, 1f)
-            text.logicalFontSize = 36f
-            text.onLayout = {
-                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.3f, Window.logicalSize.y() * 0.4f + 150f)
-                it.logicalSize = Vector2f(Window.logicalSize.x() * 0.2f, 100f)
-            }
-        }
-
-        gameObject.addComponent<Text>().also { text ->
-            text.fontName = "Sugarpunch"
-            text.text = "JANEK W"
-            text.leguiComponent.textState.horizontalAlign = HorizontalAlign.CENTER
-            text.leguiComponent.textState.textColor = Vector4f(ColorPalette.ORANGE, 1f)
-            text.logicalFontSize = 36f
-            text.onLayout = {
-                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.3f, Window.logicalSize.y() * 0.4f + 200f)
-                it.logicalSize = Vector2f(Window.logicalSize.x() * 0.2f, 100f)
-            }
-        }
-
-        gameObject.addComponent<Text>().also { textArea ->
-            textArea.fontName = "Sugarpunch"
-            textArea.text = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet."
-            textArea.leguiComponent.textState.textColor = Vector4f(ColorPalette.ORANGE, 1f)
-            textArea.logicalFontSize = 36f
-            textArea.onLayout = {
-                textArea.logicalPosition = Vector2f(Window.logicalSize.x() * 0.3f, Window.logicalSize.y() * 0.4f)
-                textArea.logicalSize = Vector2f(Window.logicalSize.x() * 0.4f, Window.logicalSize.y() * 0.3f)
-            }
-        }
-
-        gameObject.addComponent<ImageComponent>().also { image ->
-            image.texture = Loader.createViaPath("textures/lwjgl_logo.png")
-            image.leguiComponent.style.background.color = Vector4f(0f, 0f, 0f, 0f)
-            image.leguiComponent.style.border.isEnabled = false
-            image.leguiComponent.style.shadow.color = Vector4f(0f, 0f, 0f, 0f)
-            image.onLayout = {
-                image.logicalSize = Vector2f(200f, 50f)
-                image.logicalPosition = Vector2f(Window.logicalSize.x() * 0.6f, Window.logicalSize.y() * 0.7f)
+                Desktop.getDesktop().browse(URI("https://www.krakula.com"))
             }
         }
 
         // BackButton
-        gameObject.addComponent(makeBackButton(gameObject))
+        gameObject.addComponent(makeBackButton(gameObject) { Window.logicalSize.y() * 0.8f })
+
         Scene.active.spawn(gameObject)
     }
 }
 
-fun makeLogo() : Component {
+fun makeLogo(): Component {
     return ImageComponent().also { image ->
-        image.texture = Loader.createViaPath("textures/titleWithBG.png")
+        image.texture = Loader.createViaPath("textures/title.png")
+        image.texture!!.makeLinear()
         image.leguiComponent.style.background.color = Vector4f(0f, 0f, 0f, 0f)
         image.leguiComponent.style.border.isEnabled = false
+        image.leguiComponent.style.shadow.color = Vector4f(0f, 0f, 0f, 0f)
         image.onLayout = {
             image.logicalSize = Vector2f(Window.logicalSize.x() * 0.5f, (Window.logicalSize.x() * 0.5f) / 3.931f)
             image.logicalPosition = Vector2f(Window.logicalSize.x() * 0.1f, Window.logicalSize.y() * 0.1f)
@@ -311,12 +442,15 @@ fun makeLogo() : Component {
     }
 }
 
-fun makeBackButton(gameObject: GameObject) : Component {
+fun makeBackButton(gameObject: GameObject, yPosition: () -> Float): Component {
     return makeButton("BACK",
         {
-            it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.2f, Window.logicalSize.y() * 0.4f + 130f)
+            it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.2f, yPosition())
             it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
-        }) { Scene.active.destroy(gameObject); makeMainMenu() }
+        }) {
+        Scene.active.destroy(gameObject)
+        makeMainMenu()
+    }
 }
 
 fun makeButton(
@@ -341,6 +475,3 @@ fun makeButton(
     }
 
 }
-
-
-
