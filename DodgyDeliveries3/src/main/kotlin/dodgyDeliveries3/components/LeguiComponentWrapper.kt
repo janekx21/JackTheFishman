@@ -10,7 +10,7 @@ import org.joml.Vector2ic
 open class LeguiComponentWrapper<T>(
     leguiComponent: T,
     var onPressed: () -> Unit = {},
-    var onSizeChange: ((LeguiComponentWrapper<T>) -> Unit)? = null
+    var onSizeChange: ((LeguiComponentWrapper<T>) -> Unit)? = {}
 ) : Component() where T : org.liquidengine.legui.component.Component {
     private var isEnabled: Boolean = false
     private var isAddedToScene: Boolean = false
@@ -64,9 +64,7 @@ open class LeguiComponentWrapper<T>(
     private var wasPressedLastUpdate = false
 
     private fun layout() {
-        if (onSizeChange != null) {
-            onSizeChange!!(this)
-        }
+        onSizeChange(this)
     }
 
     private fun addToScene() {
