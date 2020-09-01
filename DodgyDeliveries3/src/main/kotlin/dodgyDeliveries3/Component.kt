@@ -23,7 +23,7 @@ abstract class Component : IHasOrigin<GameObject>, IUpdatable, IDrawable, IRunna
         }
         set(value) {
             check(internalGameObject == null) { "gameObject was already set" }
-            internalGameObject = value
+            setOrigin(value)
         }
 
 
