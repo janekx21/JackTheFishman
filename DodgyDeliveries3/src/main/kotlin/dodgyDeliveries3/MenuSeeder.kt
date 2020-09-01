@@ -51,7 +51,7 @@ fun loadMenu() {
     Scene.active.spawn(box)
 
     Scene.active.spawn(makeBackwardTunnel(50f))
-    Scene.active.spawn(makeBackwardTunnel(50f))
+    Scene.active.spawn(makeBackwardTunnel(-50f))
 
     makeMainMenu()
 }
