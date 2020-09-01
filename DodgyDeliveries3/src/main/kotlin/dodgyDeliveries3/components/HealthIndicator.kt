@@ -28,7 +28,7 @@ class HealthIndicator : Component() {
         }
 
     private val healthComponent: Health?
-        get() = Scene.active.findViaName("Player")?.getComponent()
+        get() = Scene.active.findViaName("Player")?.getComponents<Health>()?.singleOrNull()
 
     private val imageComponent: ImageComponent = ImageComponent().also {
         if (image != null) {
