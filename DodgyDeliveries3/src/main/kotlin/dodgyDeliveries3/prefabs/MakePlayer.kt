@@ -6,9 +6,7 @@ import jackTheFishman.engine.Loader
 import jackTheFishman.engine.graphics.Texture2D
 import jackTheFishman.engine.math.Vector3fConst
 import jackTheFishman.engine.math.times
-import org.joml.Vector2f
 import org.joml.Vector3f
-import org.liquidengine.legui.style.font.FontRegistry
 
 fun makePlayerWithBox(): Pair<GameObject, GameObject> {
     val player = GameObject("Player").also { gameObject ->
@@ -33,11 +31,6 @@ fun makePlayerWithBox(): Pair<GameObject, GameObject> {
             it.maxHp = 10f
         }
         gameObject.addComponent<Player>()
-        gameObject.addComponent<HpText>().also {
-            it.logicalFontSize = 32F
-            it.fontName = FontRegistry.ROBOTO_BOLD
-            it.logicalPosition = Vector2f(8f, 13f)
-        }
     }
     return Pair(player, makeBox(player.transform))
 }

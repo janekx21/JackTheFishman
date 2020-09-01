@@ -40,6 +40,7 @@ fun makeDefaultScene(difficulty: Difficulty): Array<GameObject> {
         track,
         player,
         box,
+        makeHealthIndicator(),
         enemySpawner,
         makeForwardTunnel(50f),
         makeForwardTunnel(-50f),

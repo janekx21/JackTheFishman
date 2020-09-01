@@ -1,6 +1,7 @@
 package dodgyDeliveries3
 
 import dodgyDeliveries3.components.Button
+import dodgyDeliveries3.components.HealthIndicator
 import dodgyDeliveries3.components.ImageComponent
 import dodgyDeliveries3.components.LeguiComponentWrapper
 import dodgyDeliveries3.util.ColorPalette
@@ -56,5 +57,11 @@ fun makeTransparentImage(
         image.leguiComponent.style.shadow.color = Vector4f(0f, 0f, 0f, 0f)
         image.onSizeChange = onSizeChange
         image.onPressed = onPressed
+    }
+}
+
+fun makeHealthIndicator(): GameObject {
+    return GameObject("HealthIndicator").also {
+        it.addComponent<HealthIndicator>()
     }
 }
