@@ -54,17 +54,17 @@ fun makePauseOptions(): GameObject {
         }
 
         gameObject.addComponent(makeButton("FULLSCREEN TOGGLE",
-                {
-                    it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.35f, Window.logicalSize.y() * 0.45f)
-                    it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
-                }) { Window.fullscreen = !Window.fullscreen })
+            {
+                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.35f, Window.logicalSize.y() * 0.45f)
+                it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
+            }) { Window.fullscreen = !Window.fullscreen })
 
         // BackButton
         gameObject.addComponent(makeButton("BACK",
-                {
-                    it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.35f, Window.logicalSize.y() * 0.45f + 130f)
-                    it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
-                }) {
+            {
+                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.35f, Window.logicalSize.y() * 0.45f + 130f)
+                it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
+            }) {
             Scene.active.destroy(gameObject)
             Scene.active.spawn(makePauseMenu())
         })
