@@ -53,21 +53,29 @@ fun makePauseOptions(): GameObject {
             }
         }
 
-        gameObject.addComponent(makeButton("FULLSCREEN TOGGLE",
-            {
-                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.35f, Window.logicalSize.y() * 0.45f)
-                it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
-            }) { Window.fullscreen = !Window.fullscreen })
+        gameObject.addComponent(
+            makeButton("FULLSCREEN TOGGLE",
+                {
+                    it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.35f, Window.logicalSize.y() * 0.45f)
+                    it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
+                },
+                {
+                    Window.fullscreen = !Window.fullscreen
+                })
+        )
 
         // BackButton
-        gameObject.addComponent(makeButton("BACK",
-            {
-                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.35f, Window.logicalSize.y() * 0.45f + 130f)
-                it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
-            }) {
-            Scene.active.destroy(gameObject)
-            Scene.active.spawn(makePauseMenu())
-        })
+        gameObject.addComponent(
+            makeButton("BACK",
+                {
+                    it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.35f, Window.logicalSize.y() * 0.45f + 130f)
+                    it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
+                },
+                {
+                    Scene.active.destroy(gameObject)
+                    Scene.active.spawn(makePauseMenu())
+                })
+        )
     }
 }
 
@@ -96,35 +104,44 @@ fun makePauseMenu(): GameObject {
         }
 
         // Resumebutton
-        gameObject.addComponent(makeButton("RESUME",
-            {
-                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.35f, Window.logicalSize.y() * 0.2f)
-                it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
-            }) {
-            Input.Mouse.setMode(Input.Mouse.CursorMode.HIDDEN)
-            Time.timeScale = 1f
-            Scene.active.spawn(makePauseMenuOpener())
-            Scene.active.destroy(gameObject)
-        })
+        gameObject.addComponent(
+            makeButton("RESUME",
+                {
+                    it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.35f, Window.logicalSize.y() * 0.2f)
+                    it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
+                },
+                {
+                    Input.Mouse.setMode(Input.Mouse.CursorMode.HIDDEN)
+                    Time.timeScale = 1f
+                    Scene.active.spawn(makePauseMenuOpener())
+                    Scene.active.destroy(gameObject)
+                })
+        )
 
         // Optionsbutton
-        gameObject.addComponent(makeButton("OPTIONS",
-            {
-                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.35f, Window.logicalSize.y() * 0.2f + 130f)
-                it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
-            }) {
-            Scene.active.destroy(gameObject)
-            Scene.active.spawn(makePauseOptions())
-        })
+        gameObject.addComponent(
+            makeButton("OPTIONS",
+                {
+                    it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.35f, Window.logicalSize.y() * 0.2f + 130f)
+                    it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
+                },
+                {
+                    Scene.active.destroy(gameObject)
+                    Scene.active.spawn(makePauseOptions())
+                })
+        )
 
         // Quitbutton
-        gameObject.addComponent(makeButton("TO MAIN MENU",
-            {
-                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.35f, Window.logicalSize.y() * 0.2f + 260f)
-                it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
-            }) {
-            Time.timeScale = 1f
-            loadMenu()
-        })
+        gameObject.addComponent(
+            makeButton("TO MAIN MENU",
+                {
+                    it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.35f, Window.logicalSize.y() * 0.2f + 260f)
+                    it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
+                },
+                {
+                    Time.timeScale = 1f
+                    loadMenu()
+                })
+        )
     }
 }

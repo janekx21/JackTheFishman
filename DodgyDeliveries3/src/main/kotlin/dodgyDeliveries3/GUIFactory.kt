@@ -45,8 +45,8 @@ fun makeBackButton(yPosition: () -> Float): Component {
 
 fun makeTransparentImage(
     texture: Texture2D,
-    onSizeChange: (LeguiComponentWrapper<ImageView>) -> Unit,
-    onPressed: () -> Unit
+    onSizeChange: (LeguiComponentWrapper<ImageView>) -> Unit = {},
+    onPressed: () -> Unit = {}
 ): Component {
     return ImageComponent().also { image ->
         texture.makeLinear()

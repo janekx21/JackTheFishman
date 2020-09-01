@@ -1,16 +1,14 @@
 package dodgyDeliveries3
 
 import dodgyDeliveries3.components.*
+import dodgyDeliveries3.prefabs.makeBackwardTunnel
 import dodgyDeliveries3.prefabs.makeLight
-import dodgyDeliveries3.prefabs.makePlayerWithBox
-import dodgyDeliveries3.prefabs.makeTunnel
+import dodgyDeliveries3.prefabs.makeMenuPlayerWithBox
 import dodgyDeliveries3.util.ColorPalette
 import jackTheFishman.engine.Audio
 import jackTheFishman.engine.Loader
 import jackTheFishman.engine.Window
 import jackTheFishman.engine.Window.close
-import jackTheFishman.engine.graphics.Texture2D
-import jackTheFishman.engine.math.Vector3fConst
 import jackTheFishman.engine.math.times
 import org.joml.Vector2f
 import org.joml.Vector3f
@@ -25,7 +23,7 @@ fun loadMenu() {
 
     configFont()
 
-    GameObject("MainMenuMusic").also { gameObject ->
+    GameObject("Main Menu Music").also { gameObject ->
         gameObject.addComponent<Music>().also {
             it.sample = Loader.createViaPath("music/mainMenuMusic.ogg")
             it.play()
@@ -48,45 +46,12 @@ fun loadMenu() {
 
     Scene.active.spawn(makeLight(Vector3f(0f, 0f, -1f), Vector3f(ColorPalette.ORANGE) * 2f))
 
-
-    val player = GameObject("Player").also { gameObject ->
-        gameObject.addComponent<Transform>().also {
-            it.scale = Vector3fConst.one * .8f
-            it.position = Vector3f(2f, -0.5f, -0.1f)
-        }
-        gameObject.addComponent<ModelRenderer>().also {
-            it.mesh = Loader.createViaPath("models/playerColoured.fbx")
-            it.material = it.material.copy(
-                albedoTexture = Loader.createViaPath<Texture2D>("textures/player/AlbedoMap.png"),
-                specularTexture = Loader.createViaPath<Texture2D>("textures/player/SpecularMap.png"),
-                normalTexture = Loader.createViaPath<Texture2D>("textures/player/NormalMap.png"),
-                normalIntensity = .1f,
-                specularRoughness = 10f,
-                ambientColor = Vector3f(.3f, .3f, .3f)
-            )
-        }
-        gameObject.addComponent<MenuPlayerAnimation>()
-        Scene.active.spawn(gameObject)
-    }
-
-    val box = makePlayerWithBox().second
-    box.transform.parent = player.transform
+    val (player, box) = makeMenuPlayerWithBox()
+    Scene.active.spawn(player)
     Scene.active.spawn(box)
 
-    Scene.active.spawn(makeTunnel(50f).also { gameObject ->
-        val tunnel = gameObject.getComponent<Tunnel>()
-        tunnel.also {
-            it.speed = 2f
-            it.forward = false
-        }
-    })
-    Scene.active.spawn(makeTunnel(-50f).also { gameObject ->
-        val tunnel = gameObject.getComponent<Tunnel>()
-        tunnel.also {
-            it.speed = 2f
-            it.forward = false
-        }
-    })
+    Scene.active.spawn(makeBackwardTunnel(50f))
+    Scene.active.spawn(makeBackwardTunnel(50f))
 
     makeMainMenu()
 }
@@ -106,14 +71,17 @@ fun makeMainMenu() {
         }
 
         // Startbutton
-        gameObject.addComponent(makeButton("START",
-            {
-                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.2f, Window.logicalSize.y() * 0.4f)
-                it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
-            }) {
-            Scene.active.destroy(gameObject)
-            makeSelectLevelMenu()
-        })
+        gameObject.addComponent(
+            makeButton("START",
+                {
+                    it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.2f, Window.logicalSize.y() * 0.4f)
+                    it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
+                },
+                {
+                    Scene.active.destroy(gameObject)
+                    makeSelectLevelMenu()
+                })
+        )
 
         // Optionsbutton
         gameObject.addComponent(
@@ -122,10 +90,12 @@ fun makeMainMenu() {
                 {
                     it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.2f, Window.logicalSize.y() * 0.4f + 130f)
                     it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
-                }) {
-                Scene.active.destroy(gameObject)
-                makeOptionsMenu()
-            })
+                },
+                {
+                    Scene.active.destroy(gameObject)
+                    makeOptionsMenu()
+                })
+        )
 
         // Quitbutton
         gameObject.addComponent(
@@ -134,7 +104,11 @@ fun makeMainMenu() {
                 {
                     it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.2f, Window.logicalSize.y() * 0.4f + 260f)
                     it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
-                }) { close() })
+                },
+                {
+                    close()
+                })
+        )
 
         // Creditbutton (KrakulaLogo)
         gameObject.addComponent(makeTransparentImage(
@@ -149,8 +123,8 @@ fun makeMainMenu() {
             {
                 Scene.active.destroy(gameObject)
                 makeCredits()
-            }
-        ))
+            })
+        )
 
         Scene.active.spawn(gameObject)
     }
@@ -197,23 +171,28 @@ fun makeOptionsMenu() {
             }
         }
 
-        gameObject.addComponent(makeButton("FULLSCREEN TOGGLE",
-            {
-                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.2f, Window.logicalSize.y() * 0.6f)
-                it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
-            }) { Window.fullscreen = !Window.fullscreen })
+        gameObject.addComponent(
+            makeButton("FULLSCREEN TOGGLE",
+                {
+                    it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.2f, Window.logicalSize.y() * 0.6f)
+                    it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
+                },
+                {
+                    Window.fullscreen = !Window.fullscreen
+                })
+        )
 
-        gameObject.addComponent(makeTransparentImage(
-            Loader.createViaPath("textures/krakula-xl.png"),
-            {
-                it.logicalSize = Vector2f(Window.logicalSize.x() * 0.1f, Window.logicalSize.x() * 0.1f)
-                it.logicalPosition = Vector2f(
-                    Window.logicalSize.x() * 0.88f,
-                    Window.logicalSize.y() - (Window.logicalSize.x() - (Window.logicalSize.x() * 0.88f))
-                )
-            },
-            { }
-        ))
+        gameObject.addComponent(
+            makeTransparentImage(
+                Loader.createViaPath("textures/krakula-xl.png"),
+                {
+                    it.logicalSize = Vector2f(Window.logicalSize.x() * 0.1f, Window.logicalSize.x() * 0.1f)
+                    it.logicalPosition = Vector2f(
+                        Window.logicalSize.x() * 0.88f,
+                        Window.logicalSize.y() - (Window.logicalSize.x() - (Window.logicalSize.x() * 0.88f))
+                    )
+                })
+        )
 
         // BackButton
         gameObject.addComponent(makeBackButton { Window.logicalSize.y() * 0.8f })
@@ -238,7 +217,8 @@ fun makeSelectLevelMenu() {
             {
                 it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.2f, Window.logicalSize.y() * 0.4f)
                 it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
-            }, {
+            },
+            {
                 Scene.active.destroy(gameObject)
                 loadDefaultScene(Difficulty.EASY)
             })
@@ -249,7 +229,8 @@ fun makeSelectLevelMenu() {
             {
                 it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.2f, Window.logicalSize.y() * 0.4f + 130f)
                 it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
-            }, {
+            },
+            {
                 Scene.active.destroy(gameObject)
                 loadDefaultScene(Difficulty.HARD)
             })
@@ -257,17 +238,17 @@ fun makeSelectLevelMenu() {
 
         gameObject.addComponent(makeBackButton { Window.logicalSize.y() * 0.4f + 260f })
 
-        gameObject.addComponent(makeTransparentImage(
-            Loader.createViaPath("textures/krakula-xl.png"),
-            {
-                it.logicalSize = Vector2f(Window.logicalSize.x() * 0.1f, Window.logicalSize.x() * 0.1f)
-                it.logicalPosition = Vector2f(
-                    Window.logicalSize.x() * 0.88f,
-                    Window.logicalSize.y() - (Window.logicalSize.x() - (Window.logicalSize.x() * 0.88f))
-                )
-            },
-            { }
-        ))
+        gameObject.addComponent(
+            makeTransparentImage(
+                Loader.createViaPath("textures/krakula-xl.png"),
+                {
+                    it.logicalSize = Vector2f(Window.logicalSize.x() * 0.1f, Window.logicalSize.x() * 0.1f)
+                    it.logicalPosition = Vector2f(
+                        Window.logicalSize.x() * 0.88f,
+                        Window.logicalSize.y() - (Window.logicalSize.x() - (Window.logicalSize.x() * 0.88f))
+                    )
+                })
+        )
 
         Scene.active.spawn(gameObject)
     }
@@ -290,8 +271,7 @@ fun makeCredits() {
             {
                 it.logicalSize = Vector2f(Window.logicalSize.x() * 0.55f, (Window.logicalSize.x() * 0.55f) / 3.72f)
                 it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.075f, Window.logicalSize.y() * 0.35f)
-            },
-            { }
+            }
         ))
 
         gameObject.addComponent(makeTransparentImage(

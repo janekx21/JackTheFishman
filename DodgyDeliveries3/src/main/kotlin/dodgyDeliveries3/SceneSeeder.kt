@@ -41,8 +41,8 @@ fun makeDefaultScene(difficulty: Difficulty): Array<GameObject> {
         player,
         box,
         enemySpawner,
-        makeTunnel(50f),
-        makeTunnel(-50f),
+        makeForwardTunnel(50f),
+        makeForwardTunnel(-50f),
         makeCamera(player.transform),
         makeLight(Vector3f(0f, 0f, 0f), Vector3f(ColorPalette.BLUE) * 2f),
         makeLight(Vector3f(0f, 0f, 10f), Vector3f(ColorPalette.ORANGE))
