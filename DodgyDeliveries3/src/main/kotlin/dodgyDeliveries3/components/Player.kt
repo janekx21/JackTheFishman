@@ -30,12 +30,21 @@ class Player(var speed: Float = 8f) : Component() {
     }
 
     override fun update() {
+        //handleNoise()
         handleInput()
         applyVelocityChange()
         if (Time.timeScale != 0f)
             animateRotation()
         animateYAxis()
         handleHealth()
+    }
+
+    private fun handleNoise() {
+        val noise = gameObject.getComponent<Audio>()
+        println((collider.velocity.x() / speed / maxVelocityChange).toString() + "    " + noise.source.gain)
+        noise.source.gain =
+            ((Math.max(0.8f, (Math.abs(collider.velocity.x() / speed) / maxVelocityChange)) - 0.8f) * 2f)
+        ((collider.velocity.length() - 0.8f) / (maxVelocityChange - 0.8f))
     }
 
     private fun handleInput() {

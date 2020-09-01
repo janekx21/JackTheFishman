@@ -2,7 +2,6 @@ package dodgyDeliveries3
 
 import dodgyDeliveries3.components.*
 import dodgyDeliveries3.util.ColorPalette
-import jackTheFishman.engine.Loader
 import jackTheFishman.engine.*
 import jackTheFishman.engine.Audio
 import jackTheFishman.engine.audio.Sample
@@ -176,14 +175,19 @@ fun makePlayer(): GameObject {
             it.hp = 10f
             it.maxHp = 10f
         }
+        gameObject.addComponent<dodgyDeliveries3.components.Audio>().also {
+            it.sample = Loader.createViaPath("sounds/noise.ogg")
+            it.play()
+            it.source.gain = 0f
+            it.source.looping = true
+        }
         gameObject.addComponent<Player>()
         gameObject.addComponent<HpText>().also {
             it.logicalFontSize = 32F
             it.fontName = FontRegistry.ROBOTO_BOLD
             it.logicalPosition = Vector2f(8f, 13f)
         }
-        gameObject.addComponent<dodgyDeliveries3.components.Audio>().also {
-        }
+
     }
 }
 

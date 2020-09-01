@@ -1,6 +1,7 @@
 package dodgyDeliveries3.components
 
 import dodgyDeliveries3.Component
+import jackTheFishman.engine.Time
 import jackTheFishman.engine.audio.IPlayable
 import jackTheFishman.engine.audio.Sample
 import jackTheFishman.engine.audio.Source
@@ -35,4 +36,8 @@ class Music : Component(), IPlayable {
         get() = source.time
 
     override val playing: Boolean get() = source.playing
+
+    override fun update() {
+        source.pitch = Time.timeScale
+    }
 }
