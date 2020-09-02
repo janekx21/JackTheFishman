@@ -163,6 +163,9 @@ fun makeOptionsMenu() {
             slider.leguiComponent.sliderActiveColor = Vector4f(ColorPalette.WHITE, 0.7f)
             slider.onChanged = { value ->
                 Audio.Listener.gain = value
+                DodgyDeliveries3.config = DodgyDeliveries3.config
+                    .copy(volume = value)
+                    .also { it.saveToDefaultPath() }
                 gameObject.getComponent<Text>().text = "VOLUME: " + "%.2f".format(Audio.Listener.gain)
             }
             slider.onSizeChange = {

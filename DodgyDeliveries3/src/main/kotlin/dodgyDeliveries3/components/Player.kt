@@ -1,6 +1,8 @@
 package dodgyDeliveries3.components
 
 import dodgyDeliveries3.Component
+import dodgyDeliveries3.DodgyDeliveries3
+import dodgyDeliveries3.util.InputSource
 import jackTheFishman.engine.Input
 import jackTheFishman.engine.Time
 import jackTheFishman.engine.Window
@@ -39,7 +41,13 @@ class Player(var speed: Float = 8f) : Component() {
     }
 
     private fun handleInput() {
-        targetPosition = clamp(mapScreenToView(Input.Mouse.position.x()), -1f, 1f) * laneWidth * .5f
+        val inputX = if (Input.Controller.isPresent && DodgyDeliveries3.config.preferredInputSource == InputSource.controller) {
+            Input.Controller.leftStick.x()
+        } else {
+            Input.Mouse.position.x()
+        }
+
+        targetPosition = clamp(mapScreenToView(inputX), -1f, 1f) * laneWidth * .5f
     }
 
     private fun mapScreenToView(x: Float): Float {

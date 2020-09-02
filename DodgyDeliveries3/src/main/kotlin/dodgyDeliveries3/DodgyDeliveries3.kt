@@ -1,7 +1,10 @@
 package dodgyDeliveries3
 
 import dodgyDeliveries3.components.Camera
+import dodgyDeliveries3.util.Configuration
 import dodgyDeliveries3.util.Debug
+import dodgyDeliveries3.util.InputSource
+import jackTheFishman.engine.Audio
 import jackTheFishman.engine.Game
 import jackTheFishman.engine.Loader
 import jackTheFishman.engine.Window
@@ -19,12 +22,17 @@ object DodgyDeliveries3 : Game() {
 
     private val logo = Loader.createViaPath<Texture2D>("logos/logo.png")
 
+    private val defaultConfig = Configuration(volume = 1f, preferredInputSource = InputSource.mouse)
+
+    var config = Configuration.loadFromDefaultPathOrNull() ?: defaultConfig
+
     init {
         // set default texture color to white
         Texture2D.setDefaultTexture2DWhite()
         configCulling()
         loadMenu()
         configWindow()
+        Audio.Listener.gain = config.volume
     }
 
     private fun configCulling() {
