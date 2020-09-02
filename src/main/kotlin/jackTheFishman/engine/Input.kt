@@ -28,6 +28,7 @@ object Input {
     fun update() {
         Keyboard.update()
         Mouse.update()
+        Controller.update()
     }
 
     /**
