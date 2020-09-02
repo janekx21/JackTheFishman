@@ -17,6 +17,18 @@ fun makeTrack2(): GameObject = makeTrack(
     bpm = 138f
 )
 
+fun makeTrack3(): GameObject = makeTrack(
+    Loader.createViaPath("music/Thaehan-Wind.ogg"),
+    offset = 0.119f,
+    bpm = 94f
+)
+
+fun makeOwnTrack(path: String, offset: Float, bpm: Float): GameObject = makeTrack(
+    Sample(Sample.getSampleFileViaPath(path)),
+    offset = offset,
+    bpm = bpm
+)
+
 fun makeTrack(sample: Sample, offset: Float, bpm: Float): GameObject {
     return GameObject("Music Track").also { gameObject ->
         gameObject.addComponent<Music>().also {

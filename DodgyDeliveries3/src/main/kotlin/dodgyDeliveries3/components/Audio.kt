@@ -1,6 +1,7 @@
 package dodgyDeliveries3.components
 
 import dodgyDeliveries3.Component
+import jackTheFishman.engine.Time
 import jackTheFishman.engine.audio.IPlayable
 import jackTheFishman.engine.audio.Sample
 import jackTheFishman.engine.audio.Source
@@ -31,6 +32,7 @@ class Audio : Component(), IPlayable {
 
     override fun update() {
         // TODO make `transform.position` also be effected by parent transformation
+        source.pitch = Time.timeScale
         source.position = transform.position
     }
 

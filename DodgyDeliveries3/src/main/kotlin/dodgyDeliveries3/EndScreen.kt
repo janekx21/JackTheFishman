@@ -25,7 +25,7 @@ fun loadWinScreen() {
             text.leguiComponent.textState.textColor = Vector4f(ColorPalette.WHITE, 1f)
             text.logicalFontSize = 25f
             text.text = "SUCCESSFULLY DELIVERED"
-            text.onLayout = {
+            text.onSizeChange = {
                 it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.1f, Window.logicalSize.y() * 0.45f)
                 it.logicalSize = Vector2f(Window.logicalSize.x() * 0.5f, 0.1f)
             }
@@ -44,13 +44,12 @@ fun loadWinScreen() {
     }
 }
 
-fun loadLooseScreen() {
-    GameObject("LooseScreen").also { gameObject ->
-
+fun loadLooseScreen(): GameObject {
+    return GameObject("LooseScreen").also { gameObject ->
         gameObject.addComponent<EscapeHandler>().also {
             it.action = {
-                Scene.active.destroy(gameObject)
-                makeMainMenu()
+                Time.timeScale = 1f
+                loadMenu()
             }
         }
 
@@ -58,23 +57,23 @@ fun loadLooseScreen() {
             text.fontName = "Sugarpunch"
             text.leguiComponent.textState.horizontalAlign = HorizontalAlign.CENTER
             text.leguiComponent.textState.textColor = Vector4f(ColorPalette.WHITE, 1f)
-            text.logicalFontSize = 25f
+            text.logicalFontSize = 70f
             text.text = "GAME OVER"
-            text.onLayout = {
-                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.1f, Window.logicalSize.y() * 0.45f)
+            text.onSizeChange = {
+                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.25f, Window.logicalSize.y() * 0.4f)
                 it.logicalSize = Vector2f(Window.logicalSize.x() * 0.5f, 0.1f)
             }
         }
 
-        gameObject.addComponent(makeButton("TO MAIN MENU",
+        gameObject.addComponent(
+            makeButton("TO MAIN MENU",
+                {
+                    it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.35f, Window.logicalSize.y() * 0.4f + 150f)
+                    it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
+                })
             {
-                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.35f, Window.logicalSize.y() * 0.2f + 260f)
-                it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
-            }) {
-            Time.timeScale = 1f
-            loadMenu()
-        })
-
-        Scene.active.spawn(gameObject)
+                Time.timeScale = 1f
+                loadMenu()
+            })
     }
 }

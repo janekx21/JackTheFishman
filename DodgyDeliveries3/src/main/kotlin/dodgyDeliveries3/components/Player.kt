@@ -1,17 +1,17 @@
 package dodgyDeliveries3.components
 
 import dodgyDeliveries3.Component
+import dodgyDeliveries3.Scene
+import dodgyDeliveries3.loadLooseScreen
 import jackTheFishman.engine.Input
 import jackTheFishman.engine.Time
 import jackTheFishman.engine.Window
-import jackTheFishman.engine.math.Vector2fConst
-import jackTheFishman.engine.math.Vector3fConst
-import jackTheFishman.engine.math.plus
-import jackTheFishman.engine.math.times
+import jackTheFishman.engine.math.*
 import org.jbox2d.common.MathUtils.PI
 import org.jbox2d.common.MathUtils.clamp
 import org.joml.Quaternionf
 import org.joml.Vector3f
+import kotlin.math.max
 import kotlin.math.sin
 
 class Player(var speed: Float = 8f) : Component() {
@@ -30,21 +30,21 @@ class Player(var speed: Float = 8f) : Component() {
     }
 
     override fun update() {
-        //handleNoise()
         handleInput()
         applyVelocityChange()
         if (Time.timeScale != 0f)
             animateRotation()
         animateYAxis()
         handleHealth()
+        handleSound()
     }
 
-    private fun handleNoise() {
-        val noise = gameObject.getComponent<Audio>()
-        println((collider.velocity.x() / speed / maxVelocityChange).toString() + "    " + noise.source.gain)
-        noise.source.gain =
-            ((Math.max(0.8f, (Math.abs(collider.velocity.x() / speed) / maxVelocityChange)) - 0.8f) * 2f)
-        ((collider.velocity.length() - 0.8f) / (maxVelocityChange - 0.8f))
+    private fun handleSound() {
+        val audio = Scene.active.findViaName("Player Box")!!.getComponent<Audio>()
+        audio.source.gain = max(
+            (6f / ((Camera.main!!.transform.position - audio.gameObject.transform.parent!!.position).length())) - 1f,
+            0f
+        )
     }
 
     private fun handleInput() {
@@ -78,7 +78,9 @@ class Player(var speed: Float = 8f) : Component() {
     private fun handleHealth() {
         val health = gameObject.getComponent<Health>()
         if (!health.alive) {
-            // TODO handle game over
+            Input.Mouse.setMode(Input.Mouse.CursorMode.NORMAL)
+            Scene.active.spawn(loadLooseScreen())
+            Time.timeScale = 0f
         }
     }
 

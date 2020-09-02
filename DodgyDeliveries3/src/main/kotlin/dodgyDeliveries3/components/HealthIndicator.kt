@@ -8,10 +8,9 @@ import jackTheFishman.engine.Window
 import jackTheFishman.engine.graphics.Texture2D
 import org.joml.Vector2f
 import org.joml.Vector4f
-import kotlin.math.roundToInt
 
 class HealthIndicator : Component() {
-    private val images: List<Texture2D> = (0 .. 5).map {
+    private val images: List<Texture2D> = (0..6).map {
         Loader.createViaPath<Texture2D>("textures/healthIndication/pizza$it.png")
     }
 
@@ -20,7 +19,8 @@ class HealthIndicator : Component() {
             if (healthComponent == null) {
                 return null
             } else {
-                val imageIndex = (images.size - 1) - ((images.size - 1) * healthComponent!!.percentage).roundToInt()
+                //val imageIndex = (images.size - 1) - ((images.size - 1) * healthComponent!!.percentage).roundToInt()
+                val imageIndex = healthComponent!!.maxHp.toInt() - healthComponent!!.hp.toInt()
                 return images[imageIndex]
             }
         }

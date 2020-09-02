@@ -27,12 +27,23 @@ fun makePlayerWithBox(): Pair<GameObject, GameObject> {
             it.radius = .5f
         }
         gameObject.addComponent<Health>().also {
-            it.hp = 10f
-            it.maxHp = 10f
+            it.hp = 6f
+            it.maxHp = 6f
         }
+        gameObject.addComponent<Audio>().also {
+            it.sample = Loader.createViaPath("sounds/hit.ogg")
+        }
+
         gameObject.addComponent<Player>()
     }
-    return Pair(player, makeBox(player.transform))
+    val box = makeBox(player.transform)
+    box.addComponent<Audio>().also {
+        it.sample = Loader.createViaPath("sounds/new_moped.ogg")
+        it.source.looping = true
+        it.source.gain = 10f
+        it.play()
+    }
+    return Pair(player, box)
 }
 
 fun makeMenuPlayerWithBox(): Pair<GameObject, GameObject> {

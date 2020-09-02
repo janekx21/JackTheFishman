@@ -24,7 +24,6 @@ class WobbleProjectile : Projectile() {
 
     override fun update() {
         super.update()
-
         collider.velocity = Vector2fConst.right * sin(Time.time * 30f) * 5f + Vector2fConst.up * speed
     }
 }

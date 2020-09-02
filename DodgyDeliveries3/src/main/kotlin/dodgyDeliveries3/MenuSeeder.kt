@@ -17,6 +17,8 @@ import org.liquidengine.legui.component.optional.align.HorizontalAlign
 import org.liquidengine.legui.style.font.FontRegistry
 import java.awt.Desktop
 import java.net.URI
+import javax.swing.JFileChooser
+import javax.swing.filechooser.FileNameExtensionFilter
 
 fun loadMenu() {
     removeAllGameObjects()
@@ -202,6 +204,7 @@ fun makeOptionsMenu() {
 }
 
 fun makeSelectLevelMenu() {
+
     GameObject("OptionsMenu").also { gameObject ->
         gameObject.addComponent(makeLogo())
 
@@ -212,31 +215,105 @@ fun makeSelectLevelMenu() {
             }
         }
 
+
         // LEVEL 1
         gameObject.addComponent(makeButton("LEVEL 1",
             {
-                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.2f, Window.logicalSize.y() * 0.4f)
-                it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
+                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.075f, Window.logicalSize.y() * 0.35f)
+                it.logicalSize = Vector2f(Window.logicalSize.x() * 0.25f, 100f)
             },
             {
                 Scene.active.destroy(gameObject)
-                loadDefaultScene(Difficulty.EASY)
+                makeDifficultySelection(Song.CHANDELIER)
             })
         )
 
         // LEVEL 2
-        gameObject.addComponent(makeButton("LEVEL 2",
-            {
-                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.2f, Window.logicalSize.y() * 0.4f + 130f)
-                it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
-            },
-            {
-                Scene.active.destroy(gameObject)
-                loadDefaultScene(Difficulty.HARD)
-            })
+        gameObject.addComponent(
+            makeButton("LEVEL 2",
+                {
+                    it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.375f, Window.logicalSize.y() * 0.35f)
+                    it.logicalSize = Vector2f(Window.logicalSize.x() * 0.25f, 100f)
+                },
+                {
+                    Scene.active.destroy(gameObject)
+                    makeDifficultySelection(Song.WIND)
+                })
         )
 
-        gameObject.addComponent(makeBackButton { Window.logicalSize.y() * 0.4f + 260f })
+        // LEVEL 3
+        gameObject.addComponent(
+            makeButton("LEVEL 3",
+                {
+                    it.logicalPosition =
+                        Vector2f(Window.logicalSize.x() * 0.075f, Window.logicalSize.y() * 0.35f + 120f)
+                    it.logicalSize = Vector2f(Window.logicalSize.x() * 0.25f, 100f)
+                },
+                {
+                    Scene.active.destroy(gameObject)
+                    makeDifficultySelection(Song.CHANDELIER)
+                })
+        )
+
+        // LEVEL 4
+        gameObject.addComponent(
+            makeButton("LEVEL 4",
+                {
+                    it.logicalPosition =
+                        Vector2f(Window.logicalSize.x() * 0.375f, Window.logicalSize.y() * 0.35f + 120f)
+                    it.logicalSize = Vector2f(Window.logicalSize.x() * 0.25f, 100f)
+                },
+                {
+                    Scene.active.destroy(gameObject)
+                    makeDifficultySelection(Song.WIND)
+                })
+        )
+
+        gameObject.addComponent(Button().also { button ->
+            button.logicalFontSize = 30F
+            button.text = "SONGINFO"
+            button.onSizeChange = {
+                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.075f, Window.logicalSize.y() * 0.35f + 240f)
+                it.logicalSize = Vector2f(Window.logicalSize.x() * 0.55f, 75f)
+            }
+            button.leguiComponent.style.background.color = Vector4f(ColorPalette.ORANGE, 0.7f)
+            button.leguiComponent.hoveredStyle.background.color = Vector4f(ColorPalette.BLUE, 0.7f)
+            button.leguiComponent.style.setBorderRadius(10f)
+            button.fontName = "Sugarpunch"
+            button.leguiComponent.textState.textColor = Vector4f(ColorPalette.WHITE, 1f)
+            button.onPressed = {
+            }
+        })
+
+        // Play Own
+        gameObject.addComponent(
+            makeButton("CUSTOM",
+                {
+                    it.logicalPosition =
+                        Vector2f(Window.logicalSize.x() * 0.075f, Window.logicalSize.y() * 0.35f + 335f)
+                    it.logicalSize = Vector2f(Window.logicalSize.x() * 0.25f, 100f)
+                },
+                {
+                    Scene.active.destroy(gameObject)
+                    getPath()
+                })
+        )
+
+        // LEVEL 4
+        gameObject.addComponent(
+            makeButton("BACK",
+                {
+                    it.logicalPosition =
+                        Vector2f(Window.logicalSize.x() * 0.375f, Window.logicalSize.y() * 0.35f + 335f)
+                    it.logicalSize = Vector2f(Window.logicalSize.x() * 0.25f, 100f)
+                },
+                {
+                    Scene.active.destroy(it.gameObject)
+                    makeMainMenu()
+                })
+        )
+
+        //gameObject.addComponent(makeBackButton { Window.logicalSize.y() * 0.4f + 260f })
 
         gameObject.addComponent(
             makeTransparentImage(
@@ -253,6 +330,229 @@ fun makeSelectLevelMenu() {
         Scene.active.spawn(gameObject)
     }
 
+}
+
+fun getPath() {
+    GameObject("SongLoader").also { gameObject ->
+        gameObject.addComponent(makeLogo())
+        gameObject.addComponent(makeButton(
+            "CHOOSE MUSIC",
+            {
+                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.2f, Window.logicalSize.y() * 0.4f)
+                it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
+            },
+            {
+                val fileChoose = JFileChooser()
+                fileChoose.dialogTitle = "Select .OGG File"
+                val filter = FileNameExtensionFilter("Ogg Files", "ogg")
+                fileChoose.fileFilter = filter
+                val fullscreen = Window.fullscreen
+                if (Window.fullscreen) {
+                    Window.fullscreen = false
+                }
+                fileChoose.showOpenDialog(null)
+                if (fullscreen) {
+                    Window.fullscreen = true
+                }
+                Scene.active.destroy(gameObject)
+                getBpm(fileChoose.selectedFile.path)
+            }
+        ))
+
+        gameObject.addComponent(makeButton("BACK",
+            {
+                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.2f, Window.logicalSize.y() * 0.4f + 130f)
+                it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
+            }, {
+                Scene.active.destroy(it.gameObject)
+                makeSelectLevelMenu()
+            })
+        )
+        Scene.active.spawn(gameObject)
+    }
+}
+
+fun getBpm(path: String) {
+
+    GameObject("SongLoader").also { gameObject ->
+        gameObject.addComponent(makeLogo())
+        gameObject.addComponent<Text>().also { text ->
+            text.logicalFontSize = 42F
+            text.fontName = "Sugarpunch"
+            text.text = "PLEASE ENTER THE BPM"
+            text.leguiComponent.textState.textColor = Vector4f(ColorPalette.WHITE, 1f)
+            text.leguiComponent.textState.horizontalAlign = HorizontalAlign.CENTER
+            text.onSizeChange = {
+                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.2f, Window.logicalSize.y() * 0.3f)
+                it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
+            }
+        }
+        gameObject.addComponent<TextInput>().also { textinput ->
+            textinput.onChanged = {
+            }
+            textinput.leguiComponent.textState.font = "Sugarpunch"
+            textinput.leguiComponent.textState.horizontalAlign = HorizontalAlign.CENTER
+            textinput.leguiComponent.textState.textColor = Vector4f(ColorPalette.WHITE, 1f)
+            textinput.leguiComponent.style.background.color = Vector4f(ColorPalette.BLUE, 1f)
+            textinput.leguiComponent.textState.fontSize = 20f
+            textinput.onSizeChange = {
+                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.2f, Window.logicalSize.y() * 0.3f + 100f)
+                it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
+            }
+        }
+        gameObject.addComponent(makeButton(
+            "CONFIRM",
+            {
+                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.2f, Window.logicalSize.y() * 0.3f + 230f)
+                it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
+            },
+            {
+                val bpmString = gameObject.getComponent<TextInput>().leguiComponent.textState.text
+                bpmString.replace("\\s".toRegex(), "")
+                val bpmFloat = bpmString.toFloatOrNull()
+                if (bpmFloat != null) {
+                    Scene.active.destroy(gameObject)
+                    getOffset(path, bpmFloat)
+                } else {
+                    gameObject.getComponent<TextInput>().leguiComponent.textState.text = "INVALID INPUT"
+                }
+            }
+        ))
+
+        gameObject.addComponent(makeButton("BACK",
+            {
+                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.2f, Window.logicalSize.y() * 0.3f + 360f)
+                it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
+            }, {
+                Scene.active.destroy(it.gameObject)
+                getPath()
+            })
+        )
+
+        Scene.active.spawn(gameObject)
+    }
+}
+
+fun getOffset(path: String, bpm: Float) {
+    GameObject("SongLoader").also { gameObject ->
+        gameObject.addComponent(makeLogo())
+        gameObject.addComponent<Text>().also { text ->
+            text.logicalFontSize = 42F
+            text.fontName = "Sugarpunch"
+            text.text = "PLEASE ENTER THE OFFSET"
+            text.leguiComponent.textState.textColor = Vector4f(ColorPalette.WHITE, 1f)
+            text.leguiComponent.textState.horizontalAlign = HorizontalAlign.CENTER
+            text.onSizeChange = {
+                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.2f, Window.logicalSize.y() * 0.3f)
+                it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
+            }
+        }
+        gameObject.addComponent<TextInput>().also { textinput ->
+            textinput.onChanged = {
+            }
+            textinput.leguiComponent.textState.font = "Sugarpunch"
+            textinput.leguiComponent.textState.horizontalAlign = HorizontalAlign.CENTER
+            textinput.leguiComponent.textState.textColor = Vector4f(ColorPalette.WHITE, 1f)
+            textinput.leguiComponent.style.background.color = Vector4f(ColorPalette.BLUE, 1f)
+            textinput.leguiComponent.textState.fontSize = 20f
+            textinput.onSizeChange = {
+                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.2f, Window.logicalSize.y() * 0.3f + 100f)
+                it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
+            }
+        }
+
+        gameObject.addComponent(makeButton(
+            "EASY",
+            {
+                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.075f, Window.logicalSize.y() * 0.3f + 230f)
+                it.logicalSize = Vector2f(Window.logicalSize.x() * 0.25f, 100f)
+            },
+            {
+
+                val offsetString = gameObject.getComponent<TextInput>().leguiComponent.textState.text
+                offsetString.replace("\\s".toRegex(), "")
+                val offsetFloat = offsetString.toFloatOrNull()
+                if (offsetFloat != null) {
+                    Scene.active.destroy(gameObject)
+                    loadDefaultSceneFromOwnSample(path, offsetFloat, bpm, Difficulty.EASY)
+                } else {
+                    gameObject.getComponent<TextInput>().leguiComponent.textState.text = "INVALID INPUT"
+                }
+            }
+        ))
+
+        gameObject.addComponent(makeButton(
+            "HARD",
+            {
+                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.375f, Window.logicalSize.y() * 0.3f + 230f)
+                it.logicalSize = Vector2f(Window.logicalSize.x() * 0.25f, 100f)
+            },
+            {
+                val offset = gameObject.getComponent<TextInput>().leguiComponent.textState.text
+                offset.replace("\\s".toRegex(), "")
+                Scene.active.destroy(gameObject)
+                loadDefaultSceneFromOwnSample(path, offset.toFloat(), bpm, Difficulty.HARD)
+            }
+        ))
+        gameObject.addComponent(makeButton("BACK",
+            {
+                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.2f, Window.logicalSize.y() * 0.3f + 360f)
+                it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
+            }, {
+                Scene.active.destroy(it.gameObject)
+                getBpm(path)
+            })
+        )
+        Scene.active.spawn(gameObject)
+    }
+}
+
+fun makeDifficultySelection(song: Song) {
+    GameObject("DifficultyMenu").also { gameObject ->
+        gameObject.addComponent(makeLogo())
+        gameObject.addComponent(makeLogo())
+
+        gameObject.addComponent<EscapeHandler>().also {
+            it.action = {
+                Scene.active.destroy(gameObject)
+                makeSelectLevelMenu()
+            }
+        }
+
+        gameObject.addComponent(makeButton("EASY",
+            {
+                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.075f, Window.logicalSize.y() * 0.45f)
+                it.logicalSize = Vector2f(Window.logicalSize.x() * 0.25f, 100f)
+            },
+            {
+                Scene.active.destroy(gameObject)
+                loadDefaultScene(song, Difficulty.EASY)
+            }
+        ))
+
+        gameObject.addComponent(makeButton("HARD",
+            {
+                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.375f, Window.logicalSize.y() * 0.45f)
+                it.logicalSize = Vector2f(Window.logicalSize.x() * 0.25f, 100f)
+            },
+            {
+                Scene.active.destroy(gameObject)
+                loadDefaultScene(song, Difficulty.HARD)
+            }
+        ))
+
+        gameObject.addComponent(makeButton("BACK",
+            {
+                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.2f, Window.logicalSize.y() * 0.45f + 130f)
+                it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
+            }, {
+                Scene.active.destroy(it.gameObject)
+                makeSelectLevelMenu()
+            })
+        )
+
+        Scene.active.spawn(gameObject)
+    }
 }
 
 fun makeCredits() {

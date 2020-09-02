@@ -6,10 +6,10 @@ import jackTheFishman.engine.Input
 import jackTheFishman.engine.math.times
 import org.joml.Vector3f
 
-fun loadDefaultScene(difficulty: Difficulty) {
+fun loadDefaultScene(song: Song, difficulty: Difficulty) {
     removeAllGameObjects()
     config()
-    makeDefaultScene(difficulty).forEach { Scene.active.spawn(it) }
+    makeDefaultScene(song, difficulty).forEach { Scene.active.spawn(it) }
 }
 
 fun removeAllGameObjects() {
@@ -22,12 +22,13 @@ fun config() {
     Input.Mouse.setMode(Input.Mouse.CursorMode.HIDDEN)
 }
 
-fun makeDefaultScene(difficulty: Difficulty): Array<GameObject> {
+fun makeDefaultScene(song: Song, difficulty: Difficulty): Array<GameObject> {
     val (player, box) = makePlayerWithBox()
 
-    val track = when (difficulty) {
-        Difficulty.EASY -> makeTrack1()
-        Difficulty.HARD -> makeTrack2()
+    val track = when (song) {
+        Song.CHANDELIER -> makeTrack1()
+        Song.APOLLO -> makeTrack2()
+        Song.WIND -> makeTrack3()
     }
 
     val enemySpawner = when (difficulty) {
@@ -38,6 +39,35 @@ fun makeDefaultScene(difficulty: Difficulty): Array<GameObject> {
     return arrayOf(
         makePauseMenuOpener(),
         track,
+        player,
+        box,
+        makeHealthIndicator(),
+        enemySpawner,
+        makeForwardTunnel(50f),
+        makeForwardTunnel(-50f),
+        makeCamera(player.transform),
+        makeLight(Vector3f(0f, 0f, 0f), Vector3f(ColorPalette.BLUE) * 2f),
+        makeLight(Vector3f(0f, 0f, 10f), Vector3f(ColorPalette.ORANGE))
+    )
+}
+
+fun loadDefaultSceneFromOwnSample(path: String, offset: Float, bpm: Float, difficulty: Difficulty) {
+    removeAllGameObjects()
+    config()
+    makeDefaultSceneFromOwnSample(path, offset, bpm, difficulty).forEach { Scene.active.spawn(it) }
+}
+
+fun makeDefaultSceneFromOwnSample(path: String, offset: Float, bpm: Float, difficulty: Difficulty): Array<GameObject> {
+    val (player, box) = makePlayerWithBox()
+
+    val enemySpawner = when (difficulty) {
+        Difficulty.EASY -> makeEasyEnemySpawner()
+        Difficulty.HARD -> makeHardEnemySpawner()
+    }
+
+    return arrayOf(
+        makePauseMenuOpener(),
+        makeOwnTrack(path, offset, bpm),
         player,
         box,
         makeHealthIndicator(),
