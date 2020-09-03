@@ -38,7 +38,7 @@ fun makePlayerWithBox(): Pair<GameObject, GameObject> {
     }
     val box = makeBox(player.transform)
     box.addComponent<Audio>().also {
-        it.sample = Loader.createViaPath("sounds/new_moped.ogg")
+        it.sample = Loader.createViaPath("sounds/moped.ogg")
         it.source.looping = true
         it.source.gain = 10f
         it.play()
