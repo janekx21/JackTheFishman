@@ -6,15 +6,15 @@ import jackTheFishman.engine.Loader
 import jackTheFishman.engine.audio.Sample
 
 fun makeTrack1(): GameObject = makeTrack(
-    Loader.createViaPath("music/Sia&SafriDuo-Chandelier(AlchimystRemix).ogg"),
-    offset = .082f,
-    bpm = 138f
+    Loader.createViaPath("music/Dream_Industrial.ogg"),
+    offset = .029f,
+    bpm = 110f
 )
 
 fun makeTrack2(): GameObject = makeTrack(
-    Loader.createViaPath("music/Protonica-Apollo.ogg"),
-    offset = 14.054f,
-    bpm = 138f
+    Loader.createViaPath("music/Edge_of_Tomorrow.ogg"),
+    offset = 0.05f,
+    bpm = 90f
 )
 
 fun makeTrack3(): GameObject = makeTrack(

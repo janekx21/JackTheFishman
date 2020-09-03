@@ -27,8 +27,8 @@ fun makeDefaultScene(song: Song, difficulty: Difficulty): Array<GameObject> {
     val (player, box) = makePlayerWithBox()
 
     val track = when (song) {
-        Song.CHANDELIER -> makeTrack1()
-        Song.APOLLO -> makeTrack2()
+        Song.DREAMINDUSTRIAL -> makeTrack1()
+        Song.EDGEOFTOMORROW -> makeTrack2()
         Song.WIND -> makeTrack3()
         Song.DREAMS -> makeTrack4()
     }
@@ -47,6 +47,8 @@ fun makeDefaultScene(song: Song, difficulty: Difficulty): Array<GameObject> {
         enemySpawner,
         makeForwardTunnel(50f),
         makeForwardTunnel(-50f),
+        makeGrid(),
+        makeWorldCurver(),
         makeCamera(player.transform),
         makeLight(Vector3f(0f, 0f, 0f), Vector3f(ColorPalette.BLUE) * 2f),
         makeLight(Vector3f(0f, 0f, 10f), Vector3f(ColorPalette.ORANGE))
@@ -81,6 +83,7 @@ fun makeDefaultSceneFromOwnSample(
         enemySpawner,
         makeForwardTunnel(50f),
         makeForwardTunnel(-50f),
+        makeGrid(),
         makeCamera(player.transform),
         makeLight(Vector3f(0f, 0f, 0f), Vector3f(ColorPalette.BLUE) * 2f),
         makeLight(Vector3f(0f, 0f, 10f), Vector3f(ColorPalette.ORANGE))

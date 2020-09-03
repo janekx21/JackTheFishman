@@ -1,5 +1,5 @@
 package dodgyDeliveries3
 
 enum class Song {
-    CHANDELIER, WIND, APOLLO, DREAMS
+    EDGEOFTOMORROW, WIND, DREAMINDUSTRIAL, DREAMS
 }

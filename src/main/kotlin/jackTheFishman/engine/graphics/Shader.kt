@@ -60,12 +60,13 @@ open class Shader(code: ShaderCode) : IUsable {
         return uniformLocations.getOrDefault(name, GL20.glGetUniformLocation(program, name))
     }
 
-    fun setMatrix(world: Matrix4fc, view: Matrix4fc, projection: Matrix4fc) {
+    fun setMatrix(world: Matrix4fc, view: Matrix4fc, projection: Matrix4fc, curveWorld: Float) {
         val mvp = Matrix4f(projection).mul(view).mul(world)
         setUniform(worldAttributeName, world)
         setUniform(viewAttributeName, view)
         setUniform(projectionAttributeName, projection)
         setUniform(mvpAttributeName, mvp)
+        setUniform(curveWorldName, curveWorld)
     }
 
     companion object : ICreateViaPath<Shader> {
@@ -76,6 +77,7 @@ open class Shader(code: ShaderCode) : IUsable {
         private const val viewAttributeName = "View"
         private const val projectionAttributeName = "Projection"
         private const val mvpAttributeName = "MVP"
+        private const val curveWorldName = "curveWorld"
 
         private const val importKeyword = "#import"
         private const val vertexKeyword = "#vertex"

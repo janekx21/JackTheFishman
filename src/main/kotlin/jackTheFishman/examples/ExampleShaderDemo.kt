@@ -61,7 +61,7 @@ class ExampleShaderDemo : Game() {
         view.rotation(Quaternionf())
         view.translate(Vector3f())
 
-        shader.setMatrix(world, view, projection)
+        shader.setMatrix(world, view, projection, 0f)
         shader.setUniform("Time", Time.time)
         shader.setUniform("Texture", tex)
 

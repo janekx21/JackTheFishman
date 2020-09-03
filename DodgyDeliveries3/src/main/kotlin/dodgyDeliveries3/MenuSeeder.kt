@@ -215,22 +215,10 @@ fun makeSelectLevelMenu() {
 
 
         // LEVEL 1
-        gameObject.addComponent(makeButton("LEVEL 1",
-            {
-                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.075f, Window.logicalSize.y() * 0.35f)
-                it.logicalSize = Vector2f(Window.logicalSize.x() * 0.25f, 100f)
-            },
-            {
-                Scene.active.destroy(gameObject)
-                makeDifficultySelection(Song.CHANDELIER)
-            })
-        )
-
-        // LEVEL 2
         gameObject.addComponent(
-            makeButton("LEVEL 2",
+            makeButton("WIND",
                 {
-                    it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.375f, Window.logicalSize.y() * 0.35f)
+                    it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.075f, Window.logicalSize.y() * 0.35f)
                     it.logicalSize = Vector2f(Window.logicalSize.x() * 0.25f, 100f)
                 },
                 {
@@ -239,9 +227,22 @@ fun makeSelectLevelMenu() {
                 })
         )
 
+        // LEVEL 2
+        gameObject.addComponent(
+            makeButton("DREAMS",
+                {
+                    it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.375f, Window.logicalSize.y() * 0.35f)
+                    it.logicalSize = Vector2f(Window.logicalSize.x() * 0.25f, 100f)
+                },
+                {
+                    Scene.active.destroy(gameObject)
+                    makeDifficultySelection(Song.DREAMS)
+                })
+        )
+
         // LEVEL 3
         gameObject.addComponent(
-            makeButton("LEVEL 3",
+            makeButton("INDUSTRIAL",
                 {
                     it.logicalPosition =
                         Vector2f(Window.logicalSize.x() * 0.075f, Window.logicalSize.y() * 0.35f + 120f)
@@ -249,13 +250,13 @@ fun makeSelectLevelMenu() {
                 },
                 {
                     Scene.active.destroy(gameObject)
-                    makeDifficultySelection(Song.APOLLO)
+                    makeDifficultySelection(Song.DREAMINDUSTRIAL)
                 })
         )
 
         // LEVEL 4
         gameObject.addComponent(
-            makeButton("LEVEL 4",
+            makeButton("TOMORROW",
                 {
                     it.logicalPosition =
                         Vector2f(Window.logicalSize.x() * 0.375f, Window.logicalSize.y() * 0.35f + 120f)
@@ -263,7 +264,7 @@ fun makeSelectLevelMenu() {
                 },
                 {
                     Scene.active.destroy(gameObject)
-                    makeDifficultySelection(Song.DREAMS)
+                    makeDifficultySelection(Song.EDGEOFTOMORROW)
                 })
         )
 

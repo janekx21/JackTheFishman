@@ -29,7 +29,7 @@ fun makeTunnel(z: Float): GameObject {
             position = Vector3f(0f, 0f, z)
         }
         gameObject.addComponent<ModelRenderer>().apply {
-            mesh = Loader.createViaPath("models/tunnel.fbx")
+            mesh = Loader.createViaPath("models/newtunnel.fbx")
             material = material.copy(
                 albedoTexture = Loader.createViaPath<Texture2D>("textures/pipes/AlbedoMap.jpg"),
                 normalTexture = Loader.createViaPath<Texture2D>("textures/pipes/NormalMap.png"),

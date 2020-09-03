@@ -60,7 +60,8 @@ object Debug {
                     debugShader.setMatrix(
                         world,
                         Camera.main!!.generateViewMatrix(),
-                        Camera.main!!.getProjectionMatrix()
+                        Camera.main!!.getProjectionMatrix(),
+                        Camera.main!!.curveWorld
                     )
                     wiredSphere.draw()
                 }
@@ -76,7 +77,8 @@ object Debug {
                     debugShader.setMatrix(
                         world,
                         Camera.main!!.generateViewMatrix(),
-                        Camera.main!!.getProjectionMatrix()
+                        Camera.main!!.getProjectionMatrix(),
+                        Camera.main!!.curveWorld
                     )
                     wiredCube.draw()
                 }

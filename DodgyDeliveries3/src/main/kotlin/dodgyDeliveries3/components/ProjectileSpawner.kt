@@ -145,7 +145,7 @@ class ProjectileSpawner(var timer: Float = 0f, var type: Type = Type.STANDARD) :
                 projectile.damage = 3f
             }
             it.addComponent<Audio>().also { audio ->
-                audio.sample = Loader.createViaPath("sounds/funny_laser.ogg")
+                audio.sample = Loader.createViaPath("sounds/laser.ogg")
                 audio.source.looping = true
                 audio.source.gain = 0f
                 audio.play()
