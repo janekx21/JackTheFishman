@@ -23,8 +23,14 @@ fun makeTrack3(): GameObject = makeTrack(
     bpm = 94f
 )
 
-fun makeOwnTrack(path: String, offset: Float, bpm: Float): GameObject = makeTrack(
-    Sample(Sample.getSampleFileViaPath(path)),
+fun makeTrack4(): GameObject = makeTrack(
+    Loader.createViaPath("music/bensound-dreams.ogg"),
+    offset = 0.689f,
+    bpm = 95f
+)
+
+fun makeOwnTrack(sample: Sample, offset: Float, bpm: Float): GameObject = makeTrack(
+    sample,
     offset = offset,
     bpm = bpm
 )

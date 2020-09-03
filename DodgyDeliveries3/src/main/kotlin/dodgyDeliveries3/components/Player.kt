@@ -24,6 +24,8 @@ class Player(var speed: Float = 8f) : Component() {
 
     var targetPosition = 0f
 
+    var wasAliveLastUpdate = true
+
     override fun start() {
         internalcollider = gameObject.getComponent()
         check(internalcollider != null) { "Player Component needs a Collider" }
@@ -32,10 +34,11 @@ class Player(var speed: Float = 8f) : Component() {
     override fun update() {
         handleInput()
         applyVelocityChange()
-        if (Time.timeScale != 0f)
+        if (Time.timeScale != 0f) {
             animateRotation()
-        animateYAxis()
+        }
         handleHealth()
+        animateYAxis()
         handleSound()
     }
 
@@ -77,9 +80,14 @@ class Player(var speed: Float = 8f) : Component() {
 
     private fun handleHealth() {
         val health = gameObject.getComponent<Health>()
-        if (!health.alive) {
+        if (!health.alive && wasAliveLastUpdate) {
             Input.Mouse.setMode(Input.Mouse.CursorMode.NORMAL)
+            val pauseOpener = Scene.active.findViaName("Pause")
+            if (pauseOpener != null) {
+                Scene.active.destroy(pauseOpener)
+            }
             Scene.active.spawn(loadLooseScreen())
+            wasAliveLastUpdate = false
             Time.timeScale = 0f
         }
     }

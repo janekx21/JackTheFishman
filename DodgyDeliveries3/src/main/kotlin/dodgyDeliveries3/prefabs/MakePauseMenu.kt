@@ -1,9 +1,12 @@
 package dodgyDeliveries3.prefabs
 
-import dodgyDeliveries3.*
+import dodgyDeliveries3.GameObject
+import dodgyDeliveries3.Scene
 import dodgyDeliveries3.components.EscapeHandler
 import dodgyDeliveries3.components.Slider
 import dodgyDeliveries3.components.Text
+import dodgyDeliveries3.loadMenu
+import dodgyDeliveries3.makeButton
 import dodgyDeliveries3.util.ColorPalette
 import jackTheFishman.engine.Audio
 import jackTheFishman.engine.Input
@@ -18,7 +21,7 @@ fun makePauseOptions(): GameObject {
         gameObject.addComponent<EscapeHandler>().also {
             it.action = {
                 Scene.active.destroy(gameObject)
-                makeMainMenu()
+                Scene.active.spawn(makePauseMenu())
             }
         }
 

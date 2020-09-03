@@ -6,10 +6,10 @@ import jackTheFishman.engine.math.Vector3fConst
 import jackTheFishman.engine.math.plus
 import jackTheFishman.engine.math.times
 
-class Tunnel(var speed: Float = 5f, var forward: Boolean = true) : Component() {
+class Tunnel(var speed: Float = 8f, var forward: Boolean = true) : Component() {
 
     override fun update() {
-        if(forward) {
+        if (forward) {
             transform.position += Vector3fConst.backwards * Time.deltaTime * speed
             if (transform.position.z() > 50f) {
                 transform.position += Vector3fConst.forward * 200f

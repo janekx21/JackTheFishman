@@ -3,6 +3,7 @@ package dodgyDeliveries3
 import dodgyDeliveries3.prefabs.*
 import dodgyDeliveries3.util.ColorPalette
 import jackTheFishman.engine.Input
+import jackTheFishman.engine.audio.Sample
 import jackTheFishman.engine.math.times
 import org.joml.Vector3f
 
@@ -29,6 +30,7 @@ fun makeDefaultScene(song: Song, difficulty: Difficulty): Array<GameObject> {
         Song.CHANDELIER -> makeTrack1()
         Song.APOLLO -> makeTrack2()
         Song.WIND -> makeTrack3()
+        Song.DREAMS -> makeTrack4()
     }
 
     val enemySpawner = when (difficulty) {
@@ -51,13 +53,18 @@ fun makeDefaultScene(song: Song, difficulty: Difficulty): Array<GameObject> {
     )
 }
 
-fun loadDefaultSceneFromOwnSample(path: String, offset: Float, bpm: Float, difficulty: Difficulty) {
+fun loadDefaultSceneFromOwnSample(sample: Sample, offset: Float, bpm: Float, difficulty: Difficulty) {
     removeAllGameObjects()
     config()
-    makeDefaultSceneFromOwnSample(path, offset, bpm, difficulty).forEach { Scene.active.spawn(it) }
+    makeDefaultSceneFromOwnSample(sample, offset, bpm, difficulty).forEach { Scene.active.spawn(it) }
 }
 
-fun makeDefaultSceneFromOwnSample(path: String, offset: Float, bpm: Float, difficulty: Difficulty): Array<GameObject> {
+fun makeDefaultSceneFromOwnSample(
+    sample: Sample,
+    offset: Float,
+    bpm: Float,
+    difficulty: Difficulty
+): Array<GameObject> {
     val (player, box) = makePlayerWithBox()
 
     val enemySpawner = when (difficulty) {
@@ -67,7 +74,7 @@ fun makeDefaultSceneFromOwnSample(path: String, offset: Float, bpm: Float, diffi
 
     return arrayOf(
         makePauseMenuOpener(),
-        makeOwnTrack(path, offset, bpm),
+        makeOwnTrack(sample, offset, bpm),
         player,
         box,
         makeHealthIndicator(),
