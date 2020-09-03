@@ -134,7 +134,7 @@ object Window : Closeable, IFinalized {
     }
 
     fun setCursor(texture: Texture2D) {
-        val cursor = glfwCreateCursor(texture.asGLFWImage(), 4, 6)
+        val cursor = glfwCreateCursor(texture.asGLFWImage(), 0, 0)
         if (cursor == MemoryUtil.NULL)
             throw RuntimeException("Error creating cursor")
         glfwSetCursor(pointer, cursor)
