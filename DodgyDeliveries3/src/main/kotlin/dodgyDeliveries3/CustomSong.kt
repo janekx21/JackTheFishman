@@ -30,11 +30,11 @@ fun getPath() {
                     Window.fullscreen = false
                 }
                 fileChoose.showOpenDialog(null)
+                Scene.active.destroy(gameObject)
+                getBpm(Sample(Sample.getSampleFileViaPath(fileChoose.selectedFile.path)))
                 if (fullscreen) {
                     Window.fullscreen = true
                 }
-                Scene.active.destroy(gameObject)
-                getBpm(Sample(Sample.getSampleFileViaPath(fileChoose.selectedFile.path)))
             }
         ))
 
