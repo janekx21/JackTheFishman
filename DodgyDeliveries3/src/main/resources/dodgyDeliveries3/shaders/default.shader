@@ -56,7 +56,7 @@ vec3 generateFresnel(vec3 viewDirection, vec3 normal) {
 }
 
 vec3 generateAmbient() {
-   return AmbientColor;
+    return AmbientColor;
 }
 
 float generateFogIntensity(vec3 fragmentPosition, vec3 cameraPosition) {
