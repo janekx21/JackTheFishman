@@ -27,8 +27,8 @@ void main() {
     uv = UV;
 }
 
-    #fragment
-    #define MAX_LIGHT_COUNT 32
+#fragment
+#define MAX_LIGHT_COUNT 32
 uniform vec3 LightPositions[MAX_LIGHT_COUNT];
 uniform vec3 LightColors[MAX_LIGHT_COUNT];
 uniform vec3 AlbedoColor;
