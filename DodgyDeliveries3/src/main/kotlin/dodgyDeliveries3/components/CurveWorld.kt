@@ -8,7 +8,6 @@ enum class Curving {
     IDLE, TOWARDS, BACKWARDS
 }
 
-
 class CurveWorld : Component() {
     val interval = 10f
     val bendSpeed = 0.2f

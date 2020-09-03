@@ -1,8 +1,12 @@
 package dodgyDeliveries3.prefabs
 
 import dodgyDeliveries3.GameObject
+import dodgyDeliveries3.Scene
 import dodgyDeliveries3.components.Music
+import dodgyDeliveries3.loadWinScreen
+import jackTheFishman.engine.Input
 import jackTheFishman.engine.Loader
+import jackTheFishman.engine.Time
 import jackTheFishman.engine.audio.Sample
 
 fun makeTrack1(): GameObject = makeTrack(
@@ -39,9 +43,19 @@ fun makeTrack(sample: Sample, offset: Float, bpm: Float): GameObject {
     return GameObject("Music Track").also { gameObject ->
         gameObject.addComponent<Music>().also {
             it.sample = sample
+            it.source.looping = false
             it.offset = offset
             it.bpm = bpm
             it.play()
+            it.onEndReached = {
+                Input.Mouse.setMode(Input.Mouse.CursorMode.NORMAL)
+                val pauseOpener = Scene.active.findViaName("Pause")
+                if (pauseOpener != null) {
+                    Scene.active.destroy(pauseOpener)
+                }
+                Scene.active.spawn(loadWinScreen())
+                Time.timeScale = 0f
+            }
         }
     }
 }

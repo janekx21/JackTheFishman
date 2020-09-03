@@ -4,6 +4,7 @@ import dodgyDeliveries3.components.*
 import dodgyDeliveries3.prefabs.makeBackwardTunnel
 import dodgyDeliveries3.prefabs.makeLight
 import dodgyDeliveries3.prefabs.makeMenuPlayerWithBox
+import dodgyDeliveries3.prefabs.makeSongCredits
 import dodgyDeliveries3.util.ColorPalette
 import jackTheFishman.engine.Audio
 import jackTheFishman.engine.Loader
@@ -284,6 +285,8 @@ fun makeSelectLevelMenu() {
             button.fontName = "Sugarpunch"
             button.leguiComponent.textState.textColor = Vector4f(ColorPalette.WHITE, 1f)
             button.onPressed = {
+                Scene.active.destroy(gameObject)
+                makeSongCredits()
             }
         })
 

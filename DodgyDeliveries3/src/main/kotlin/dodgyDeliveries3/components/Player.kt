@@ -1,9 +1,9 @@
 package dodgyDeliveries3.components
 
 import dodgyDeliveries3.Component
+import dodgyDeliveries3.DodgyDeliveries3
 import dodgyDeliveries3.Scene
 import dodgyDeliveries3.loadLooseScreen
-import dodgyDeliveries3.DodgyDeliveries3
 import dodgyDeliveries3.util.InputSource
 import jackTheFishman.engine.Input
 import jackTheFishman.engine.Time

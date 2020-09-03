@@ -21,8 +21,9 @@ object DodgyDeliveries3 : Game() {
     }
 
     private val logo = Loader.createViaPath<Texture2D>("logos/logo.png")
+    private val cursor = Loader.createViaPath<Texture2D>("logos/cursor.png")
 
-    private val defaultConfig = Configuration(volume = 1f, preferredInputSource = InputSource.mouse)
+    private val defaultConfig = Configuration(volume = 0.5f, preferredInputSource = InputSource.mouse)
 
     var config = Configuration.loadFromDefaultPathOrNull() ?: defaultConfig
 
@@ -47,6 +48,7 @@ object DodgyDeliveries3 : Game() {
         }
         Window.onResize(Window)
         Window.setIcon(logo)
+        Window.setCursor(cursor)
     }
 
     override fun update() {

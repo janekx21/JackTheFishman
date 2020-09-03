@@ -20,10 +20,5 @@ class Health(var maxHp: Float = 6f, var hp: Float = maxHp) : Component() {
         if (alive) {
             hp = min(hp + amount, maxHp)
         }
-        /*if (!alive) {
-            Input.Mouse.setMode(Input.Mouse.CursorMode.NORMAL)
-            Scene.active.spawn(loadLooseScreen())
-            Time.timeScale = 0f
-        }*/
     }
 }

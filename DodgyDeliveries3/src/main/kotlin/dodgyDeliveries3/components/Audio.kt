@@ -31,7 +31,6 @@ class Audio : Component(), IPlayable {
     override val playing: Boolean get() = source.playing
 
     override fun update() {
-        // TODO make `transform.position` also be effected by parent transformation
         source.pitch = Time.timeScale
         source.position = transform.position
     }
