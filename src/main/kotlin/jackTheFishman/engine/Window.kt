@@ -55,7 +55,7 @@ object Window : Closeable, IFinalized {
                 )
             } else {
                 physicalSize = Vector2i(1280, 720)
-                glfwSetWindowMonitor(pointer, 0, 100, 100, physicalSize.x(), physicalSize.y(), GLFW_DONT_CARE)
+                glfwSetWindowMonitor(pointer, 0, 0, 25, physicalSize.x(), physicalSize.y(), GLFW_DONT_CARE)
             }
             field = value
         }
