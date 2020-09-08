@@ -5,7 +5,7 @@ import jackTheFishman.engine.Serialisation
 import jackTheFishman.engine.util.ICreateViaPath
 import java.io.File
 
-data class Configuration(val volume: Float, val fullscreen: Boolean) {
+data class Configuration(val volume: Float, val fullscreen: Boolean, val showGrid: Boolean) {
     companion object : ICreateViaPath<Configuration> {
         override fun createViaPath(path: String): Configuration {
             return Serialisation.klaxon.parse(File(path))!!

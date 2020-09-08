@@ -1,12 +1,10 @@
 package dodgyDeliveries3.prefabs
 
-import dodgyDeliveries3.GameObject
-import dodgyDeliveries3.Scene
+import dodgyDeliveries3.*
 import dodgyDeliveries3.components.EscapeHandler
+import dodgyDeliveries3.components.ModelRenderer
 import dodgyDeliveries3.components.Slider
 import dodgyDeliveries3.components.Text
-import dodgyDeliveries3.loadMenu
-import dodgyDeliveries3.makeButton
 import dodgyDeliveries3.util.ColorPalette
 import jackTheFishman.engine.Audio
 import jackTheFishman.engine.Input
@@ -63,7 +61,32 @@ fun makePauseOptions(): GameObject {
                     it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
                 },
                 {
-                    Window.fullscreen = !Window.fullscreen
+                    val fullscreen = !Window.fullscreen
+                    DodgyDeliveries3.config = DodgyDeliveries3.config.copy(fullscreen = fullscreen).also {
+                        it.saveToDefaultPath()
+                    }
+                    Window.fullscreen = fullscreen
+                })
+        )
+
+        gameObject.addComponent(
+            makeButton("SHOW GRID",
+                {
+                    // TODO: Koordinaten anpassen
+                    it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.35f, Window.logicalSize.y() * 0.55f)
+                    it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
+                },
+                {
+                    val showGrid = !DodgyDeliveries3.config.showGrid
+
+                    DodgyDeliveries3.config = DodgyDeliveries3.config.copy(showGrid = showGrid).also {
+                        it.saveToDefaultPath()
+                        Scene.active.findViaName("Grid")!!.getComponent<ModelRenderer>().mesh = if (showGrid) {
+                            makeGridMesh()
+                        } else {
+                            null
+                        }
+                    }
                 })
         )
 

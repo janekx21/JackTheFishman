@@ -1,12 +1,16 @@
 package dodgyDeliveries3.prefabs
 
+import dodgyDeliveries3.DodgyDeliveries3
 import dodgyDeliveries3.GameObject
 import dodgyDeliveries3.components.ModelRenderer
 import dodgyDeliveries3.components.Transform
 import dodgyDeliveries3.util.ColorPalette
 import jackTheFishman.engine.Loader
+import jackTheFishman.engine.graphics.Mesh
 import jackTheFishman.engine.math.times
 import org.joml.Vector3f
+
+fun makeGridMesh() = Loader.createViaPath<Mesh>("models/grid.fbx")
 
 fun makeGrid(): GameObject {
     return GameObject("Grid").also { gameObject ->
@@ -15,7 +19,12 @@ fun makeGrid(): GameObject {
             it.scale = it.scale * 1.4f
         }
         gameObject.addComponent<ModelRenderer>().also {
-            it.mesh = Loader.createViaPath("models/grid.fbx")
+            it.mesh = if (DodgyDeliveries3.config.showGrid) {
+                makeGridMesh()
+            } else {
+                null
+            }
+
             it.material = it.material.copy(
                 albedoColor = ColorPalette.ORANGE,
                 emissionColor = Vector3f(66f, 95f, 106f) * (1f / 255f) * 0.6f

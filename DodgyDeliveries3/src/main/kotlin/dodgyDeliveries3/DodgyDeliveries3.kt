@@ -22,7 +22,7 @@ object DodgyDeliveries3 : Game() {
     private val logo = Loader.createViaPath<Texture2D>("logos/logo.png")
     private val cursor = Loader.createViaPath<Texture2D>("logos/cursor.png")
 
-    private val defaultConfig = Configuration(volume = 0.5f, fullscreen = true)
+    private val defaultConfig = Configuration(volume = 0.5f, fullscreen = true, showGrid = true)
 
     var config = Configuration.loadFromDefaultPathOrNull() ?: defaultConfig
 
