@@ -47,7 +47,6 @@ fun makeTrack(sample: Sample, offset: Float, bpm: Float): GameObject {
             it.offset = offset
             it.bpm = bpm
 
-            it.time = sample.duration - 5
             it.play()
 
             it.onEndReached = {

@@ -187,7 +187,11 @@ fun makeOptionsMenu() {
                     it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
                 },
                 {
-                    Window.fullscreen = !Window.fullscreen
+                    val fullscreen = !Window.fullscreen
+                    DodgyDeliveries3.config = DodgyDeliveries3.config.copy(fullscreen = fullscreen).also {
+                        it.saveToDefaultPath()
+                    }
+                    Window.fullscreen = fullscreen
                 })
         )
 

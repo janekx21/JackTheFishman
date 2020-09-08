@@ -5,11 +5,7 @@ import jackTheFishman.engine.Serialisation
 import jackTheFishman.engine.util.ICreateViaPath
 import java.io.File
 
-enum class InputSource {
-    mouse, controller
-}
-
-data class Configuration(val volume: Float, val preferredInputSource: InputSource) {
+data class Configuration(val volume: Float, val fullscreen: Boolean) {
     companion object : ICreateViaPath<Configuration> {
         override fun createViaPath(path: String): Configuration {
             return Serialisation.klaxon.parse(File(path))!!

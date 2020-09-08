@@ -3,7 +3,6 @@ package dodgyDeliveries3
 import dodgyDeliveries3.components.Camera
 import dodgyDeliveries3.util.Configuration
 import dodgyDeliveries3.util.Debug
-import dodgyDeliveries3.util.InputSource
 import jackTheFishman.engine.Audio
 import jackTheFishman.engine.Game
 import jackTheFishman.engine.Loader
@@ -23,7 +22,7 @@ object DodgyDeliveries3 : Game() {
     private val logo = Loader.createViaPath<Texture2D>("logos/logo.png")
     private val cursor = Loader.createViaPath<Texture2D>("logos/cursor.png")
 
-    private val defaultConfig = Configuration(volume = 0.5f, preferredInputSource = InputSource.mouse)
+    private val defaultConfig = Configuration(volume = 0.5f, fullscreen = true)
 
     var config = Configuration.loadFromDefaultPathOrNull() ?: defaultConfig
 
@@ -52,6 +51,9 @@ object DodgyDeliveries3 : Game() {
     }
 
     override fun update() {
+        if (Window.fullscreen != config.fullscreen) {
+            Window.fullscreen = config.fullscreen
+        }
         Scene.active.update()
     }
 
