@@ -30,7 +30,7 @@ fun makePauseOptions(): GameObject {
             text.logicalFontSize = 25f
             text.text = "VOLUME: " + "%.2f".format(Audio.Listener.gain)
             text.onSizeChange = {
-                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.25f, Window.logicalSize.y() * 0.25f)
+                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.25f, Window.logicalSize.y() * 0.2f)
                 it.logicalSize = Vector2f(Window.logicalSize.x() * 0.5f, 0.1f)
             }
         }
@@ -38,7 +38,7 @@ fun makePauseOptions(): GameObject {
         // Volumeslider
         gameObject.addComponent<Slider>().also { slider ->
             slider.onSizeChange = {
-                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.35f, Window.logicalSize.y() * 0.25f)
+                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.35f, Window.logicalSize.y() * 0.2f)
                 it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
             }
             slider.leguiComponent.value = Audio.Listener.gain
@@ -57,7 +57,7 @@ fun makePauseOptions(): GameObject {
         gameObject.addComponent(
             makeButton("FULLSCREEN TOGGLE",
                 {
-                    it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.35f, Window.logicalSize.y() * 0.45f)
+                    it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.35f, Window.logicalSize.y() * 0.35f)
                     it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
                 },
                 {
@@ -70,10 +70,10 @@ fun makePauseOptions(): GameObject {
         )
 
         gameObject.addComponent(
-            makeButton("SHOW GRID",
+            makeButton(
+                "GRID TOGGLE",
                 {
-                    // TODO: Koordinaten anpassen
-                    it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.35f, Window.logicalSize.y() * 0.55f)
+                    it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.35f, Window.logicalSize.y() * 0.35f + 130f)
                     it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
                 },
                 {
@@ -94,7 +94,7 @@ fun makePauseOptions(): GameObject {
         gameObject.addComponent(
             makeButton("BACK",
                 {
-                    it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.35f, Window.logicalSize.y() * 0.45f + 130f)
+                    it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.35f, Window.logicalSize.y() * 0.35f + 260f)
                     it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
                 },
                 {

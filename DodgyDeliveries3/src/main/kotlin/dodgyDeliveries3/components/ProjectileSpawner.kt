@@ -79,7 +79,8 @@ class ProjectileSpawner(var timer: Float = 0f, var type: Type = Type.STANDARD) :
                 color = Vector3f(ColorPalette.RED) * 2f
             }
             it.addComponent<Projectile>().also { projectile ->
-                projectile.damage = 0f
+                projectile.damage = 1f
+                projectile.volume = 1.1f
             }
             it.addComponent<Audio>().also { audio ->
                 audio.sample = Loader.createViaPath("sounds/wind.ogg")
@@ -109,7 +110,7 @@ class ProjectileSpawner(var timer: Float = 0f, var type: Type = Type.STANDARD) :
                 color = Vector3f(ColorPalette.YELLOW) * 2f
             }
             it.addComponent<WobbleProjectile>().also { projectile ->
-                projectile.damage = 0f
+                projectile.damage = 2f
             }
             it.addComponent<Audio>().also { audio ->
                 audio.sample = Loader.createViaPath("sounds/wobble.ogg")
@@ -142,7 +143,7 @@ class ProjectileSpawner(var timer: Float = 0f, var type: Type = Type.STANDARD) :
                 color = Vector3f(ColorPalette.BLUE) * 2f
             }
             it.addComponent<Projectile>().also { projectile ->
-                projectile.damage = 0f
+                projectile.damage = 3f
             }
             it.addComponent<Audio>().also { audio ->
                 audio.sample = Loader.createViaPath("sounds/laser.ogg")

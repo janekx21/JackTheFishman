@@ -9,6 +9,7 @@ import org.joml.Vector2f
 import org.joml.Vector4f
 import org.liquidengine.legui.component.optional.align.HorizontalAlign
 import javax.swing.JFileChooser
+import javax.swing.UIManager
 import javax.swing.filechooser.FileNameExtensionFilter
 
 fun getPath() {
@@ -21,6 +22,11 @@ fun getPath() {
                 it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
             },
             {
+                try {
+                    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
+                } catch (ex: Exception) {
+
+                }
                 val fileChoose = JFileChooser()
                 fileChoose.dialogTitle = "Select .OGG File"
                 val filter = FileNameExtensionFilter("Ogg Files", "ogg")

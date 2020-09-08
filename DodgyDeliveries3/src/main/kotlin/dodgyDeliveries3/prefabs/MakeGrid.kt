@@ -16,7 +16,7 @@ fun makeGrid(): GameObject {
     return GameObject("Grid").also { gameObject ->
         gameObject.addComponent<Transform>().also {
             it.position = Vector3f(0f, -0.47f, -3.5f)
-            it.scale = it.scale * 1.4f
+            it.scale = Vector3f(it.scale.x() * 1.12f, it.scale.y() * 1.4f, it.scale.z() * 1.4f)
         }
         gameObject.addComponent<ModelRenderer>().also {
             it.mesh = if (DodgyDeliveries3.config.showGrid) {

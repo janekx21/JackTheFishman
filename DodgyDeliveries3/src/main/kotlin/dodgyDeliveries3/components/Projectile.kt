@@ -7,7 +7,7 @@ import org.jbox2d.dynamics.contacts.Contact
 
 open class Projectile(var damage: Float = 1f) : Component(), ICollisionHandler {
     var internalAudio: Audio? = null
-    private var volume: Float = 2f
+    var volume: Float = 2f
 
     private val sound: Audio
         get() {
