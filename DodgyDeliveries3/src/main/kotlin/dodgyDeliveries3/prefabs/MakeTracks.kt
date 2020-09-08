@@ -10,25 +10,25 @@ import jackTheFishman.engine.Time
 import jackTheFishman.engine.audio.Sample
 
 fun makeTrack1(): GameObject = makeTrack(
-    Loader.createViaPath("music/Dream_Industrial.ogg"),
+    Loader.createViaPath("music/Dream_Industrial.ogg", cache = false),
     offset = .029f,
     bpm = 110f
 )
 
 fun makeTrack2(): GameObject = makeTrack(
-    Loader.createViaPath("music/Edge_of_Tomorrow.ogg"),
+    Loader.createViaPath("music/Edge_of_Tomorrow.ogg", cache = false),
     offset = 0.05f,
     bpm = 90f
 )
 
 fun makeTrack3(): GameObject = makeTrack(
-    Loader.createViaPath("music/Thaehan-Wind.ogg"),
+    Loader.createViaPath("music/Thaehan-Wind.ogg", cache = false),
     offset = 0.119f,
     bpm = 94f
 )
 
 fun makeTrack4(): GameObject = makeTrack(
-    Loader.createViaPath("music/bensound-dreams.ogg"),
+    Loader.createViaPath("music/bensound-dreams.ogg", cache = false),
     offset = 0.689f,
     bpm = 95f
 )
@@ -46,7 +46,10 @@ fun makeTrack(sample: Sample, offset: Float, bpm: Float): GameObject {
             it.source.looping = false
             it.offset = offset
             it.bpm = bpm
+
+            it.time = sample.duration - 5
             it.play()
+
             it.onEndReached = {
                 Input.Mouse.setMode(Input.Mouse.CursorMode.NORMAL)
                 val pauseOpener = Scene.active.findViaName("Pause")

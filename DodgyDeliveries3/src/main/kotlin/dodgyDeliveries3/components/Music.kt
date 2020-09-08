@@ -28,7 +28,11 @@ class Music(loop: Boolean = false, var onEndReached: () -> Unit = {}) : Componen
 
     override fun play() = source.play()
     override fun pause() = source.pause()
-    override fun stop() = source.stop()
+    override fun stop() {
+        source.stop()
+        source.close()
+        source.sample?.close()
+    }
 
     override var time: Float
         set(value) {
@@ -43,18 +47,13 @@ class Music(loop: Boolean = false, var onEndReached: () -> Unit = {}) : Componen
     override fun update() {
         super.update()
 
-        //println(source)
-        //println(source.state)
+        source.pitch = Time.timeScale
 
         if (source.state != lastPlayState) {
             if (source.state == PlayState.STOPPED) {
-                source.close()
                 onEndReached()
-            } else {
-                lastPlayState = source.state
             }
+            lastPlayState = source.state
         }
-
-        source.pitch = Time.timeScale
     }
 }

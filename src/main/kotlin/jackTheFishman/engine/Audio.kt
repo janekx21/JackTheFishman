@@ -83,4 +83,22 @@ object Audio : IFinalized {
                 field = value
             }
     }
+
+    fun <T> checkedInvocation(f: () -> T): T {
+        alGetError()
+        val result = f()
+        val alErr = alGetError()
+        if (alErr != AL_NO_ERROR) {
+            val alErrStr = when (alErr) {
+                AL_INVALID_NAME -> "AL_INVALID_NAME"
+                AL_INVALID_ENUM -> "AL_INVALID_ENUM"
+                AL_INVALID_VALUE -> "AL_INVALID_VALUE"
+                AL_INVALID_OPERATION -> "AL_INVALID_OPERATION"
+                AL_OUT_OF_MEMORY -> "AL_OUT_OF_MEMORY"
+                else -> "($alErr)"
+            }
+            throw IllegalStateException("OpenAL error ocurred: $alErrStr")
+        }
+        return result
+    }
 }

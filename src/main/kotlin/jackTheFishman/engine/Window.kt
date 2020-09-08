@@ -104,7 +104,7 @@ object Window : Closeable, IFinalized {
         configGLFW()
         configOpenGL()
         configEventCallbacks()
-        fullscreen = true
+        fullscreen = false
     }
 
     private fun configGLFW() {

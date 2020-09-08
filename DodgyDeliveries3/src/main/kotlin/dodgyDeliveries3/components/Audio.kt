@@ -5,6 +5,7 @@ import jackTheFishman.engine.Time
 import jackTheFishman.engine.audio.IPlayable
 import jackTheFishman.engine.audio.Sample
 import jackTheFishman.engine.audio.Source
+import org.lwjgl.openal.AL10
 import org.lwjgl.openal.AL10.AL_INVALID_NAME
 import org.lwjgl.openal.AL10.alGetError
 
@@ -22,7 +23,11 @@ class Audio : Component(), IPlayable {
 
     override fun pause() = source.pause()
 
-    override fun stop() = source.stop()
+    override fun stop() {
+        source.stop()
+        source.close()
+        //source.sample?.close()
+    }
 
     override var time: Float
         set(value) {

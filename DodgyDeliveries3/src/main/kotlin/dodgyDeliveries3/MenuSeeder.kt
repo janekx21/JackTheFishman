@@ -10,12 +10,15 @@ import jackTheFishman.engine.Audio
 import jackTheFishman.engine.Loader
 import jackTheFishman.engine.Window
 import jackTheFishman.engine.Window.close
+import jackTheFishman.engine.audio.Sample
+import jackTheFishman.engine.audio.SampleViaPath
 import jackTheFishman.engine.math.times
 import org.joml.Vector2f
 import org.joml.Vector3f
 import org.joml.Vector4f
 import org.liquidengine.legui.component.optional.align.HorizontalAlign
 import org.liquidengine.legui.style.font.FontRegistry
+import org.lwjgl.openal.AL10.alIsBuffer
 import java.awt.Desktop
 import java.net.URI
 
@@ -26,7 +29,9 @@ fun loadMenu() {
 
     GameObject("Main Menu Music").also { gameObject ->
         gameObject.addComponent(Music(true).also {
-            it.sample = Loader.createViaPath("music/mainMenuMusic.ogg")
+            val sample = Sample.createViaPath(Loader.resourceFileViaPath("music/mainMenuMusic.ogg").path)
+
+            it.sample = sample
             it.play()
         })
         Scene.active.spawn(gameObject)

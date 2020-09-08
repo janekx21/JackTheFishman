@@ -21,7 +21,6 @@ open class Projectile(var damage: Float = 1f) : Component(), ICollisionHandler {
 
     override fun update() {
         if (transform.position.z() > 20f) {
-            sound.stop()
             Scene.active.destroy(gameObject)
         }
         sound.source.gain =
