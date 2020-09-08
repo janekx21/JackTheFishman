@@ -13,12 +13,16 @@ import jackTheFishman.engine.util.range
 import org.joml.Vector3f
 import org.joml.Vector3fc
 import java.util.*
+import kotlin.math.E
+import kotlin.math.pow
 import kotlin.random.asKotlinRandom
 
 class EnemySpawner : Component() {
     var timer = 0f
     var spawnInterval = 4f
     private val random = Random().asKotlinRandom()
+
+    private var lastOffsetNegative = true
 
     override fun update() {
         timer -= Time.deltaTime
@@ -29,7 +33,7 @@ class EnemySpawner : Component() {
     }
 
     private fun spawn() {
-        val xOffset = random.range(-2f, 2f)
+        val xOffset = calcXOffset()
         val timerOffset = random.range(0f, 1f)
         when ((random.nextFloat() * 4f).toInt()) {
             0 -> Scene.active.spawn(makeStandardEnemy(Vector3f(xOffset, 5f, -20f), timerOffset))
@@ -41,6 +45,18 @@ class EnemySpawner : Component() {
             3 -> Scene.active.spawn(makeLanternFish(Vector3f(xOffset, 5f, -15f), timerOffset))
 
             else -> throw NotImplementedError("No fitting choice found")
+        }
+    }
+
+    private fun calcXOffset(): Float {
+        var xOffset = random.range(0f, 2f)
+        xOffset = 2.018218f - 2.013538f * E.toFloat().pow(-1.987213f * xOffset)
+        if (lastOffsetNegative) {
+            lastOffsetNegative = !lastOffsetNegative
+            return xOffset
+        } else {
+            lastOffsetNegative = !lastOffsetNegative
+            return xOffset * -1f
         }
     }
 

@@ -25,10 +25,10 @@ fun loadMenu() {
     configFont()
 
     GameObject("Main Menu Music").also { gameObject ->
-        gameObject.addComponent<Music>().also {
+        gameObject.addComponent(Music(true).also {
             it.sample = Loader.createViaPath("music/mainMenuMusic.ogg")
             it.play()
-        }
+        })
         Scene.active.spawn(gameObject)
     }
 

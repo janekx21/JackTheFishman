@@ -143,6 +143,7 @@ fun makePauseMenu(): GameObject {
                 },
                 {
                     Time.timeScale = 1f
+                    Scene.active.destroy(gameObject)
                     loadMenu()
                 })
         )

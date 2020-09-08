@@ -41,7 +41,7 @@ fun makeOwnTrack(sample: Sample, offset: Float, bpm: Float): GameObject = makeTr
 
 fun makeTrack(sample: Sample, offset: Float, bpm: Float): GameObject {
     return GameObject("Music Track").also { gameObject ->
-        gameObject.addComponent<Music>().also {
+        gameObject.addComponent(Music(false).also {
             it.sample = sample
             it.source.looping = false
             it.offset = offset
@@ -56,6 +56,6 @@ fun makeTrack(sample: Sample, offset: Float, bpm: Float): GameObject {
                 Scene.active.spawn(loadWinScreen())
                 Time.timeScale = 0f
             }
-        }
+        })
     }
 }

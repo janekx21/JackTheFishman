@@ -102,6 +102,6 @@ class Player(var speed: Float = 8f) : Component() {
 
     companion object {
         const val maxVelocityChange = 4f
-        const val laneWidth = 8f
+        const val laneWidth = 6f
     }
 }

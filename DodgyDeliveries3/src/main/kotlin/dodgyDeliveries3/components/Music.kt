@@ -24,7 +24,7 @@ class Music(loop: Boolean = false, var onEndReached: () -> Unit = {}) : Componen
     val secondsPerBeat: Float
         get() = 60f / bpm
 
-    val source = Source().also { it.looping = true }
+    val source = Source().also { it.looping = loop }
 
     override fun play() = source.play()
     override fun pause() = source.pause()
@@ -43,11 +43,16 @@ class Music(loop: Boolean = false, var onEndReached: () -> Unit = {}) : Componen
     override fun update() {
         super.update()
 
+        //println(source)
+        //println(source.state)
+
         if (source.state != lastPlayState) {
             if (source.state == PlayState.STOPPED) {
+                source.close()
                 onEndReached()
+            } else {
+                lastPlayState = source.state
             }
-            lastPlayState = source.state
         }
 
         source.pitch = Time.timeScale

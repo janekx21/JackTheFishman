@@ -62,7 +62,8 @@ class Source(initialSample: Sample? = null) : Closeable, IPlayable {
     }
 
     override fun stop() {
-        alSourceStop(pointer)
+        alDeleteSources(pointer)
+        //alSourceStop(pointer)
     }
 
     override var time: Float

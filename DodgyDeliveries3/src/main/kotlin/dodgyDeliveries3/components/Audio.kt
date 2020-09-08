@@ -5,6 +5,8 @@ import jackTheFishman.engine.Time
 import jackTheFishman.engine.audio.IPlayable
 import jackTheFishman.engine.audio.Sample
 import jackTheFishman.engine.audio.Source
+import org.lwjgl.openal.AL10.AL_INVALID_NAME
+import org.lwjgl.openal.AL10.alGetError
 
 class Audio : Component(), IPlayable {
     var source = Source()
@@ -33,6 +35,11 @@ class Audio : Component(), IPlayable {
     override fun update() {
         source.pitch = Time.timeScale
         source.position = transform.position
+        val error = alGetError()
+        if (error != 0) {
+            println(error)
+            println(AL_INVALID_NAME)
+        }
     }
 
     override fun draw() {}
