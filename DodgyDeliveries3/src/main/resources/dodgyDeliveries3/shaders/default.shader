@@ -1,6 +1,7 @@
 #vertex
 uniform mat4 MVP;
 uniform mat4 World;
+uniform float curveWorld;
 
 in vec3 Position;
 in vec3 Normal;
@@ -10,9 +11,14 @@ out vec3 position;
 out vec2 uv;
 out mat3 TBN;
 
+vec4 bend(vec4 pos) {
+    pos.x = pos.x + (pos.z * pos.z * curveWorld);
+    return pos;
+}
+
 void main() {
-    gl_Position = MVP * vec4(Position, 1);
-    position = vec3(World * vec4(Position, 1));
+    gl_Position = bend(MVP * vec4(Position, 1));
+    position = (World * vec4(Position, 1)).xyz;
 
     vec3 N = normalize(vec3(World * vec4(Normal, 0.0)));
     vec3 T = normalize(vec3(World * vec4(Tangent, 0.0)));
@@ -50,7 +56,7 @@ vec3 generateFresnel(vec3 viewDirection, vec3 normal) {
 }
 
 vec3 generateAmbient() {
-   return AmbientColor;
+    return AmbientColor;
 }
 
 float generateFogIntensity(vec3 fragmentPosition, vec3 cameraPosition) {

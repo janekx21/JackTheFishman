@@ -14,6 +14,8 @@ class Camera(var fov: Float = 80f) : Component() {
     private var hash = 0
     private var cached: Matrix4fc = Matrix4f()
 
+    var curveWorld: Float = 0f
+
     fun getProjectionMatrix(): Matrix4fc {
         return matrix
     }

@@ -48,8 +48,8 @@ object Loader {
         return obj.createViaPath(file.path)
     }
 
-    inline fun <reified T> createViaPath(path: String): T where T : Any {
-        val instance = loadedObjects.getOrPut(path) {
+    inline fun <reified T> createViaPath(path: String, cache: Boolean = true): T where T : Any {
+        val doCreate = {
             val file = resourceFileViaPath(path)
             check(file.exists()) { "file not found ${file.path}" }
             val possibleFactory = T::class.companionObjectInstance
@@ -58,6 +58,11 @@ object Loader {
             @Suppress("UNCHECKED_CAST") val factory = possibleFactory as ICreateViaPath<T>
             factory.createViaPath(file.path)
         }
-        return instance as T
+
+        return if (cache) {
+            loadedObjects.getOrPut(path, doCreate) as T
+        } else {
+            doCreate()
+        }
     }
 }

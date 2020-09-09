@@ -4,7 +4,7 @@ import dodgyDeliveries3.Component
 import kotlin.math.max
 import kotlin.math.min
 
-class Health(var maxHp: Float = 3f, var hp: Float = maxHp) : Component() {
+class Health(var maxHp: Float = 6f, var hp: Float = maxHp) : Component() {
     val alive: Boolean
         get() = hp > 0f
 
@@ -12,9 +12,8 @@ class Health(var maxHp: Float = 3f, var hp: Float = maxHp) : Component() {
         get() = hp / maxHp
 
     fun applyDamage(amount: Float) {
-        if (alive) {
-            hp = max(hp - amount, 0f)
-        }
+        hp = max(hp - amount, 0f)
+        gameObject.getComponent<Audio>().play()
     }
 
     fun applyHeal(amount: Float) {

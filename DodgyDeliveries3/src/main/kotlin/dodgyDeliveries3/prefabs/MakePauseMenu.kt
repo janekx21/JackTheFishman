@@ -2,6 +2,7 @@ package dodgyDeliveries3.prefabs
 
 import dodgyDeliveries3.*
 import dodgyDeliveries3.components.EscapeHandler
+import dodgyDeliveries3.components.ModelRenderer
 import dodgyDeliveries3.components.Slider
 import dodgyDeliveries3.components.Text
 import dodgyDeliveries3.util.ColorPalette
@@ -18,7 +19,7 @@ fun makePauseOptions(): GameObject {
         gameObject.addComponent<EscapeHandler>().also {
             it.action = {
                 Scene.active.destroy(gameObject)
-                makeMainMenu()
+                Scene.active.spawn(makePauseMenu())
             }
         }
 
@@ -29,7 +30,7 @@ fun makePauseOptions(): GameObject {
             text.logicalFontSize = 25f
             text.text = "VOLUME: " + "%.2f".format(Audio.Listener.gain)
             text.onSizeChange = {
-                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.25f, Window.logicalSize.y() * 0.25f)
+                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.25f, Window.logicalSize.y() * 0.2f)
                 it.logicalSize = Vector2f(Window.logicalSize.x() * 0.5f, 0.1f)
             }
         }
@@ -37,7 +38,7 @@ fun makePauseOptions(): GameObject {
         // Volumeslider
         gameObject.addComponent<Slider>().also { slider ->
             slider.onSizeChange = {
-                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.35f, Window.logicalSize.y() * 0.25f)
+                it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.35f, Window.logicalSize.y() * 0.2f)
                 it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
             }
             slider.leguiComponent.value = Audio.Listener.gain
@@ -56,11 +57,36 @@ fun makePauseOptions(): GameObject {
         gameObject.addComponent(
             makeButton("FULLSCREEN TOGGLE",
                 {
-                    it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.35f, Window.logicalSize.y() * 0.45f)
+                    it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.35f, Window.logicalSize.y() * 0.35f)
                     it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
                 },
                 {
-                    Window.fullscreen = !Window.fullscreen
+                    val fullscreen = !Window.fullscreen
+                    DodgyDeliveries3.config = DodgyDeliveries3.config.copy(fullscreen = fullscreen).also {
+                        it.saveToDefaultPath()
+                    }
+                    Window.fullscreen = fullscreen
+                })
+        )
+
+        gameObject.addComponent(
+            makeButton(
+                "GRID TOGGLE",
+                {
+                    it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.35f, Window.logicalSize.y() * 0.35f + 130f)
+                    it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
+                },
+                {
+                    val showGrid = !DodgyDeliveries3.config.showGrid
+
+                    DodgyDeliveries3.config = DodgyDeliveries3.config.copy(showGrid = showGrid).also {
+                        it.saveToDefaultPath()
+                        Scene.active.findViaName("Grid")!!.getComponent<ModelRenderer>().mesh = if (showGrid) {
+                            makeGridMesh()
+                        } else {
+                            null
+                        }
+                    }
                 })
         )
 
@@ -68,7 +94,7 @@ fun makePauseOptions(): GameObject {
         gameObject.addComponent(
             makeButton("BACK",
                 {
-                    it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.35f, Window.logicalSize.y() * 0.45f + 130f)
+                    it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.35f, Window.logicalSize.y() * 0.35f + 260f)
                     it.logicalSize = Vector2f(Window.logicalSize.x() * 0.3f, 100f)
                 },
                 {
@@ -140,6 +166,7 @@ fun makePauseMenu(): GameObject {
                 },
                 {
                     Time.timeScale = 1f
+                    Scene.active.destroy(gameObject)
                     loadMenu()
                 })
         )

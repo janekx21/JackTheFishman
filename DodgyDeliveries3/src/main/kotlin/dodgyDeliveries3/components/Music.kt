@@ -3,10 +3,11 @@ package dodgyDeliveries3.components
 import dodgyDeliveries3.Component
 import jackTheFishman.engine.Time
 import jackTheFishman.engine.audio.IPlayable
+import jackTheFishman.engine.audio.PlayState
 import jackTheFishman.engine.audio.Sample
 import jackTheFishman.engine.audio.Source
 
-class Music : Component(), IPlayable {
+class Music(loop: Boolean = false, var onEndReached: () -> Unit = {}) : Component(), IPlayable {
     var sample: Sample? = null
         get() = source.sample
         set(value) {
@@ -23,11 +24,15 @@ class Music : Component(), IPlayable {
     val secondsPerBeat: Float
         get() = 60f / bpm
 
-    private var source = Source().also { it.looping = true }
+    val source = Source().also { it.looping = loop }
 
     override fun play() = source.play()
     override fun pause() = source.pause()
-    override fun stop() = source.stop()
+    override fun stop() {
+        source.stop()
+        source.close()
+        source.sample?.close()
+    }
 
     override var time: Float
         set(value) {
@@ -37,7 +42,18 @@ class Music : Component(), IPlayable {
 
     override val playing: Boolean get() = source.playing
 
+    private var lastPlayState: PlayState? = null
+
     override fun update() {
+        super.update()
+
         source.pitch = Time.timeScale
+
+        if (source.state != lastPlayState) {
+            if (source.state == PlayState.STOPPED) {
+                onEndReached()
+            }
+            lastPlayState = source.state
+        }
     }
 }

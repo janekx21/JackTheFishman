@@ -93,7 +93,7 @@ class ExampleFly : Game() {
         view.rotation(rotation)
         view.translate(Vector3f(position).negate())
 
-        shader.setMatrix(world, view, projection)
+        shader.setMatrix(world, view, projection, 0f)
         shader.setUniform("funkyColor", Vector4f(.2f, .5f, .7f, 1f))
         shader.setUniform("Cube", cube)
         shader.setUniform("CameraPosition", position)

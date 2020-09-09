@@ -1,17 +1,18 @@
 package dodgyDeliveries3.components
 
 import dodgyDeliveries3.Component
+import dodgyDeliveries3.DodgyDeliveries3
+import dodgyDeliveries3.Scene
+import dodgyDeliveries3.loadLooseScreen
 import jackTheFishman.engine.Input
 import jackTheFishman.engine.Time
 import jackTheFishman.engine.Window
-import jackTheFishman.engine.math.Vector2fConst
-import jackTheFishman.engine.math.Vector3fConst
-import jackTheFishman.engine.math.plus
-import jackTheFishman.engine.math.times
+import jackTheFishman.engine.math.*
 import org.jbox2d.common.MathUtils.PI
 import org.jbox2d.common.MathUtils.clamp
 import org.joml.Quaternionf
 import org.joml.Vector3f
+import kotlin.math.max
 import kotlin.math.sin
 
 class Player(var speed: Float = 8f) : Component() {
@@ -23,6 +24,8 @@ class Player(var speed: Float = 8f) : Component() {
         }
 
     var targetPosition = 0f
+
+    var wasAliveLastUpdate = true
 
     override fun start() {
         internalcollider = gameObject.getComponent()
@@ -36,10 +39,22 @@ class Player(var speed: Float = 8f) : Component() {
             animateRotation()
         animateYAxis()
         handleHealth()
+        animateYAxis()
+        handleSound()
+    }
+
+    private fun handleSound() {
+        val audio = Scene.active.findViaName("Player Box")!!.getComponent<Audio>()
+        audio.source.gain = max(
+            (6f / ((Camera.main!!.transform.position - audio.gameObject.transform.parent!!.position).length())) - 1f,
+            0f
+        )
     }
 
     private fun handleInput() {
-        targetPosition = clamp(mapScreenToView(Input.Mouse.position.x()), -1f, 1f) * laneWidth * .5f
+        val inputX = Input.Mouse.position.x()
+
+        targetPosition = clamp(mapScreenToView(inputX), -1f, 1f) * laneWidth * .5f
     }
 
     private fun mapScreenToView(x: Float): Float {
@@ -68,13 +83,20 @@ class Player(var speed: Float = 8f) : Component() {
 
     private fun handleHealth() {
         val health = gameObject.getComponent<Health>()
-        if (!health.alive) {
-            // TODO handle game over
+        if (!health.alive && wasAliveLastUpdate) {
+            Input.Mouse.setMode(Input.Mouse.CursorMode.NORMAL)
+            val pauseOpener = Scene.active.findViaName("Pause")
+            if (pauseOpener != null) {
+                Scene.active.destroy(pauseOpener)
+            }
+            Scene.active.spawn(loadLooseScreen())
+            wasAliveLastUpdate = false
+            Time.timeScale = 0f
         }
     }
 
     companion object {
         const val maxVelocityChange = 4f
-        const val laneWidth = 8f
+        const val laneWidth = 6f
     }
 }

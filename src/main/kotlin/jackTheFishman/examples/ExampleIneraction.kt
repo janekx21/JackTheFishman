@@ -49,7 +49,7 @@ class ExampleInteraction : Game() {
         world.identity()
         world.translate(Vector3f(sin(GLFW.glfwGetTime()).toFloat() * .1f, 0f, 0f))
 
-        shader.setMatrix(world, view, projection)
+        shader.setMatrix(world, view, projection, 0f)
         shader.setUniform("funkyColor", Vector4f(.2f, .5f, .7f, 1f))
         shader.setUniform("funkyTex", tex)
 

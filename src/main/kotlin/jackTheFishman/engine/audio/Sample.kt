@@ -2,15 +2,18 @@ package jackTheFishman.engine.audio
 
 import com.beust.klaxon.Json
 import com.beust.klaxon.TypeFor
+import jackTheFishman.engine.Audio
 import jackTheFishman.engine.util.ICreateViaPath
 import jackTheFishman.engine.util.IntPointer
 import jackTheFishman.engine.util.typeAdapter.SampleTypeAdapter
 import org.lwjgl.openal.AL10.*
 import org.lwjgl.stb.STBVorbis
 import org.lwjgl.system.MemoryStack
+import java.io.Closeable
+import java.nio.IntBuffer
 
 @TypeFor(field = "type", adapter = SampleTypeAdapter::class)
-open class Sample(sampleFile: SampleFile) {
+open class Sample(sampleFile: SampleFile) : Closeable  {
     val type: String = javaClass.simpleName
 
     // Find the correct OpenAL format
@@ -18,12 +21,39 @@ open class Sample(sampleFile: SampleFile) {
 
     // Request space for the buffer
     @Json(ignored = true)
-    val pointer = alGenBuffers()
+    val pointer = Audio.checkedInvocation { alGenBuffers() }
+
+    @Json(ignored = true)
+    val duration: Float
 
     init {
         check(format != null) { "format not found" }
         // Send the data to OpenAL
-        alBufferData(pointer, format, sampleFile.data, sampleFile.sampleRate)
+        Audio.checkedInvocation {
+            alBufferData(pointer, format, sampleFile.data, sampleFile.sampleRate)
+        }
+
+        val temp = IntPointer()
+
+        Audio.checkedInvocation { alGetBufferi(pointer, AL_SIZE, temp.buffer) }
+        val bufferSize = temp.value
+
+        Audio.checkedInvocation { alGetBufferi(pointer, AL_FREQUENCY, temp.buffer) }
+        val frequency = temp.value
+
+        Audio.checkedInvocation { alGetBufferi(pointer, AL_CHANNELS, temp.buffer) }
+        val channels = temp.value
+
+        Audio.checkedInvocation { alGetBufferi(pointer, AL_BITS, temp.buffer) }
+        val bitsPerSample = temp.value
+
+        duration = bufferSize * 8f / (frequency * channels * bitsPerSample)
+    }
+
+    override fun close() {
+        Audio.checkedInvocation {
+            alDeleteBuffers(pointer)
+        }
     }
 
     companion object : ICreateViaPath<Sample> {
@@ -53,6 +83,7 @@ open class Sample(sampleFile: SampleFile) {
             // Free the space we allocated earlier
             MemoryStack.stackPop()
             MemoryStack.stackPop()
+
             return SampleFile(rawAudioBuffer, channels, sampleRate)
         }
 

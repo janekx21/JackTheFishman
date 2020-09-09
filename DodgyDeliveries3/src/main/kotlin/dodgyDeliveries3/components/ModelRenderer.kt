@@ -22,7 +22,8 @@ data class ModelRenderer(var mesh: Mesh? = null, var material: Material = defaul
             shader.setMatrix(
                 gameObject.transform.generateMatrix(),
                 Camera.main!!.generateViewMatrix(),
-                Camera.main!!.getProjectionMatrix()
+                Camera.main!!.getProjectionMatrix(),
+                Camera.main!!.curveWorld
             )
             uploadUniforms(shader)
             shader.use {

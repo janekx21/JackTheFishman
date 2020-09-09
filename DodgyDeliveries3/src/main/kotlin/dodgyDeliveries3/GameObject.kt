@@ -74,9 +74,6 @@ data class GameObject(val name: String, val components: ArrayList<Component> = a
     }
 
     fun stop() {
-        for (component in components) {
-            component.stop()
-        }
     }
 
     fun destroyAllComponents() {

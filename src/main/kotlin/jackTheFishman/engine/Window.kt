@@ -17,6 +17,7 @@ import org.lwjgl.opengl.GL11.GL_BLEND
 import org.lwjgl.opengl.GL46
 import org.lwjgl.opengl.GL46.GL_DEPTH_TEST
 import org.lwjgl.opengl.GL46.glEnable
+import org.lwjgl.system.MemoryUtil
 import java.io.Closeable
 import kotlin.math.min
 
@@ -54,7 +55,7 @@ object Window : Closeable, IFinalized {
                 )
             } else {
                 physicalSize = Vector2i(1280, 720)
-                glfwSetWindowMonitor(pointer, 0, 100, 100, physicalSize.x(), physicalSize.y(), GLFW_DONT_CARE)
+                glfwSetWindowMonitor(pointer, 0, 0, 25, physicalSize.x(), physicalSize.y(), GLFW_DONT_CARE)
             }
             field = value
         }
@@ -96,7 +97,6 @@ object Window : Closeable, IFinalized {
         glfwMakeContextCurrent(pointer)
         createCapabilities()
         glfwShowWindow(pointer)
-
         IFinalized.push(this)
     }
 
@@ -130,6 +130,13 @@ object Window : Closeable, IFinalized {
             it.chainFramebufferSizeCallback.add(framebufferSizeCallback)
             it.chainWindowCloseCallback.add(windowCloseCallback)
         }
+    }
+
+    fun setCursor(texture: Texture2D) {
+        val cursor = glfwCreateCursor(texture.asGLFWImage(), 0, 0)
+        if (cursor == MemoryUtil.NULL)
+            throw RuntimeException("Error creating cursor")
+        glfwSetCursor(pointer, cursor)
     }
 
     fun setIcon(texture: Texture2D) {

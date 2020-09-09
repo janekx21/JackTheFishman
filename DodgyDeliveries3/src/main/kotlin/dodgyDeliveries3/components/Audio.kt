@@ -1,12 +1,13 @@
 package dodgyDeliveries3.components
 
 import dodgyDeliveries3.Component
+import jackTheFishman.engine.Time
 import jackTheFishman.engine.audio.IPlayable
 import jackTheFishman.engine.audio.Sample
 import jackTheFishman.engine.audio.Source
 
 class Audio : Component(), IPlayable {
-    private var source = Source()
+    var source = Source()
 
     var sample: Sample? = null
         get() = source.sample
@@ -19,7 +20,11 @@ class Audio : Component(), IPlayable {
 
     override fun pause() = source.pause()
 
-    override fun stop() = source.stop()
+    override fun stop() {
+        source.stop()
+        source.close()
+        //source.sample?.close()
+    }
 
     override var time: Float
         set(value) {
@@ -30,7 +35,7 @@ class Audio : Component(), IPlayable {
     override val playing: Boolean get() = source.playing
 
     override fun update() {
-        // TODO make `transform.position` also be effected by parent transformation
+        source.pitch = Time.timeScale
         source.position = transform.position
     }
 

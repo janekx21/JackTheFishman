@@ -80,6 +80,13 @@ class ProjectileSpawner(var timer: Float = 0f, var type: Type = Type.STANDARD) :
             }
             it.addComponent<Projectile>().also { projectile ->
                 projectile.damage = 1f
+                projectile.volume = 1.1f
+            }
+            it.addComponent<Audio>().also { audio ->
+                audio.sample = Loader.createViaPath("sounds/wind.ogg")
+                audio.source.looping = true
+                audio.source.gain = 0f
+                audio.play()
             }
         }
     }
@@ -105,6 +112,12 @@ class ProjectileSpawner(var timer: Float = 0f, var type: Type = Type.STANDARD) :
             it.addComponent<WobbleProjectile>().also { projectile ->
                 projectile.damage = 2f
             }
+            it.addComponent<Audio>().also { audio ->
+                audio.sample = Loader.createViaPath("sounds/wobble.ogg")
+                audio.source.looping = true
+                audio.source.gain = 0f
+                audio.play()
+            }
         }
     }
 
@@ -122,7 +135,7 @@ class ProjectileSpawner(var timer: Float = 0f, var type: Type = Type.STANDARD) :
                 )
             }
             it.addComponent<CircleCollider>().apply {
-                velocity = Vector2fConst.up * 4f
+                velocity = Vector2fConst.up * 5f
                 isSensor = true
                 radius = .2f
             }
@@ -130,7 +143,13 @@ class ProjectileSpawner(var timer: Float = 0f, var type: Type = Type.STANDARD) :
                 color = Vector3f(ColorPalette.BLUE) * 2f
             }
             it.addComponent<Projectile>().also { projectile ->
-                projectile.damage = 0f
+                projectile.damage = 3f
+            }
+            it.addComponent<Audio>().also { audio ->
+                audio.sample = Loader.createViaPath("sounds/laser.ogg")
+                audio.source.looping = true
+                audio.source.gain = 0f
+                audio.play()
             }
         }
     }
