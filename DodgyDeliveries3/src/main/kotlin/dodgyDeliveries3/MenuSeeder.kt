@@ -11,14 +11,12 @@ import jackTheFishman.engine.Loader
 import jackTheFishman.engine.Window
 import jackTheFishman.engine.Window.close
 import jackTheFishman.engine.audio.Sample
-import jackTheFishman.engine.audio.SampleViaPath
 import jackTheFishman.engine.math.times
 import org.joml.Vector2f
 import org.joml.Vector3f
 import org.joml.Vector4f
 import org.liquidengine.legui.component.optional.align.HorizontalAlign
 import org.liquidengine.legui.style.font.FontRegistry
-import org.lwjgl.openal.AL10.alIsBuffer
 import java.awt.Desktop
 import java.net.URI
 
@@ -151,6 +149,7 @@ fun makeOptionsMenu() {
             text.fontName = "Sugarpunch"
             text.leguiComponent.textState.horizontalAlign = HorizontalAlign.CENTER
             text.leguiComponent.textState.textColor = Vector4f(ColorPalette.WHITE, 1f)
+            text.text = "VOLUME: " + "%.2f".format(Audio.Listener.gain)
             text.logicalFontSize = 25f
             text.onSizeChange = {
                 it.logicalPosition = Vector2f(Window.logicalSize.x() * 0.1f, Window.logicalSize.y() * 0.45f)
