@@ -9,17 +9,6 @@ plugins {
     id("org.jetbrains.dokka") version "0.10.1"
 }
 
-project(":DodgyDeliveries3") {
-    // We need kotlin for the documentation generation
-    apply(plugin = "java")
-    apply(plugin = "kotlin")
-
-    dependencies {
-        // All subprojects depend on root project
-        implementation(project(":"))
-    }
-}
-
 allprojects {
     version = "1.1"
 
@@ -51,6 +40,7 @@ allprojects {
 
         // Klaxon is a json serialisation library
         implementation("com.beust:klaxon:5.0.1")
+
         // Faster JSON parser (about twice on large json strings)
         implementation("com.beust:klaxon-jackson:1.0.1")
 
@@ -95,6 +85,5 @@ tasks {
     val dokka by getting(DokkaTask::class) {
         outputFormat = "html"
         outputDirectory = "$buildDir/dokka"
-        subProjects = listOf("DodgyDeliveries3")
     }
 }

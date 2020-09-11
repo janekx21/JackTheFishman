@@ -1,13 +1,13 @@
 package jackTheFishman.examples
 
-import jackTheFishman.engine.Game
-import jackTheFishman.engine.Loader
-import jackTheFishman.engine.Loader.createViaPath
-import jackTheFishman.engine.Time
-import jackTheFishman.engine.Window
-import jackTheFishman.engine.graphics.Mesh
-import jackTheFishman.engine.graphics.Shader
-import jackTheFishman.engine.graphics.Texture2D
+import jackTheFishman.framework.Game
+import jackTheFishman.framework.Loader
+import jackTheFishman.framework.Loader.createViaPath
+import jackTheFishman.framework.Time
+import jackTheFishman.framework.Window
+import jackTheFishman.framework.graphics.Mesh
+import jackTheFishman.framework.graphics.Shader
+import jackTheFishman.framework.graphics.Texture2D
 import org.joml.Matrix4f
 import org.joml.Quaternionf
 import org.joml.Vector3f

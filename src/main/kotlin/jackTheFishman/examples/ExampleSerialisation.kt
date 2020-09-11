@@ -3,7 +3,7 @@ package jackTheFishman.examples
 import com.beust.klaxon.Json
 import com.beust.klaxon.TypeAdapter
 import com.beust.klaxon.TypeFor
-import jackTheFishman.engine.Serialisation
+import jackTheFishman.framework.Serialisation
 import kotlin.reflect.KClass
 
 class ExampleTypeAdapter : TypeAdapter<Foo> {

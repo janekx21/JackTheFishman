@@ -1,10 +1,10 @@
 package jackTheFishman.examples
 
-import jackTheFishman.engine.*
-import jackTheFishman.engine.Loader.createViaPath
-import jackTheFishman.engine.graphics.Mesh
-import jackTheFishman.engine.graphics.Shader
-import jackTheFishman.engine.graphics.Texture2D
+import jackTheFishman.framework.*
+import jackTheFishman.framework.Loader.createViaPath
+import jackTheFishman.framework.graphics.Mesh
+import jackTheFishman.framework.graphics.Shader
+import jackTheFishman.framework.graphics.Texture2D
 import org.joml.Matrix4f
 import org.joml.Vector3f
 import org.joml.Vector4f
