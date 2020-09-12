@@ -4,9 +4,9 @@ import com.beust.klaxon.TypeFor
 import jackTheFishman.framework.math.extentions.times
 import jackTheFishman.framework.math.extentions.toMatrix4fc
 import jackTheFishman.framework.math.extentions.toVector3fc
-import jackTheFishman.framework.util.ICreateViaPath
-import jackTheFishman.framework.util.IDrawable
-import jackTheFishman.framework.util.IUsable
+import jackTheFishman.framework.util.CreateViaPath
+import jackTheFishman.framework.util.Drawable
+import jackTheFishman.framework.util.Usable
 import jackTheFishman.framework.util.typeAdapter.MeshTypeAdapter
 import org.joml.Matrix4f
 import org.joml.Vector2f
@@ -18,7 +18,7 @@ import org.lwjgl.assimp.Assimp
 import org.lwjgl.opengl.GL46.*
 
 @TypeFor(field = "type", adapter = MeshTypeAdapter::class)
-open class Mesh(private val data: Array<Vertex>) : IDrawable, IUsable {
+open class Mesh(private val data: Array<Vertex>) : Drawable, Usable {
     val type: String = javaClass.simpleName
 
     private val vbo: Int = glGenBuffers()
@@ -47,7 +47,7 @@ open class Mesh(private val data: Array<Vertex>) : IDrawable, IUsable {
         }
     }
 
-    companion object : ICreateViaPath<Mesh> {
+    companion object : CreateViaPath<Mesh> {
         fun getMeshDataViaPath(path: String): Array<Vertex> {
             val scene =
                 Assimp.aiImportFile(

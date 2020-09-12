@@ -5,9 +5,9 @@ import jackTheFishman.framework.Input.Keyboard.down
 import jackTheFishman.framework.Input.Keyboard.justDown
 import jackTheFishman.framework.Input.Keyboard.justUp
 import jackTheFishman.framework.Input.Keyboard.up
-import jackTheFishman.framework.math.constants.Vector2fCopy
+import jackTheFishman.framework.math.constants.vector2f.zero
 import jackTheFishman.framework.math.extentions.minus
-import jackTheFishman.framework.util.DoublePointer
+import jackTheFishman.framework.util.pointer.DoublePointer
 import org.joml.Vector2f
 import org.joml.Vector2fc
 import org.lwjgl.glfw.GLFW.*
@@ -368,8 +368,8 @@ object Input {
             DISABLED, HIDDEN, NORMAL
         }
 
-        var position: Vector2fc = Vector2fCopy.zero
-        var deltaPosition: Vector2fc = Vector2fCopy.zero
+        var position: Vector2fc = zero
+        var deltaPosition: Vector2fc = zero
 
         var left = ToggleableState(isDown = false, changed = false)
         var right = ToggleableState(isDown = false, changed = false)
@@ -421,9 +421,9 @@ object Input {
             D_PAD_LEFT(GLFW_GAMEPAD_BUTTON_DPAD_LEFT)
         }
 
-        var leftStick = Vector2fCopy.zero
+        var leftStick = zero
 
-        var rightStick = Vector2fCopy.zero
+        var rightStick = zero
 
         // der button state, der allen buttons beim konstruieren gegeben wird
         private val initialButtonState = ToggleableState(isDown = false, changed = false)
@@ -487,8 +487,8 @@ object Input {
                     )
                 }
 
-                leftStick = Vector2fCopy.zero
-                rightStick = Vector2fCopy.zero
+                leftStick = zero
+                rightStick = zero
             }
         }
 

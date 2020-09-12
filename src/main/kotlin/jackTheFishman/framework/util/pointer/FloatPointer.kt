@@ -1,4 +1,4 @@
-package jackTheFishman.framework.util
+package jackTheFishman.framework.util.pointer
 
 class FloatPointer {
     private val array = floatArrayOf(0f)

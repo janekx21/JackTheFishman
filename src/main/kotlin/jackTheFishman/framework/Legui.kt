@@ -1,12 +1,12 @@
 package jackTheFishman.framework
 
-import jackTheFishman.framework.util.IDrawable
+import jackTheFishman.framework.util.Drawable
 import org.liquidengine.legui.DefaultInitializer
 import org.liquidengine.legui.animation.AnimatorProvider
 import org.liquidengine.legui.component.Frame
 import org.liquidengine.legui.system.layout.LayoutManager
 
-object Legui : IDrawable {
+object Legui : Drawable {
     val frame: Frame = Frame(Window.physicalSize.x().toFloat(), Window.physicalSize.y().toFloat())
     val initializer: DefaultInitializer
 

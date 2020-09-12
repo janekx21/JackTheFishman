@@ -1,5 +1,5 @@
 package jackTheFishman.framework.util
 
-interface IDrawable {
+interface Drawable {
     fun draw()
 }

@@ -1,7 +1,7 @@
 package jackTheFishman.framework.graphics
 
 import jackTheFishman.framework.Window
-import jackTheFishman.framework.util.IUsable
+import jackTheFishman.framework.util.Usable
 import org.joml.Vector2i
 import org.joml.Vector2ic
 import org.lwjgl.opengl.GL30.*
@@ -9,7 +9,7 @@ import org.lwjgl.opengl.GL30C.GL_FRAMEBUFFER
 import org.lwjgl.opengl.GL46
 import java.nio.ByteBuffer
 
-class Framebuffer : IUsable {
+class Framebuffer : Usable {
     val buffer = glGenFramebuffers()
     var size: Vector2ic = Vector2i(Window.physicalSize)
 

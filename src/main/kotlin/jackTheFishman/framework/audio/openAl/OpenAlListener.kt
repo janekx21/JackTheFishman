@@ -1,6 +1,6 @@
 package jackTheFishman.framework.audio.openAl
 
-import jackTheFishman.framework.Listener
+import jackTheFishman.framework.audio.Listener
 import jackTheFishman.framework.math.constants.vector3f.zero
 import org.joml.Quaternionf
 import org.joml.Quaternionfc

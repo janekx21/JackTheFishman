@@ -1,9 +1,9 @@
 package jackTheFishman.framework.graphics
 
 import com.beust.klaxon.TypeFor
-import jackTheFishman.framework.util.ICreateViaPath
-import jackTheFishman.framework.util.IUsable
-import jackTheFishman.framework.util.IntPointer
+import jackTheFishman.framework.util.CreateViaPath
+import jackTheFishman.framework.util.Usable
+import jackTheFishman.framework.util.pointer.IntPointer
 import jackTheFishman.framework.util.typeAdapter.ShaderTypeAdapter
 import org.joml.Matrix4f
 import org.joml.Matrix4fc
@@ -14,7 +14,7 @@ import org.lwjgl.opengl.GL46.*
 import java.io.File
 
 @TypeFor(field = "type", adapter = ShaderTypeAdapter::class)
-open class Shader(code: ShaderCode) : IUsable {
+open class Shader(code: ShaderCode) : Usable {
     val type: String = javaClass.simpleName
 
     private val program = compileProgram(code.vertexCode, code.fragmentCode)
@@ -69,7 +69,7 @@ open class Shader(code: ShaderCode) : IUsable {
         setUniform(curveWorldName, curveWorld)
     }
 
-    companion object : ICreateViaPath<Shader> {
+    companion object : CreateViaPath<Shader> {
         private const val colorAttribute = "outColor"
         private const val versionString = "#version 330 core\n"
 

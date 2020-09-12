@@ -4,8 +4,8 @@ import jackTheFishman.framework.audio.PlayState
 import jackTheFishman.framework.audio.SampleFile
 import jackTheFishman.framework.math.constants.vector3f.forward
 import jackTheFishman.framework.math.constants.vector3f.up
-import jackTheFishman.framework.util.IFinalized
-import jackTheFishman.framework.util.IntPointer
+import jackTheFishman.framework.util.Finalized
+import jackTheFishman.framework.util.pointer.IntPointer
 import org.joml.Quaternionf
 import org.joml.Quaternionfc
 import org.joml.Vector3f
@@ -18,14 +18,14 @@ import org.lwjgl.openal.ALC.destroy
 import org.lwjgl.openal.ALC10.*
 import org.lwjgl.openal.ALC11
 
-object OpenAl : IFinalized {
+object OpenAl : Finalized {
     private val defaultDeviceName = ALC11.alcGetString(0, ALC11.ALC_DEFAULT_DEVICE_SPECIFIER)
     private val device = alcOpenDevice(defaultDeviceName)
 
     init {
         check(device != 0L) { "Open AI Device not found" }
         checkNotNull(defaultDeviceName) { "Default device not found" }
-        IFinalized.push(this)
+        Finalized.push(this)
     }
 
     private val context = alcCreateContext(device, intArrayOf())

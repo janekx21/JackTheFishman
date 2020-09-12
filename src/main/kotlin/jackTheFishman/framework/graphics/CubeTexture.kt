@@ -1,9 +1,9 @@
 package jackTheFishman.framework.graphics
 
 import com.beust.klaxon.Json
-import jackTheFishman.framework.util.ICreateViaPath
-import jackTheFishman.framework.util.IUsable
-import jackTheFishman.framework.util.IntPointer
+import jackTheFishman.framework.util.CreateViaPath
+import jackTheFishman.framework.util.Usable
+import jackTheFishman.framework.util.pointer.IntPointer
 import org.joml.Vector2i
 import org.joml.Vector2ic
 import org.lwjgl.opengl.GL46.*
@@ -13,7 +13,7 @@ import org.lwjgl.stb.STBImage.stbi_set_flip_vertically_on_load
 import java.io.File
 import java.nio.ByteBuffer
 
-class CubeTexture : Texture(), IUsable {
+class CubeTexture : Texture(), Usable {
     @Json(ignored = true)
     override val pointer = glGenTextures()
     private var internalSize: Vector2ic = Vector2i(0, 0)
@@ -59,7 +59,7 @@ class CubeTexture : Texture(), IUsable {
         unbindWithIndex(0)
     }
 
-    companion object : ICreateViaPath<CubeTexture> {
+    companion object : CreateViaPath<CubeTexture> {
         private val fileNames = arrayOf("right", "left", "top", "bottom", "front", "back")
 
         override fun createViaPath(path: String): CubeTexture {

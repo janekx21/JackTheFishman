@@ -1,4 +1,4 @@
-package jackTheFishman.framework.util
+package jackTheFishman.framework.util.pointer
 
 import java.nio.IntBuffer
 

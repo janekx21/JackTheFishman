@@ -1,6 +1,6 @@
 package jackTheFishman.framework
 
-import jackTheFishman.framework.util.IFinalized
+import jackTheFishman.framework.util.Finalized
 import org.lwjgl.glfw.GLFW
 
 /**
@@ -19,7 +19,6 @@ open class Game {
 
     private fun initEngineObjects() {
         Window
-        OpenAlAudio
         Physics
     }
 
@@ -49,7 +48,7 @@ open class Game {
                 Legui.draw()
             }
         } finally {
-            IFinalized.finalizeAll()
+            Finalized.finalizeAll()
         }
     }
 }

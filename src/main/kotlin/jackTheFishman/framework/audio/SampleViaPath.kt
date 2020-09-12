@@ -1,7 +1,7 @@
 package jackTheFishman.framework.audio
 
 import jackTheFishman.framework.audio.openAl.OpenAlSample
-import jackTheFishman.framework.util.IntPointer
+import jackTheFishman.framework.util.pointer.IntPointer
 import org.lwjgl.stb.STBVorbis
 
 class SampleViaPath(val path: String) : OpenAlSample(getSampleFileViaPath(path)) {

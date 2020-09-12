@@ -3,7 +3,7 @@ package jackTheFishman.examples
 import com.beust.klaxon.Json
 import com.beust.klaxon.TypeAdapter
 import com.beust.klaxon.TypeFor
-import jackTheFishman.framework.Serialisation
+import jackTheFishman.framework.KlaxonSerialisation
 import kotlin.reflect.KClass
 
 class ExampleTypeAdapter : TypeAdapter<Foo> {
@@ -31,8 +31,8 @@ class Bar(val barVariable: String = "Bar's Variable") : Foo()
 
 fun main() {
     val originalFoo: Foo = Bar()
-    val json = Serialisation.klaxon.toJsonString(originalFoo).also { println(it) }
-    val newFoo = Serialisation.klaxon.parse<Foo>(json)
+    val json = KlaxonSerialisation.klaxon.toJsonString(originalFoo).also { println(it) }
+    val newFoo = KlaxonSerialisation.klaxon.parse<Foo>(json)
     check(newFoo != null) { "Serialising failed" }
     println("$originalFoo -> $newFoo")
     check(newFoo is Bar) { "Type was not correctly serialised" }

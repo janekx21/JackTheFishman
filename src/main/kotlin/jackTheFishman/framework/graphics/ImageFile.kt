@@ -1,6 +1,6 @@
 package jackTheFishman.framework.graphics
 
-import jackTheFishman.framework.util.IntPointer
+import jackTheFishman.framework.util.pointer.IntPointer
 import org.joml.Vector2i
 import org.joml.Vector2ic
 import org.lwjgl.stb.STBImage

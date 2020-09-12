@@ -1,6 +1,6 @@
 package jackTheFishman.framework
 
-import jackTheFishman.framework.util.ICreateViaPath
+import jackTheFishman.framework.util.CreateViaPath
 import java.io.File
 import kotlin.math.absoluteValue
 import kotlin.reflect.full.companionObjectInstance
@@ -42,7 +42,7 @@ object Loader {
     }
 
     @Deprecated("because its symbol is ugly. Replace with `createViaPath<T>(path)`.")
-    inline fun <reified T> createViaPath(obj: ICreateViaPath<T>, path: String): T {
+    inline fun <reified T> createViaPath(obj: CreateViaPath<T>, path: String): T {
         val file = resourceFileViaPath(path)
         check(file.exists()) { "file not found ${file.path}" }
         return obj.createViaPath(file.path)
@@ -54,8 +54,8 @@ object Loader {
             check(file.exists()) { "file not found ${file.path}" }
             val possibleFactory = T::class.companionObjectInstance
             check(possibleFactory != null) { "Class dose not define a companionObject" }
-            check(possibleFactory is ICreateViaPath<*>) { "companionObject dose not implement ICreateViaPath" }
-            @Suppress("UNCHECKED_CAST") val factory = possibleFactory as ICreateViaPath<T>
+            check(possibleFactory is CreateViaPath<*>) { "companionObject dose not implement ICreateViaPath" }
+            @Suppress("UNCHECKED_CAST") val factory = possibleFactory as CreateViaPath<T>
             factory.createViaPath(file.path)
         }
 

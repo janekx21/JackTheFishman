@@ -1,4 +1,4 @@
-package jackTheFishman.framework
+package jackTheFishman.framework.audio
 
 import org.joml.Quaternionfc
 import org.joml.Vector3fc

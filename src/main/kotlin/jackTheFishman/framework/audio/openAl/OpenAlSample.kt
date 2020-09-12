@@ -5,7 +5,7 @@ import com.beust.klaxon.TypeFor
 import jackTheFishman.framework.audio.Sample
 import jackTheFishman.framework.audio.SampleFile
 import jackTheFishman.framework.audio.SampleViaPath
-import jackTheFishman.framework.util.ICreateViaPath
+import jackTheFishman.framework.util.CreateViaPath
 import jackTheFishman.framework.util.typeAdapter.SampleTypeAdapter
 import java.io.Closeable
 
@@ -27,7 +27,7 @@ open class OpenAlSample(sampleFile: SampleFile) : Sample, Closeable {
         OpenAl.deleteSample(pointer)
     }
 
-    companion object : ICreateViaPath<OpenAlSample> {
+    companion object : CreateViaPath<OpenAlSample> {
         override fun createViaPath(path: String): OpenAlSample {
             return SampleViaPath(path)
         }

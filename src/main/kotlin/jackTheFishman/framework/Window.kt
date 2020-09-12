@@ -1,8 +1,8 @@
 package jackTheFishman.framework
 
 import jackTheFishman.framework.graphics.Texture2D
-import jackTheFishman.framework.util.FloatPointer
-import jackTheFishman.framework.util.IFinalized
+import jackTheFishman.framework.util.Finalized
+import jackTheFishman.framework.util.pointer.FloatPointer
 import org.joml.Vector2f
 import org.joml.Vector2fc
 import org.joml.Vector2i
@@ -25,7 +25,7 @@ import kotlin.math.min
 /**
  * Window Wrapper that also manages the open gl context
  */
-object Window : Closeable, IFinalized {
+object Window : Closeable, Finalized {
     private const val MAX_DELTA_TIME = .1f // translates to 10fps
     private const val title = "Jack the Fishman Framework"
 
@@ -97,7 +97,7 @@ object Window : Closeable, IFinalized {
         glfwMakeContextCurrent(pointer)
         createCapabilities()
         glfwShowWindow(pointer)
-        IFinalized.push(this)
+        Finalized.push(this)
     }
 
     private fun config() {

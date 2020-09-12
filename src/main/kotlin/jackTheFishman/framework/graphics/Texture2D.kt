@@ -1,8 +1,8 @@
 package jackTheFishman.framework.graphics
 
 import com.beust.klaxon.Json
-import jackTheFishman.framework.util.ICreateViaPath
-import jackTheFishman.framework.util.IUsable
+import jackTheFishman.framework.util.CreateViaPath
+import jackTheFishman.framework.util.Usable
 import org.joml.Vector2i
 import org.joml.Vector2ic
 import org.lwjgl.BufferUtils
@@ -11,7 +11,7 @@ import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL46.*
 import java.nio.ByteBuffer
 
-open class Texture2D : Texture(), IUsable {
+open class Texture2D : Texture(), Usable {
     @Json(ignored = true)
     override val pointer = glGenTextures()
 
@@ -119,7 +119,7 @@ open class Texture2D : Texture(), IUsable {
         unbindWithIndex(0)
     }
 
-    companion object : ICreateViaPath<Texture2D> {
+    companion object : CreateViaPath<Texture2D> {
         override fun createViaPath(path: String): Texture2DViaPath {
             return Texture2DViaPath(path)
         }

@@ -1,4 +1,4 @@
-package jackTheFishman.framework.util
+package jackTheFishman.framework.util.pointer
 
 class DoublePointer {
     private val array = doubleArrayOf(0.0)
