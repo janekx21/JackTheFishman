@@ -1,24 +1,20 @@
 package jackTheFishman
 
-/**
- * Object that directly controls global time
- */
-object Time {
+interface Time {
     /**
-     * The amount of time since that creation of time (aka game start)
+     * Time since window open in seconds
      */
-    var time = 0f
+    var time: Float
 
     /**
-     * The amount of time that has passed since the last time update
+     * The amount of time that has passed since the last update in seconds
      */
-    var deltaTime = 0f
+    var deltaTime: Float
 
-    var timeScale = 1f
-
-    fun update(newDeltaTime: Float) {
-        check(newDeltaTime >= 0f) { "Time can not flow in reverse" }
-        deltaTime = newDeltaTime * timeScale
-        time += deltaTime
-    }
+    /**
+     * Scale of time where
+     * 1 or 100% corresponds to normal time flow.
+     */
+    var timeScale: Float
+    fun update(passedTime: Float)
 }

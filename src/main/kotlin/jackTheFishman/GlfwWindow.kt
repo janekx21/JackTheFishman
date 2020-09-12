@@ -19,16 +19,12 @@ import org.lwjgl.opengl.GL46.GL_DEPTH_TEST
 import org.lwjgl.opengl.GL46.glEnable
 import org.lwjgl.system.MemoryUtil
 import java.io.Closeable
-import kotlin.math.min
 
 
 /**
  * Window Wrapper that also manages the open gl context
  */
-object Window : Closeable, Finalized {
-    private const val MAX_DELTA_TIME = .1f // translates to 10fps
-    private const val title = "Jack the Fishman Framework"
-
+class GlfwWindow(val time: Time) : Closeable, Finalized {
     var physicalSize: Vector2ic = Vector2i(1280, 720)
 
     var shouldClose = false
@@ -63,9 +59,9 @@ object Window : Closeable, Finalized {
     val aspect: Float
         get() = physicalSize.x().toFloat() / physicalSize.y().toFloat()
 
-    var onResize: (Window) -> Unit = {}
+    var onResize: (GlfwWindow) -> Unit = {}
 
-    val pointer = glfwCreateWindow(physicalSize.x(), physicalSize.y(), title, 0, 0)
+    val pointer = glfwCreateWindow(physicalSize.x(), physicalSize.y(), Companion.title, 0, 0)
 
     var contentScale: Float = 1.0F
 
@@ -156,14 +152,22 @@ object Window : Closeable, Finalized {
     }
 
     private fun updateTime() {
-        glfwGetTime().also { time ->
-            // when the window should close the time jumps to 0
-            if (time > 0.0) {
-                val deltaTime = (time - lastTime).toFloat()
-                Time.update(min(deltaTime, MAX_DELTA_TIME))
-                lastTime = time
-            }
+        val newTime = glfwGetTime()
+        if (isValidTime(newTime)) {
+            val deltaTime = applyNewTime(newTime)
+            time.update(deltaTime)
         }
+    }
+
+    private fun applyNewTime(newTime: Double): Float {
+        val deltaTime = (newTime - lastTime).toFloat()
+        lastTime = newTime
+        return deltaTime
+    }
+
+    private fun isValidTime(time: Double): Boolean {
+        // When the window should close the time jumps to 0
+        return time > 0f
     }
 
     override fun close() {
@@ -174,5 +178,9 @@ object Window : Closeable, Finalized {
         Legui.destroy()
         glfwDestroyWindow(pointer)
         glfwTerminate()
+    }
+
+    companion object {
+        private const val title = "Jack the Fishman Framework"
     }
 }

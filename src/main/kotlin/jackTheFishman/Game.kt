@@ -1,15 +1,20 @@
 package jackTheFishman
 
+import jackTheFishman.audio.Listener
+import jackTheFishman.audio.openAl.OpenAlListener
 import jackTheFishman.util.Finalized
+import org.koin.core.context.startKoin
+import org.koin.dsl.module
 import org.lwjgl.glfw.GLFW
 
 /**
  * Base class for all games. This is the main entry point.
  */
-open class Game {
+open class Game(val window: GlfwWindow) {
     init {
         configGLFW()
         initEngineObjects()
+        setupDependencyInjection()
     }
 
     private fun configGLFW() {
@@ -18,8 +23,17 @@ open class Game {
     }
 
     private fun initEngineObjects() {
-        Window
         Physics
+    }
+
+    private fun setupDependencyInjection() {
+        val mainModule = module {
+            single { OpenAlListener() as Listener }
+        }
+
+        startKoin {
+            modules(mainModule)
+        }
     }
 
     /**
@@ -37,8 +51,8 @@ open class Game {
      */
     fun run() {
         try {
-            while (!Window.shouldClose) {
-                Window.update()
+            while (!window.shouldClose) {
+                window.update()
                 Legui.update()
                 Input.update()
                 Physics.update()

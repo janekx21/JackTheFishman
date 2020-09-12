@@ -7,11 +7,11 @@ import org.liquidengine.legui.component.Frame
 import org.liquidengine.legui.system.layout.LayoutManager
 
 object Legui : Drawable {
-    val frame: Frame = Frame(Window.physicalSize.x().toFloat(), Window.physicalSize.y().toFloat())
+    val frame: Frame = Frame(GlfwWindow.physicalSize.x().toFloat(), GlfwWindow.physicalSize.y().toFloat())
     val initializer: DefaultInitializer
 
     init {
-        initializer = DefaultInitializer(Window.pointer, frame)
+        initializer = DefaultInitializer(GlfwWindow.pointer, frame)
         initializer.renderer.initialize()
     }
 

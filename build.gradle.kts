@@ -1,3 +1,4 @@
+import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform.getCurrentOperatingSystem
 import org.jetbrains.dokka.gradle.DokkaTask
 
 plugins {
@@ -21,6 +22,10 @@ allprojects {
     }
 
     dependencies {
+        val koinVersion = "2.1.6"
+        val lwjglVersion = "3.2.3"
+        val jomlVersion = "1.9.25"
+
         // Kotlin standard library for runtime support
         implementation(kotlin("stdlib"))
 
@@ -34,7 +39,6 @@ allprojects {
         testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
 
         // Koin for dependency injection
-        val koinVersion = "2.1.5"
         implementation("org.koin:koin-core:$koinVersion")
         testImplementation("org.koin:koin-test:$koinVersion")
 
@@ -51,9 +55,7 @@ allprojects {
         implementation("org.liquidengine:legui:2.1.0")
 
         // LWJGL is a collection of game library's
-        val lwjglVersion = "3.2.3"
-        val jomlVersion = "1.9.25"
-        val os = org.gradle.nativeplatform.platform.internal.DefaultNativePlatform.getCurrentOperatingSystem()
+        val os = getCurrentOperatingSystem()
         val lwjglNatives = when {
             os.isWindows -> "natives-windows"
             os.isMacOsX -> "natives-macos"
@@ -82,6 +84,7 @@ allprojects {
 
 tasks {
     // Generate documentation with kotlin support
+    @Suppress("UNUSED_VARIABLE")
     val dokka by getting(DokkaTask::class) {
         outputFormat = "html"
         outputDirectory = "$buildDir/dokka"

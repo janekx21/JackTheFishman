@@ -380,7 +380,7 @@ object Input {
                 CursorMode.DISABLED -> GLFW_CURSOR_DISABLED
                 CursorMode.HIDDEN -> GLFW_CURSOR_HIDDEN
             }
-            glfwSetInputMode(Window.pointer, GLFW_CURSOR, index)
+            glfwSetInputMode(GlfwWindow.pointer, GLFW_CURSOR, index)
         }
 
         fun update() {
@@ -389,13 +389,13 @@ object Input {
             val x = DoublePointer()
             val y = DoublePointer()
 
-            glfwGetCursorPos(Window.pointer, x.buffer, y.buffer)
+            glfwGetCursorPos(GlfwWindow.pointer, x.buffer, y.buffer)
 
             position = Vector2f(x.value.toFloat(), y.value.toFloat())
             deltaPosition = position - deltaPosition
 
-            val leftDown = glfwGetMouseButton(Window.pointer, GLFW_MOUSE_BUTTON_LEFT) != GLFW_RELEASE
-            val rightDown = glfwGetMouseButton(Window.pointer, GLFW_MOUSE_BUTTON_RIGHT) != GLFW_RELEASE
+            val leftDown = glfwGetMouseButton(GlfwWindow.pointer, GLFW_MOUSE_BUTTON_LEFT) != GLFW_RELEASE
+            val rightDown = glfwGetMouseButton(GlfwWindow.pointer, GLFW_MOUSE_BUTTON_RIGHT) != GLFW_RELEASE
 
             left = ToggleableState(isDown = leftDown, changed = leftDown != left.isDown)
             right = ToggleableState(isDown = rightDown, changed = rightDown != right.isDown)
