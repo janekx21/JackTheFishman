@@ -38,7 +38,3 @@ operator fun Vector2fc.minus(other: Vector2fc): Vector2fc {
 operator fun Vector2fc.unaryMinus(): Vector2fc {
     return Vector2f(this).negate()
 }
-
-fun Vector2fc.toJson(): Any? {
-    return arrayOf(this.x(), this.y())
-}
