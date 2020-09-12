@@ -1,7 +1,7 @@
 package jackTheFishman.framework
 
-import jackTheFishman.framework.math.toVec2
-import jackTheFishman.framework.math.toVector2fc
+import jackTheFishman.framework.math.extentions.toVec2
+import jackTheFishman.framework.math.extentions.toVector2fc
 import org.jbox2d.common.Vec2
 import org.jbox2d.dynamics.World
 import org.joml.Vector2fc

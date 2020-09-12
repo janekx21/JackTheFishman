@@ -1,9 +1,9 @@
 package jackTheFishman.framework.graphics
 
 import com.beust.klaxon.TypeFor
-import jackTheFishman.framework.math.times
-import jackTheFishman.framework.math.toMatrix4fc
-import jackTheFishman.framework.math.toVector3fc
+import jackTheFishman.framework.math.extentions.times
+import jackTheFishman.framework.math.extentions.toMatrix4fc
+import jackTheFishman.framework.math.extentions.toVector3fc
 import jackTheFishman.framework.util.ICreateViaPath
 import jackTheFishman.framework.util.IDrawable
 import jackTheFishman.framework.util.IUsable

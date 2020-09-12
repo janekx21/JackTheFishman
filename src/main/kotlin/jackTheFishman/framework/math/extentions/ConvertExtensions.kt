@@ -1,4 +1,4 @@
-package jackTheFishman.framework.math
+package jackTheFishman.framework.math.extentions
 
 import org.jbox2d.common.Vec2
 import org.joml.*

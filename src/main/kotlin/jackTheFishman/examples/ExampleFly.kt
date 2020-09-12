@@ -9,9 +9,9 @@ import jackTheFishman.framework.graphics.Mesh
 import jackTheFishman.framework.graphics.Shader
 import jackTheFishman.framework.graphics.Texture2D
 import jackTheFishman.framework.math.Vector3fConst
-import jackTheFishman.framework.math.clamp
-import jackTheFishman.framework.math.plus
-import jackTheFishman.framework.math.times
+import jackTheFishman.framework.math.extentions.clamp
+import jackTheFishman.framework.math.extentions.plus
+import jackTheFishman.framework.math.extentions.times
 import org.joml.*
 import org.lwjgl.opengl.GL46
 import java.lang.Math

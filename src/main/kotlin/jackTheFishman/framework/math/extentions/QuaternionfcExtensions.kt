@@ -1,4 +1,4 @@
-package jackTheFishman.framework.math
+package jackTheFishman.framework.math.extentions
 
 import org.joml.Quaternionf
 import org.joml.Quaternionfc

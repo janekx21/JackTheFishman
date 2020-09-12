@@ -2,7 +2,7 @@ package jackTheFishman.framework.audio.openAl
 
 import jackTheFishman.framework.audio.PlayState
 import jackTheFishman.framework.audio.Source
-import jackTheFishman.framework.math.zero
+import jackTheFishman.framework.math.constants.vector3f.zero
 import org.joml.Vector3fc
 import java.io.Closeable
 

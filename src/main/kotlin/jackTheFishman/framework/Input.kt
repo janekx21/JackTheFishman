@@ -5,8 +5,8 @@ import jackTheFishman.framework.Input.Keyboard.down
 import jackTheFishman.framework.Input.Keyboard.justDown
 import jackTheFishman.framework.Input.Keyboard.justUp
 import jackTheFishman.framework.Input.Keyboard.up
-import jackTheFishman.framework.math.Vector2fCopy
-import jackTheFishman.framework.math.minus
+import jackTheFishman.framework.math.constants.Vector2fCopy
+import jackTheFishman.framework.math.extentions.minus
 import jackTheFishman.framework.util.DoublePointer
 import org.joml.Vector2f
 import org.joml.Vector2fc

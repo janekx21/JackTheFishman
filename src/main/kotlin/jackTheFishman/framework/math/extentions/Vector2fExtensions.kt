@@ -1,4 +1,4 @@
-package jackTheFishman.framework.math
+package jackTheFishman.framework.math.extentions
 
 import org.joml.Vector2f
 import org.joml.Vector2fc

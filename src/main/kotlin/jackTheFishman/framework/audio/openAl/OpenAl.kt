@@ -2,8 +2,8 @@ package jackTheFishman.framework.audio.openAl
 
 import jackTheFishman.framework.audio.PlayState
 import jackTheFishman.framework.audio.SampleFile
-import jackTheFishman.framework.math.forward
-import jackTheFishman.framework.math.up
+import jackTheFishman.framework.math.constants.vector3f.forward
+import jackTheFishman.framework.math.constants.vector3f.up
 import jackTheFishman.framework.util.IFinalized
 import jackTheFishman.framework.util.IntPointer
 import org.joml.Quaternionf
