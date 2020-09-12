@@ -22,6 +22,8 @@ object OpenAl : Finalized {
     private val defaultDeviceName = ALC11.alcGetString(0, ALC11.ALC_DEFAULT_DEVICE_SPECIFIER)
     private val device = alcOpenDevice(defaultDeviceName)
 
+    private const val BITS_PER_BYTE = 8
+
     init {
         check(device != 0L) { "Open AI Device not found" }
         checkNotNull(defaultDeviceName) { "Default device not found" }
@@ -146,7 +148,7 @@ object OpenAl : Finalized {
         alGetBufferi(pointer, AL_BITS, temp.array)
         val bitsPerSample = temp.value
 
-        return bufferSize * 8f / (frequency * channels * bitsPerSample)
+        return bufferSize * BITS_PER_BYTE.toFloat() / (frequency * channels * bitsPerSample)
     }
 
     fun deleteSample(pointer: OpenAlSamplePointer) {
