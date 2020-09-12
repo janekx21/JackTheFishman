@@ -1,5 +1,7 @@
-package jackTheFishman.framework.audio
+package jackTheFishman.framework.audio.openAl
 
+import jackTheFishman.framework.audio.PlayState
+import jackTheFishman.framework.audio.Source
 import jackTheFishman.framework.math.zero
 import org.joml.Vector3fc
 import java.io.Closeable

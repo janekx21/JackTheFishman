@@ -3,7 +3,7 @@ package jackTheFishman.examples
 
 import jackTheFishman.framework.*
 import jackTheFishman.framework.Loader.createViaPath
-import jackTheFishman.framework.audio.OpenAlListener
+import jackTheFishman.framework.audio.openAl.OpenAlListener
 import jackTheFishman.framework.graphics.CubeTexture
 import jackTheFishman.framework.graphics.Mesh
 import jackTheFishman.framework.graphics.Shader

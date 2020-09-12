@@ -1,8 +1,8 @@
 package jackTheFishman.framework.util.typeAdapter
 
 import com.beust.klaxon.TypeAdapter
-import jackTheFishman.framework.audio.OpenAlSample
 import jackTheFishman.framework.audio.SampleViaPath
+import jackTheFishman.framework.audio.openAl.OpenAlSample
 import kotlin.reflect.KClass
 
 class SampleTypeAdapter : TypeAdapter<OpenAlSample> {

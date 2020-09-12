@@ -1,11 +1,16 @@
 package jackTheFishman.framework.util
 
-class IntPointer {
-    private val array = intArrayOf(0)
+import java.nio.IntBuffer
 
-    val buffer: IntArray
-        get() = array
+class IntPointer {
+    private val single = intArrayOf(0)
+
+    val array: IntArray
+        get() = single
+
+    val buffer: IntBuffer
+        get() = IntBuffer.wrap(single)
 
     val value: Int
-        get() = array[0]
+        get() = single[0]
 }

@@ -75,7 +75,7 @@ class CubeTexture : Texture(), IUsable {
                 val height = IntPointer()
                 val channels = IntPointer()
                 stbi_set_flip_vertically_on_load(true)
-                val data = stbi_load(file.path, width.buffer, height.buffer, channels.buffer, 4)
+                val data = stbi_load(file.path, width.array, height.array, channels.array, 4)
                 check(data != null) { "image could not be loaded" }
                 if (size != null) {
                     // TODO check if this is really needed

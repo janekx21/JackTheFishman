@@ -1,5 +1,7 @@
-package jackTheFishman.framework.audio
+package jackTheFishman.framework.audio.openAl
 
+import jackTheFishman.framework.audio.PlayState
+import jackTheFishman.framework.audio.SampleFile
 import jackTheFishman.framework.math.forward
 import jackTheFishman.framework.math.up
 import jackTheFishman.framework.util.IFinalized
@@ -15,13 +17,6 @@ import org.lwjgl.openal.ALC.createCapabilities
 import org.lwjgl.openal.ALC.destroy
 import org.lwjgl.openal.ALC10.*
 import org.lwjgl.openal.ALC11
-
-typealias OpenAlSourcePointer = Int
-typealias OpenAlSamplePointer = Int
-
-enum class OpenAlSampleFormat {
-    MONO_16, STEREO_16
-}
 
 object OpenAl : IFinalized {
     private val defaultDeviceName = ALC11.alcGetString(0, ALC11.ALC_DEFAULT_DEVICE_SPECIFIER)
@@ -133,22 +128,22 @@ object OpenAl : IFinalized {
             OpenAlSampleFormat.MONO_16 -> AL_FORMAT_MONO16
             OpenAlSampleFormat.STEREO_16 -> AL_FORMAT_STEREO16
         }
-        alBufferData(pointer, alFormat, file.data, file.sampleRate)
+        alBufferData(pointer, alFormat, file.rawData, file.sampleRate)
     }
 
     fun getSampleDurationInSeconds(pointer: OpenAlSamplePointer): Float {
         val temp = IntPointer()
 
-        alGetBufferi(pointer, AL_SIZE, temp.buffer)
+        alGetBufferi(pointer, AL_SIZE, temp.array)
         val bufferSize = temp.value
 
-        alGetBufferi(pointer, AL_FREQUENCY, temp.buffer)
+        alGetBufferi(pointer, AL_FREQUENCY, temp.array)
         val frequency = temp.value
 
-        alGetBufferi(pointer, AL_CHANNELS, temp.buffer)
+        alGetBufferi(pointer, AL_CHANNELS, temp.array)
         val channels = temp.value
 
-        alGetBufferi(pointer, AL_BITS, temp.buffer)
+        alGetBufferi(pointer, AL_BITS, temp.array)
         val bitsPerSample = temp.value
 
         return bufferSize * 8f / (frequency * channels * bitsPerSample)

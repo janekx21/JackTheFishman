@@ -1,4 +1,4 @@
-package jackTheFishman.framework.audio
+package jackTheFishman.framework.audio.openAl
 
 import jackTheFishman.framework.Listener
 import jackTheFishman.framework.math.zero

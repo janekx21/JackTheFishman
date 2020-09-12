@@ -20,7 +20,7 @@ class ImageFile(path: String) : Closeable {
         stbi_set_flip_vertically_on_load(true)
     }
 
-    private val possiblyData = STBImage.stbi_load(path, width.buffer, height.buffer, channels.buffer, 4)
+    private val possiblyData = STBImage.stbi_load(path, width.array, height.array, channels.array, 4)
 
     init {
         check(possiblyData != null) { "Image could not be loaded at path: $path" }

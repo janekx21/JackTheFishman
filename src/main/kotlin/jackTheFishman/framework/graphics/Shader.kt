@@ -108,7 +108,7 @@ open class Shader(code: ShaderCode) : IUsable {
             glShaderSource(shader, code)
             glCompileShader(shader)
             val status = IntPointer()
-            glGetShaderiv(shader, GL_COMPILE_STATUS, status.buffer)
+            glGetShaderiv(shader, GL_COMPILE_STATUS, status.array)
             check(status.value != GL_FALSE) { glGetShaderInfoLog(shader) }
             return shader
         }
