@@ -126,7 +126,7 @@ object OpenAl : Finalized {
             else -> throw Exception("Channel count of ${file.channelCount} is not supported")
         }
 
-        val alFormat = when(format) {
+        val alFormat = when (format) {
             OpenAlSampleFormat.MONO_16 -> AL_FORMAT_MONO16
             OpenAlSampleFormat.STEREO_16 -> AL_FORMAT_STEREO16
         }

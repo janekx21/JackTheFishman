@@ -8,5 +8,7 @@ class FloatPointer {
 
     var value: Float
         get() = array[0]
-        set(value) { array[0] = value }
+        set(value) {
+            array[0] = value
+        }
 }
