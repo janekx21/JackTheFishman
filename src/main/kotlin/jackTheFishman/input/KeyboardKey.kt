@@ -1,6 +1,6 @@
 package jackTheFishman.input
 
-enum class Keys {
+enum class KeyboardKey {
     SPACE,
     APOSTROPHE,
     COMMA,

@@ -5,10 +5,11 @@ import jackTheFishman.math.constants.vector2f.zero
 import jackTheFishman.math.extentions.minus
 import org.joml.Vector2fc
 
-class WindowMouse(val window: Window) : Mouse {
+class WindowMouse(private val window: Window) : Mouse {
     override var position: Vector2fc = zero
     override var deltaPosition: Vector2fc = zero
 
+    // TODO replace with cached buttons
     override var leftButton = ToggleableState(isDown = false, changed = false)
     override var rightButton = ToggleableState(isDown = false, changed = false)
 

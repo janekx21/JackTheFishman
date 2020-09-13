@@ -1,3 +1,3 @@
 package jackTheFishman.input
 
-data class KeyboardAction(val key: Keys, val action: KeyboardActionType)
+data class KeyboardAction(val key: KeyboardKey, val action: KeyboardActionType)
