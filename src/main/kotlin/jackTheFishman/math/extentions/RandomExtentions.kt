@@ -1,4 +1,4 @@
-package jackTheFishman.util
+package jackTheFishman.math.extentions
 
 import kotlin.random.Random
 

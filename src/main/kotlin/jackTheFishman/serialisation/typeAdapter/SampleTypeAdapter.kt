@@ -1,4 +1,4 @@
-package jackTheFishman.util.typeAdapter
+package jackTheFishman.serialisation.typeAdapter
 
 import com.beust.klaxon.TypeAdapter
 import jackTheFishman.audio.SampleViaPath

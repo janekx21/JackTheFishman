@@ -10,7 +10,7 @@ import org.lwjgl.glfw.GLFW
 /**
  * Base class for all games. This is the main entry point.
  */
-open class Game(val window: GlfwWindow) {
+open class Game(private val window: Window) {
     init {
         configGLFW()
         initEngineObjects()

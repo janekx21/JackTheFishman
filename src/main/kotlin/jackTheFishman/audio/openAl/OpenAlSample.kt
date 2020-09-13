@@ -5,8 +5,8 @@ import com.beust.klaxon.TypeFor
 import jackTheFishman.audio.Sample
 import jackTheFishman.audio.SampleFile
 import jackTheFishman.audio.SampleViaPath
+import jackTheFishman.serialisation.typeAdapter.SampleTypeAdapter
 import jackTheFishman.util.CreateViaPath
-import jackTheFishman.util.typeAdapter.SampleTypeAdapter
 import java.io.Closeable
 
 @TypeFor(field = "type", adapter = SampleTypeAdapter::class)

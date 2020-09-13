@@ -1,4 +1,4 @@
-package jackTheFishman
+package jackTheFishman.serialisation
 
 import com.beust.klaxon.Klaxon
 import jackTheFishman.math.converter.QuaternionConverter

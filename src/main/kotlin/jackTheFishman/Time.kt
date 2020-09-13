@@ -16,5 +16,4 @@ interface Time {
      * 1 or 100% corresponds to normal time flow.
      */
     var timeScale: Float
-    fun update(passedTime: Float)
 }

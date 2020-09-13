@@ -1,7 +1,7 @@
 package jackTheFishman.graphics
 
 import com.beust.klaxon.TypeFor
-import jackTheFishman.util.typeAdapter.TextureTypeAdapter
+import jackTheFishman.serialisation.typeAdapter.TextureTypeAdapter
 
 @TypeFor(field = "type", adapter = TextureTypeAdapter::class)
 abstract class Texture {

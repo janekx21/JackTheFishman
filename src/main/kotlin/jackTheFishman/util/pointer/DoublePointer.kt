@@ -1,11 +1,11 @@
 package jackTheFishman.util.pointer
 
 class DoublePointer {
-    private val array = doubleArrayOf(0.0)
+    private val single = doubleArrayOf(0.0)
 
-    val buffer: DoubleArray
-        get() = array
+    val array: DoubleArray
+        get() = single
 
     val value: Double
-        get() = array[0]
+        get() = single[0]
 }

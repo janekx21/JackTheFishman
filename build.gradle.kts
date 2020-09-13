@@ -79,6 +79,9 @@ allprojects {
         runtimeOnly("org.lwjgl", "lwjgl-stb", classifier = lwjglNatives)
         runtimeOnly("org.lwjgl", "lwjgl-tinyfd", classifier = lwjglNatives)
         implementation("org.joml", "joml", jomlVersion)
+
+        // RxJava
+        implementation("io.reactivex.rxjava3:rxjava:3.0.6")
     }
 }
 

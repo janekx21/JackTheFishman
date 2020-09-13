@@ -1,10 +1,10 @@
 package jackTheFishman.graphics
 
 import com.beust.klaxon.TypeFor
+import jackTheFishman.serialisation.typeAdapter.ShaderTypeAdapter
 import jackTheFishman.util.CreateViaPath
 import jackTheFishman.util.Usable
 import jackTheFishman.util.pointer.IntPointer
-import jackTheFishman.util.typeAdapter.ShaderTypeAdapter
 import org.joml.Matrix4f
 import org.joml.Matrix4fc
 import org.joml.Vector3fc

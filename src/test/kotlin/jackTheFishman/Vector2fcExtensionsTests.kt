@@ -1,3 +1,5 @@
+package jackTheFishman
+
 import jackTheFishman.math.extentions.*
 import org.joml.Vector2f
 import org.joml.Vector2fc

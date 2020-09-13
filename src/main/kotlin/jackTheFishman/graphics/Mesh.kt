@@ -4,10 +4,10 @@ import com.beust.klaxon.TypeFor
 import jackTheFishman.math.extentions.times
 import jackTheFishman.math.extentions.toMatrix4fc
 import jackTheFishman.math.extentions.toVector3fc
+import jackTheFishman.serialisation.typeAdapter.MeshTypeAdapter
 import jackTheFishman.util.CreateViaPath
 import jackTheFishman.util.Drawable
 import jackTheFishman.util.Usable
-import jackTheFishman.util.typeAdapter.MeshTypeAdapter
 import org.joml.Matrix4f
 import org.joml.Vector2f
 import org.joml.Vector3f

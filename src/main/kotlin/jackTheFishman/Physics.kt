@@ -13,7 +13,7 @@ object Physics {
     val world = World(Vec2(0f, 0f))
 
     fun update() {
-        world.step(RealTime.deltaTime, velocityIterations, positionIterations)
+        world.step(WindowTime.deltaTime, velocityIterations, positionIterations)
     }
 
     var gravity: Vector2fc
