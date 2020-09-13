@@ -9,7 +9,7 @@ class WindowTime(private val window: Window) : Time {
     init {
         window.onBetweenUpdates.subscribe { timeInSeconds ->
             val passedTime = timeInSeconds - time
-            check(deltaTime >= 0f) { "Time can not flow in reverse" }
+            check(passedTime >= 0f) { "Time can not flow in reverse" }
             val clampedPassedTime = min(passedTime, MAX_DELTA_TIME)
             deltaTime = clampedPassedTime * timeScale
             time += deltaTime

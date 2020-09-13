@@ -1,6 +1,5 @@
 package jackTheFishman.graphics
 
-import jackTheFishman.GlfwWindow
 import jackTheFishman.util.Usable
 import org.joml.Vector2i
 import org.joml.Vector2ic
@@ -11,7 +10,7 @@ import java.nio.ByteBuffer
 
 class Framebuffer : Usable {
     val buffer = glGenFramebuffers()
-    var size: Vector2ic = Vector2i(GlfwWindow.physicalSize)
+    var size: Vector2ic = Vector2i(0, 0)
 
     init {
         glBindFramebuffer(GL_FRAMEBUFFER, buffer)
@@ -66,10 +65,10 @@ class Framebuffer : Usable {
     }
 
     override fun use(callback: () -> Unit) {
-        if (GlfwWindow.physicalSize != size) {
-            size = Vector2i(GlfwWindow.physicalSize)
-            generateTextures()
-        }
+        // if (GlfwWindow.physicalSize != size) {
+            // size = Vector2i(GlfwWindow.physicalSize)
+            // generateTextures()
+        // }
         glBindFramebuffer(GL_FRAMEBUFFER, buffer)
         callback()
         glBindFramebuffer(GL_FRAMEBUFFER, 0)

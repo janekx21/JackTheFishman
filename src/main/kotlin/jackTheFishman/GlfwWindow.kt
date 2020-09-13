@@ -17,7 +17,6 @@ import org.joml.Vector2ic
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.glfw.GLFWFramebufferSizeCallbackI
 import org.lwjgl.glfw.GLFWImage
-import org.lwjgl.glfw.GLFWKeyCallbackI
 import org.lwjgl.glfw.GLFWWindowCloseCallbackI
 import org.lwjgl.opengl.GL.createCapabilities
 import org.lwjgl.opengl.GL11.GL_BLEND
@@ -139,13 +138,6 @@ class GlfwWindow : Window, Closeable, Finalized {
     }
 
     private fun configEventCallbacks() {
-        Legui.initializer.callbackKeeper.also {
-            it.chainKeyCallback.add(GLFWKeyCallbackI { _, key, _, action, _ ->
-                emitKeyAction(key, action)
-            })
-            it.chainFramebufferSizeCallback.add(framebufferSizeCallback)
-            it.chainWindowCloseCallback.add(windowCloseCallback)
-        }
     }
 
     private fun emitKeyAction(key: Int, action: Int) {
@@ -210,7 +202,6 @@ class GlfwWindow : Window, Closeable, Finalized {
     }
 
     override fun finalize() {
-        Legui.destroy()
         glfwDestroyWindow(pointer)
         glfwTerminate()
     }

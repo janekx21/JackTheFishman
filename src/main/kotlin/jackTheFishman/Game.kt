@@ -23,7 +23,6 @@ open class Game(private val window: Window) {
     }
 
     private fun initEngineObjects() {
-        Physics
     }
 
     private fun setupDependencyInjection() {
@@ -53,13 +52,9 @@ open class Game(private val window: Window) {
         try {
             while (!window.shouldClose) {
                 window.update()
-                Legui.update()
-                Input.update()
-                Physics.update()
                 update()
 
                 draw()
-                Legui.draw()
             }
         } finally {
             Finalized.finalizeAll()
