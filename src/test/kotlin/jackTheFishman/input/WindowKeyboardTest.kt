@@ -9,9 +9,11 @@ import org.joml.Vector2fc
 import org.joml.Vector2i
 import org.joml.Vector2ic
 import org.junit.Assert
-import org.koin.core.context.startKoin
+import org.junit.Rule
+import org.koin.dsl.bind
 import org.koin.dsl.module
 import org.koin.test.KoinTest
+import org.koin.test.KoinTestRule
 import org.koin.test.inject
 import kotlin.test.Test
 
@@ -74,24 +76,26 @@ internal class WindowKeyboardTest : KoinTest {
 
     private val myModule =
         module {
-            single { WindowStub() }
-            single { WindowKeyboard(get()) }
+            single { WindowStub() } bind Window::class
+            single { WindowKeyboard(get()) } bind Keyboard::class
         }
 
     private val windowStub: WindowStub by inject()
     private val keyboard: Keyboard by inject()
 
+    @get:Rule
+    val koinTestRule = KoinTestRule.create {
+        modules(myModule)
+    }
+
+
     @Test
     fun shouldStartUnset() {
-        startKoin { myModule }
-
         Assert.assertFalse(keyboard.down(KeyboardKey.A))
     }
 
     @Test
     fun `should register with flush`() {
-        startKoin { myModule }
-
         windowStub.keyboardEmitter!!.onNext(KeyboardAction(KeyboardKey.A, KeyboardActionType.PRESSED))
         windowStub.updateEmitter!!.onNext(.1f)
 
@@ -100,8 +104,6 @@ internal class WindowKeyboardTest : KoinTest {
 
     @Test
     fun shouldNotRegisterWithoutFlush() {
-        startKoin { myModule }
-
         windowStub.keyboardEmitter!!.onNext(KeyboardAction(KeyboardKey.A, KeyboardActionType.PRESSED))
 
         Assert.assertFalse(keyboard.down(KeyboardKey.A))
