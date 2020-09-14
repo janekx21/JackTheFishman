@@ -38,16 +38,14 @@ internal class WindowKeyboardTest : KoinTest {
             get() = logicalSize.x() / logicalSize.y()
 
         var updateEmitter: ObservableEmitter<Float>? = null
-        override val onBetweenUpdates: Observable<Float>
-            get() = Observable.create {
-                updateEmitter = it
-            }
+        override val onBetweenUpdates: Observable<Float> = Observable.create {
+            updateEmitter = it
+        }
 
         var keyboardEmitter: ObservableEmitter<KeyboardAction>? = null
-        override val onKeyChanged: Observable<KeyboardAction>
-            get() = Observable.create {
-                keyboardEmitter = it
-            }
+        override val onKeyChanged: Observable<KeyboardAction> = Observable.create {
+            keyboardEmitter = it
+        }
 
         override fun setCursor(texture: Texture2D) {
             TODO("Not yet implemented")
@@ -96,6 +94,7 @@ internal class WindowKeyboardTest : KoinTest {
 
     @Test
     fun `should register with flush`() {
+        check(windowStub.keyboardEmitter != null) { "wtf" }
         windowStub.keyboardEmitter!!.onNext(KeyboardAction(KeyboardKey.A, KeyboardActionType.PRESSED))
         windowStub.updateEmitter!!.onNext(.1f)
 
