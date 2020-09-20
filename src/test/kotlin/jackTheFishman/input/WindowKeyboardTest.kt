@@ -11,20 +11,21 @@ internal class WindowKeyboardTest : BaseTest() {
     private val keyboard: Keyboard by inject()
 
     @Test
-    fun shouldStartUnset() {
+    fun `should start unset`() {
         Assert.assertFalse(keyboard.down(KeyboardKey.A))
     }
 
     @Test
     fun `should register with flush`() {
         windowStub.keyboardSubject.onNext(KeyboardAction(KeyboardKey.A, KeyboardActionType.PRESSED))
+
         windowStub.updateSubject.onNext(.1f)
 
         Assert.assertTrue(keyboard.down(KeyboardKey.A))
     }
 
     @Test
-    fun shouldNotRegisterWithoutFlush() {
+    fun `should not register without flush`() {
         windowStub.keyboardSubject.onNext(KeyboardAction(KeyboardKey.A, KeyboardActionType.PRESSED))
 
         Assert.assertFalse(keyboard.down(KeyboardKey.A))

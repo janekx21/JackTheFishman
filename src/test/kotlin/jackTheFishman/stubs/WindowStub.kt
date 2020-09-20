@@ -12,20 +12,11 @@ import org.joml.Vector2i
 import org.joml.Vector2ic
 
 class WindowStub : Window {
-    override var shouldClose: Boolean
-        get() = false
-        set(value) {}
-    override var physicalSize: Vector2ic
-        get() = Vector2i(1280, 720)
-        set(value) {}
-    override val logicalSize: Vector2fc
-        get() = Vector2f(1280f, 720f)
-    override var contentScale: Float
-        get() = 1f
-        set(value) {}
-    override var fullscreen: Boolean
-        get() = false
-        set(value) {}
+    override var shouldClose: Boolean = false
+    override var physicalSize: Vector2ic = Vector2i(1280, 720)
+    override val logicalSize: Vector2fc = Vector2f(1280f, 720f)
+    override var contentScale: Float= 1f
+    override var fullscreen: Boolean = false
     override val aspect: Float
         get() = logicalSize.x() / logicalSize.y()
 
@@ -43,10 +34,7 @@ class WindowStub : Window {
 
     override fun setCursorMode(mode: CursorMode) {}
 
-    override val mousePosition: Vector2fc
-        get() = Vector2f(42f, 65f)
-    override val isLeftMouseButtonDown: Boolean
-        get() = false
-    override val isRightMouseButtonDown: Boolean
-        get() = false
+    override var mousePosition: Vector2fc = Vector2f(0f, 0f)
+    override val isLeftMouseButtonDown: Boolean = false
+    override val isRightMouseButtonDown: Boolean = false
 }

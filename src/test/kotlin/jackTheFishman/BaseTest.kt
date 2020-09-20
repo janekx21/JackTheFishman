@@ -1,7 +1,9 @@
 package jackTheFishman
 
 import jackTheFishman.input.Keyboard
+import jackTheFishman.input.Mouse
 import jackTheFishman.input.WindowKeyboard
+import jackTheFishman.input.WindowMouse
 import jackTheFishman.stubs.WindowStub
 import org.junit.Rule
 import org.koin.dsl.bind
@@ -14,6 +16,7 @@ open class BaseTest : KoinTest {
         module {
             single { WindowStub() } bind Window::class
             single { WindowKeyboard(get()) } bind Keyboard::class
+            single { WindowMouse(get()) } bind Mouse::class
         }
 
     @get:Rule
