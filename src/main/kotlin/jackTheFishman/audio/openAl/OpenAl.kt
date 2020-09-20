@@ -24,6 +24,8 @@ object OpenAl : Finalized {
 
     private const val BITS_PER_BYTE = 8
 
+    const val NULL_SAMPLE: OpenAlSamplePointer = 0
+
     init {
         check(device != 0L) { "Open AI Device not found" }
         checkNotNull(defaultDeviceName) { "Default device not found" }

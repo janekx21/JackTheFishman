@@ -13,6 +13,9 @@ class OpenAlSource(initialSample: OpenAlSample? = null) : Source, Closeable {
         set(value) {
             if (value != null) {
                 OpenAl.setSampleOfSource(pointer, value.pointer)
+            } else {
+                stop()
+                OpenAl.setSampleOfSource(pointer, OpenAl.NULL_SAMPLE)
             }
             field = value
         }
@@ -21,13 +24,13 @@ class OpenAlSource(initialSample: OpenAlSample? = null) : Source, Closeable {
         sample = initialSample
     }
 
-    override var pitch: Float = 1.0f
+    override var pitch: Float = 1f
         set(value) {
             OpenAl.setSourcePitch(pointer, value)
             field = value
         }
 
-    override var gain: Float = 1.0f
+    override var gain: Float = 1f
         set(value) {
             OpenAl.setSourceGain(pointer, gain)
             field = value
@@ -75,10 +78,10 @@ class OpenAlSource(initialSample: OpenAlSample? = null) : Source, Closeable {
 
     override fun close() {
         stop()
-        delete()
+        deleteSource()
     }
 
-    private fun delete() {
+    private fun deleteSource() {
         OpenAl.deleteSource(pointer)
     }
 }
