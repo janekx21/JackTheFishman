@@ -10,33 +10,44 @@ object TempFileWrapper {
     var prefix: File = File("./")
 
     fun pathFromResourcePath(resourcePath: File): File {
-        checkFileResourceExists(resourcePath)
-        return File(wrapResourceInTempFile(resourcePath))
-    }
-
-    private fun checkFileResourceExists(resourcePath: File) {
-        val pathWithPrefix = resourceWithPrefix(resourcePath)
-        val resource = ClassLoader.getSystemResource(pathWithPrefix.invariantSeparatorsPath)
-        checkNotNull(resource) { "Resource at $pathWithPrefix not found" }
+        val resourcePathWithPrefix = resourceWithPrefix(resourcePath)
+        checkFileResourceExists(resourcePathWithPrefix)
+        return wrapResourceInTempFile(resourcePathWithPrefix)
     }
 
     private fun resourceWithPrefix(resourcePath: File): File {
         return prefix.resolve(resourcePath)
     }
 
-    private fun wrapResourceInTempFile(resourcePath: File): String {
-        val pathWithPrefix = resourceWithPrefix(resourcePath)
-        val hash = resourcePath.path.hashCode()
+    private fun checkFileResourceExists(resourcePathWithPrefix: File) {
+        val resource = ClassLoader.getSystemResource(resourcePathWithPrefix.invariantSeparatorsPath)
+        checkNotNull(resource) { "Resource at $resourcePathWithPrefix not found" }
+    }
 
-        val inputStream = ClassLoader.getSystemResourceAsStream(pathWithPrefix.invariantSeparatorsPath)
-        checkNotNull(inputStream) { "File stream could not be opened to resource at $resourcePath" }
+    private fun wrapResourceInTempFile(pathWithPrefix: File): File {
+        val tempFile = createTempFile(pathWithPrefix)
 
-        val tempFile = File.createTempFile("resource_${hash.absoluteValue}", ".${pathWithPrefix.extension}")
-        val outputStream = FileOutputStream(tempFile)
+        val inputStream = createInputStream(pathWithPrefix)
+        val outputStream = createOutputStream(tempFile)
 
         outputStream.pipe(inputStream)
 
-        return tempFile.path
+        return tempFile
+    }
+
+    private fun createTempFile(pathWithPrefix: File): File {
+        val hash = pathWithPrefix.path.hashCode()
+        return File.createTempFile("resource_${hash.absoluteValue}", ".${pathWithPrefix.extension}")
+    }
+
+    private fun createInputStream(pathWithPrefix: File): InputStream {
+        val inputStream = ClassLoader.getSystemResourceAsStream(pathWithPrefix.invariantSeparatorsPath)
+        checkNotNull(inputStream) { "File stream could not be opened to resource at $pathWithPrefix" }
+        return inputStream
+    }
+
+    private fun createOutputStream(tempFile: File): FileOutputStream {
+        return FileOutputStream(tempFile)
     }
 
     private fun OutputStream.pipe(source: InputStream) {
