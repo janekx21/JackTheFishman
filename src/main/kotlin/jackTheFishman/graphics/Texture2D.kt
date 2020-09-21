@@ -1,6 +1,7 @@
 package jackTheFishman.graphics
 
 import com.beust.klaxon.Json
+import jackTheFishman.resouces.viaPath.Texture2DViaPath
 import jackTheFishman.util.CreateViaPath
 import jackTheFishman.util.Usable
 import org.joml.Vector2i

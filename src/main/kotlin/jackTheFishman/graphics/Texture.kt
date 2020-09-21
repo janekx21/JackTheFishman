@@ -1,10 +1,11 @@
 package jackTheFishman.graphics
 
 import com.beust.klaxon.TypeFor
+import jackTheFishman.resouces.Resource
 import jackTheFishman.serialisation.typeAdapter.TextureTypeAdapter
 
 @TypeFor(field = "type", adapter = TextureTypeAdapter::class)
-abstract class Texture {
+abstract class Texture : Resource {
     val type: String = javaClass.simpleName
 
     abstract val pointer: Int

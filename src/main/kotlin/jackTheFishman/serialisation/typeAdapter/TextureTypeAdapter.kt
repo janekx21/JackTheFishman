@@ -4,7 +4,7 @@ import com.beust.klaxon.TypeAdapter
 import jackTheFishman.graphics.CubeTexture
 import jackTheFishman.graphics.Texture
 import jackTheFishman.graphics.Texture2D
-import jackTheFishman.graphics.Texture2DViaPath
+import jackTheFishman.resouces.viaPath.Texture2DViaPath
 import kotlin.reflect.KClass
 
 class TextureTypeAdapter : TypeAdapter<Texture> {
