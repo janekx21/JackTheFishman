@@ -1,9 +1,9 @@
 package jackTheFishman.serialisation
 
 import com.beust.klaxon.Klaxon
-import jackTheFishman.math.converter.QuaternionConverter
-import jackTheFishman.math.converter.Vector2fConverter
-import jackTheFishman.math.converter.Vector3fConverter
+import jackTheFishman.serialisation.converter.QuaternionConverter
+import jackTheFishman.serialisation.converter.Vector2fConverter
+import jackTheFishman.serialisation.converter.Vector3fConverter
 
 object JsonSerialisation {
     val klaxon = Klaxon().run {

@@ -1,4 +1,4 @@
-package jackTheFishman.math.converter
+package jackTheFishman.serialisation.converter
 
 import com.beust.klaxon.Converter
 import com.beust.klaxon.JsonValue

@@ -1,4 +1,4 @@
-package jackTheFishman.math.converter
+package jackTheFishman.serialisation.converter
 
 fun anyAsFloat(value: Any?): Float {
     checkNotNull(value) { "Value is null" }
