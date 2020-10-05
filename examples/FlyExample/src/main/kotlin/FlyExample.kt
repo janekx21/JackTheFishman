@@ -1,4 +1,3 @@
-
 import jackTheFishman.Game
 import jackTheFishman.GlfwWindow
 

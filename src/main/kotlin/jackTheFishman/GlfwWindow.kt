@@ -15,6 +15,7 @@ import org.joml.Vector2fc
 import org.joml.Vector2i
 import org.joml.Vector2ic
 import org.lwjgl.glfw.GLFW.*
+import org.lwjgl.glfw.GLFWErrorCallback
 import org.lwjgl.glfw.GLFWFramebufferSizeCallbackI
 import org.lwjgl.glfw.GLFWImage
 import org.lwjgl.glfw.GLFWWindowCloseCallbackI
@@ -31,6 +32,13 @@ import java.io.Closeable
  * Window Wrapper that also manages the open gl context
  */
 class GlfwWindow : Window, Closeable, Finalized {
+    init {
+        glfwInit().also {
+            check(it) { "GLFW could not init" }
+        }
+        preConfig()
+    }
+
     override var physicalSize: Vector2ic = Vector2i(1280, 720)
     override var shouldClose = false
     override val mousePosition: Vector2fc
@@ -78,7 +86,9 @@ class GlfwWindow : Window, Closeable, Finalized {
 
     var onResize: (GlfwWindow) -> Unit = {}
 
-    val pointer = glfwCreateWindow(physicalSize.x(), physicalSize.y(), Companion.title, 0, 0)
+    val pointer = glfwCreateWindow(physicalSize.x(), physicalSize.y(), title, 0, 0).also {
+        check(it != 0L) { "GLFW Window could not be instantiated" }
+    }
 
     override var contentScale: Float = 1.0f
 
@@ -103,7 +113,19 @@ class GlfwWindow : Window, Closeable, Finalized {
 
     init {
         open()
-        config()
+        postConfig()
+    }
+
+    private fun preConfig() {
+        configEventCallbacks()
+    }
+
+    private fun configEventCallbacks() {
+        val errorCallback = GLFWErrorCallback.createPrint(System.err)
+        glfwSetErrorCallback { code, description ->
+            errorCallback(code, description)
+            error("GLFW error was occurred")
+        }
     }
 
     private fun open() {
@@ -113,10 +135,9 @@ class GlfwWindow : Window, Closeable, Finalized {
         Finalized.push(this)
     }
 
-    private fun config() {
+    private fun postConfig() {
         configGLFW()
         configOpenGL()
-        configEventCallbacks()
     }
 
     private fun configGLFW() {
@@ -135,9 +156,6 @@ class GlfwWindow : Window, Closeable, Finalized {
     private fun configOpenGL() {
         glEnable(GL_BLEND)
         glEnable(GL_DEPTH_TEST)
-    }
-
-    private fun configEventCallbacks() {
     }
 
     private fun emitKeyAction(key: Int, action: Int) {
