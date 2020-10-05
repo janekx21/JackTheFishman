@@ -24,7 +24,7 @@ class WindowStub : Window {
     override val onBetweenUpdates: Observable<Float> = updateSubject
 
     var keyboardSubject: ReplaySubject<KeyboardAction> = ReplaySubject.create()
-    override val onKeyChanged: Observable<KeyboardAction> = keyboardSubject
+    override val onKeyAction: Observable<KeyboardAction> = keyboardSubject
 
     override fun setCursor(texture: Texture2D) {}
 

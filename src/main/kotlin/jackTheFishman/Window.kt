@@ -9,13 +9,13 @@ import org.joml.Vector2ic
 
 interface Window {
     var shouldClose: Boolean
-    var physicalSize: Vector2ic
+    val physicalSize: Vector2ic
     val logicalSize: Vector2fc
     var contentScale: Float
     var fullscreen: Boolean
     val aspect: Float
     val onBetweenUpdates: Observable<Float>
-    val onKeyChanged: Observable<KeyboardAction>
+    val onKeyAction: Observable<KeyboardAction>
 
     fun setCursor(texture: Texture2D)
     fun setIcon(texture: Texture2D)

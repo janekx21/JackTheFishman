@@ -2,6 +2,7 @@ package jackTheFishman
 
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.ObservableEmitter
+import io.reactivex.rxjava3.subjects.PublishSubject
 import jackTheFishman.graphics.Texture2D
 import jackTheFishman.input.CursorMode
 import jackTheFishman.input.KeyboardAction
@@ -10,20 +11,17 @@ import jackTheFishman.input.KeyboardKey
 import jackTheFishman.util.Finalized
 import jackTheFishman.util.pointer.DoublePointer
 import jackTheFishman.util.pointer.FloatPointer
+import jackTheFishman.util.pointer.IntPointer
 import org.joml.Vector2f
 import org.joml.Vector2fc
 import org.joml.Vector2i
 import org.joml.Vector2ic
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.glfw.GLFWErrorCallback
-import org.lwjgl.glfw.GLFWFramebufferSizeCallbackI
 import org.lwjgl.glfw.GLFWImage
-import org.lwjgl.glfw.GLFWWindowCloseCallbackI
 import org.lwjgl.opengl.GL.createCapabilities
 import org.lwjgl.opengl.GL11.GL_BLEND
-import org.lwjgl.opengl.GL46
-import org.lwjgl.opengl.GL46.GL_DEPTH_TEST
-import org.lwjgl.opengl.GL46.glEnable
+import org.lwjgl.opengl.GL46.*
 import org.lwjgl.system.MemoryUtil
 import java.io.Closeable
 
@@ -31,7 +29,7 @@ import java.io.Closeable
 /**
  * Window Wrapper that also manages the open gl context
  */
-class GlfwWindow : Window, Closeable, Finalized {
+class GlfwWindow(startSize: Vector2ic = Vector2i(1280, 720)) : Window, Closeable, Finalized {
     init {
         glfwInit().also {
             check(it) { "GLFW could not init" }
@@ -39,8 +37,18 @@ class GlfwWindow : Window, Closeable, Finalized {
         preConfig()
     }
 
-    override var physicalSize: Vector2ic = Vector2i(1280, 720)
+    val pointer = glfwCreateWindow(startSize.x(), startSize.y(), title, 0, 0).also {
+        check(it != 0L) { "GLFW Window could not be instantiated" }
+    }
+
     override var shouldClose = false
+    override val physicalSize: Vector2ic
+        get() {
+            val width = IntPointer()
+            val height = IntPointer()
+            glfwGetWindowSize(pointer, width.array, height.array)
+            return Vector2i(width.value, height.value)
+        }
     override val mousePosition: Vector2fc
         get() {
             val x = DoublePointer()
@@ -53,7 +61,6 @@ class GlfwWindow : Window, Closeable, Finalized {
     override val isRightMouseButtonDown: Boolean
         get() = glfwGetMouseButton(pointer, GLFW_MOUSE_BUTTON_RIGHT) != GLFW_RELEASE
 
-
     var multiSampleCount = 1
         set(value) {
             field = value
@@ -64,7 +71,7 @@ class GlfwWindow : Window, Closeable, Finalized {
         set(value) {
             if (value) {
                 val mode = glfwGetVideoMode(glfwGetPrimaryMonitor())
-                checkNotNull(mode)
+                checkNotNull(mode) { "GLFW window mode could not be determent" }
                 glfwSetWindowMonitor(
                     pointer,
                     glfwGetPrimaryMonitor(),
@@ -75,8 +82,8 @@ class GlfwWindow : Window, Closeable, Finalized {
                     GLFW_DONT_CARE
                 )
             } else {
-                physicalSize = Vector2i(1280, 720)
-                glfwSetWindowMonitor(pointer, 0, 0, 25, physicalSize.x(), physicalSize.y(), GLFW_DONT_CARE)
+                // TODO save size between fullscreen sessions
+                glfwSetWindowMonitor(pointer, 0, 0, 0, 100, 100, GLFW_DONT_CARE)
             }
             field = value
         }
@@ -84,32 +91,16 @@ class GlfwWindow : Window, Closeable, Finalized {
     override val aspect: Float
         get() = physicalSize.x().toFloat() / physicalSize.y().toFloat()
 
-    var onResize: (GlfwWindow) -> Unit = {}
-
-    val pointer = glfwCreateWindow(physicalSize.x(), physicalSize.y(), title, 0, 0).also {
-        check(it != 0L) { "GLFW Window could not be instantiated" }
-    }
-
     override var contentScale: Float = 1.0f
 
     override val logicalSize: Vector2fc
         get() = Vector2f(physicalSize).div(contentScale)
 
-    private val framebufferSizeCallback = GLFWFramebufferSizeCallbackI { _, width, height ->
-        physicalSize = Vector2i(width, height)
-        GL46.glViewport(0, 0, physicalSize.x(), physicalSize.y())
-        onResize(this)
-    }
-
-    private val windowCloseCallback = GLFWWindowCloseCallbackI {
-        close()
-    }
-
     private var updatesEmitter: ObservableEmitter<Float>? = null
     override val onBetweenUpdates: Observable<Float> = Observable.create { updatesEmitter = it }
 
-    private var keyChangedEmitter: ObservableEmitter<KeyboardAction>? = null
-    override val onKeyChanged: Observable<KeyboardAction> = Observable.create { }
+    private val keyActionSubject = PublishSubject.create<KeyboardAction>()
+    override val onKeyAction: Observable<KeyboardAction> = keyActionSubject
 
     init {
         open()
@@ -117,10 +108,10 @@ class GlfwWindow : Window, Closeable, Finalized {
     }
 
     private fun preConfig() {
-        configEventCallbacks()
+        configErrorCallback()
     }
 
-    private fun configEventCallbacks() {
+    private fun configErrorCallback() {
         val errorCallback = GLFWErrorCallback.createPrint(System.err)
         glfwSetErrorCallback { code, description ->
             errorCallback(code, description)
@@ -138,6 +129,7 @@ class GlfwWindow : Window, Closeable, Finalized {
     private fun postConfig() {
         configGLFW()
         configOpenGL()
+        configEventCallbacks()
     }
 
     private fun configGLFW() {
@@ -158,6 +150,24 @@ class GlfwWindow : Window, Closeable, Finalized {
         glEnable(GL_DEPTH_TEST)
     }
 
+    private fun configEventCallbacks() {
+        glfwSetFramebufferSizeCallback(pointer) { _, width, height ->
+            onResize(Vector2i(width, height))
+        }
+
+        glfwSetWindowCloseCallback(pointer) {
+            close()
+        }
+
+        glfwSetKeyCallback(pointer) { _, key, _, action, _ ->
+            emitKeyAction(key, action)
+        }
+    }
+
+    private fun onResize(size: Vector2ic) {
+        glViewport(0, 0, size.x(), size.y())
+    }
+
     private fun emitKeyAction(key: Int, action: Int) {
         val actionType = when (action) {
             GLFW_PRESS -> KeyboardActionType.PRESSED
@@ -166,7 +176,7 @@ class GlfwWindow : Window, Closeable, Finalized {
         }
 
         if (glfwKeyToKey.containsKey(key)) {
-            keyChangedEmitter?.onNext(KeyboardAction(glfwKeyToKey[key] ?: error("Key not found"), actionType))
+            keyActionSubject.onNext(KeyboardAction(glfwKeyToKey[key] ?: error("Key not found"), actionType))
         }
     }
 

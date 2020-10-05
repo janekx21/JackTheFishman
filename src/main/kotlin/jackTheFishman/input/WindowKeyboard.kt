@@ -17,7 +17,7 @@ class WindowKeyboard(private val window: Window) : Keyboard {
     private var nextKeyStates = keyStates.toMutableMap()
 
     init {
-        window.onKeyChanged.subscribe { registerKeyboardAction(it) }
+        window.onKeyAction.subscribe { registerKeyboardAction(it) }
         window.onBetweenUpdates.subscribe { update() }
     }
 
