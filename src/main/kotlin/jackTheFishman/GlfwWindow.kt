@@ -96,7 +96,7 @@ class GlfwWindow(startSize: Vector2ic = Vector2i(1280, 720)) : Window, Closeable
         get() = Vector2f(physicalSize).div(contentScale)
 
     private var updatesEmitter: ObservableEmitter<Float>? = null
-    override val onBetweenUpdates: Observable<Float> = Observable.create { updatesEmitter = it }
+    override val onUpdate: Observable<Float> = Observable.create { updatesEmitter = it }
 
     private val keyActionSubject = PublishSubject.create<KeyboardAction>()
     override val onKeyAction: Observable<KeyboardAction> = keyActionSubject
@@ -174,37 +174,46 @@ class GlfwWindow(startSize: Vector2ic = Vector2i(1280, 720)) : Window, Closeable
             else -> error("Keyboard action not supported")
         }
 
-        if (glfwKeyToKey.containsKey(key)) {
-            keyActionSubject.onNext(KeyboardAction(glfwKeyToKey[key] ?: error("Key not found"), actionType))
+        if (glfwKeyToKeyboardKey.containsKey(key)) {
+            keyActionSubject.onNext(KeyboardAction(glfwKeyToKeyboardKey[key] ?: error("Key not found"), actionType))
         }
     }
 
-    override fun setCursor(texture: Texture2D) {
-        val cursor = glfwCreateCursor(texture.asGLFWImage(), 0, 0)
-        if (cursor == MemoryUtil.NULL)
-            throw RuntimeException("Error creating cursor")
-        glfwSetCursor(pointer, cursor)
-    }
-
-    override fun setIcon(texture: Texture2D) {
-        val buffer = GLFWImage.malloc(1)
-        buffer.put(0, texture.asGLFWImage())
-        glfwSetWindowIcon(pointer, buffer)
-    }
-
-    override fun update() {
-        updateWindow()
-        updateTime()
-    }
-
-    override fun setCursorMode(mode: CursorMode) {
-        val glfwCursorMode = when (mode) {
-            CursorMode.NORMAL -> GLFW_CURSOR_NORMAL
-            CursorMode.DISABLED -> GLFW_CURSOR_DISABLED
-            CursorMode.HIDDEN -> GLFW_CURSOR_HIDDEN
+    override var cursor: Texture2D? = null
+        set(value) {
+            if (value != null) {
+                val cursor = glfwCreateCursor(value.asGLFWImage(), 0, 0)
+                if (cursor == MemoryUtil.NULL)
+                    throw RuntimeException("Error creating cursor")
+                glfwSetCursor(pointer, cursor)
+            } else {
+                glfwSetCursor(pointer, NO_CURSOR)
+            }
+            field = value
         }
-        glfwSetInputMode(pointer, GLFW_CURSOR, glfwCursorMode)
-    }
+
+    override var icon: Texture2D? = null
+        set(value) {
+            if (value != null) {
+                val buffer = GLFWImage.malloc(1)
+                buffer.put(0, value.asGLFWImage())
+                glfwSetWindowIcon(pointer, buffer)
+            } else {
+                glfwSetWindowIcon(pointer, null)
+            }
+            field = value
+        }
+
+    override var cursorMode: CursorMode = CursorMode.NORMAL
+        set(value) {
+            val glfwCursorMode = when (value) {
+                CursorMode.NORMAL -> GLFW_CURSOR_NORMAL
+                CursorMode.DISABLED -> GLFW_CURSOR_DISABLED
+                CursorMode.HIDDEN -> GLFW_CURSOR_HIDDEN
+            }
+            glfwSetInputMode(pointer, GLFW_CURSOR, glfwCursorMode)
+            field = value
+        }
 
     private fun updateWindow() {
         glfwSwapBuffers(pointer)
@@ -223,6 +232,11 @@ class GlfwWindow(startSize: Vector2ic = Vector2i(1280, 720)) : Window, Closeable
         return time > 0f
     }
 
+    override fun update() {
+        updateWindow()
+        updateTime()
+    }
+
     override fun close() {
         shouldClose = true
     }
@@ -234,8 +248,9 @@ class GlfwWindow(startSize: Vector2ic = Vector2i(1280, 720)) : Window, Closeable
 
     companion object {
         private const val title = "Jack the Fishman Framework"
+        const val NO_CURSOR = 0L
 
-        private val glfwKeyToKey = mapOf(
+        private val glfwKeyToKeyboardKey = mapOf(
             GLFW_KEY_SPACE to KeyboardKey.SPACE,
             GLFW_KEY_APOSTROPHE to KeyboardKey.APOSTROPHE,
             GLFW_KEY_COMMA to KeyboardKey.COMMA,

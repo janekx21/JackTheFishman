@@ -8,21 +8,24 @@ import org.joml.Vector2fc
 import org.joml.Vector2ic
 
 interface Window {
-    var shouldClose: Boolean
     val physicalSize: Vector2ic
     val logicalSize: Vector2fc
-    var contentScale: Float
-    var fullscreen: Boolean
     val aspect: Float
-    val onBetweenUpdates: Observable<Float>
+
+    val onUpdate: Observable<Float>
     val onKeyAction: Observable<KeyboardAction>
 
-    fun setCursor(texture: Texture2D)
-    fun setIcon(texture: Texture2D)
-    fun update()
+    var shouldClose: Boolean
+    var contentScale: Float
+    var fullscreen: Boolean
 
-    fun setCursorMode(mode: CursorMode)
+    var cursor: Texture2D?
+    var icon: Texture2D?
+    var cursorMode: CursorMode
+
     val mousePosition: Vector2fc
     val isLeftMouseButtonDown: Boolean
     val isRightMouseButtonDown: Boolean
+
+    fun update()
 }

@@ -20,7 +20,7 @@ class WindowMouse(private val window: Window) : Mouse {
         }
 
     init {
-        window.onBetweenUpdates.subscribe {
+        window.onUpdate.subscribe {
             update()
         }
     }

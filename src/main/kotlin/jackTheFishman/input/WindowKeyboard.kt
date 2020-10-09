@@ -18,7 +18,7 @@ class WindowKeyboard(private val window: Window) : Keyboard {
 
     init {
         window.onKeyAction.subscribe { registerKeyboardAction(it) }
-        window.onBetweenUpdates.subscribe { update() }
+        window.onUpdate.subscribe { update() }
     }
 
     private fun registerKeyboardAction(action: KeyboardAction) {

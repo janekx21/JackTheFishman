@@ -21,7 +21,7 @@ class WindowStub : Window {
         get() = logicalSize.x() / logicalSize.y()
 
     var updateSubject: ReplaySubject<Float> = ReplaySubject.create()
-    override val onBetweenUpdates: Observable<Float> = updateSubject
+    override val onUpdate: Observable<Float> = updateSubject
 
     var keyboardSubject: ReplaySubject<KeyboardAction> = ReplaySubject.create()
     override val onKeyAction: Observable<KeyboardAction> = keyboardSubject

@@ -7,7 +7,7 @@ import kotlin.math.min
  */
 class WindowTime(private val window: Window) : Time {
     init {
-        window.onBetweenUpdates.subscribe { timeInSeconds ->
+        window.onUpdate.subscribe { timeInSeconds ->
             val passedTime = timeInSeconds - time
             check(passedTime >= 0f) { "Time can not flow in reverse" }
             val clampedPassedTime = min(passedTime, MAX_DELTA_TIME)
