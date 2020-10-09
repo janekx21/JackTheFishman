@@ -25,7 +25,6 @@ import org.lwjgl.opengl.GL46.*
 import org.lwjgl.system.MemoryUtil
 import java.io.Closeable
 
-
 /**
  * Window Wrapper that also manages the open gl context
  */
@@ -179,7 +178,6 @@ class GlfwWindow(startSize: Vector2ic = Vector2i(1280, 720)) : Window, Closeable
             keyActionSubject.onNext(KeyboardAction(glfwKeyToKey[key] ?: error("Key not found"), actionType))
         }
     }
-
 
     override fun setCursor(texture: Texture2D) {
         val cursor = glfwCreateCursor(texture.asGLFWImage(), 0, 0)

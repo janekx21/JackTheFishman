@@ -13,16 +13,12 @@ import org.lwjgl.glfw.GLFW
 open class Game(private val window: Window) {
     init {
         configGLFW()
-        initEngineObjects()
         setupDependencyInjection()
     }
 
     private fun configGLFW() {
         check(GLFW.glfwInit()) { "GLFW couldn't init" }
         GLFW.glfwDefaultWindowHints() // optional, the current window hints are already the default
-    }
-
-    private fun initEngineObjects() {
     }
 
     private fun setupDependencyInjection() {
