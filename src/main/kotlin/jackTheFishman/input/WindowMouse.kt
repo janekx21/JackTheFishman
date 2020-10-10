@@ -15,9 +15,10 @@ class WindowMouse(private val window: Window) : Mouse {
 
     override var cursorMode: CursorMode = CursorMode.NORMAL
         set(value) {
-            window.setCursorMode(value)
+            window.cursorMode = value
             field = value
         }
+        get() = window.cursorMode
 
     init {
         window.onUpdate.subscribe {

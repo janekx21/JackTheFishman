@@ -3,9 +3,9 @@ package jackTheFishman
 import kotlin.math.min
 
 /**
- * Object that directly controls global time
+ * Directly controls global time
  */
-class WindowTime(private val window: Window) : Time {
+class WindowTime(window: Window) : Time {
     init {
         window.onUpdate.subscribe { timeInSeconds ->
             val passedTime = timeInSeconds - time

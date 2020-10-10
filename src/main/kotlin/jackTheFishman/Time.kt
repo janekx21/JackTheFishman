@@ -13,7 +13,7 @@ interface Time {
 
     /**
      * Scale of time where
-     * 1 or 100% corresponds to normal time flow.
+     * 1 or 100% corresponds to normal time flow
      */
     var timeScale: Float
 }

@@ -7,7 +7,7 @@ import jackTheFishman.Window
  * You can get a specific key state using these functions respectively:
  * [down], [up], [changed], [justDown] and [justUp].
  */
-class WindowKeyboard(private val window: Window) : Keyboard {
+class WindowKeyboard(window: Window) : Keyboard {
     private var keyStates =
         KeyboardKey.values().map { key -> key to ToggleableState() }.toMap()
 

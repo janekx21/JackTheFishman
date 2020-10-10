@@ -38,14 +38,3 @@ operator fun Vector2f.plusAssign(other: Vector2fc) {
 operator fun Vector2f.unaryMinus(): Vector2f {
     return Vector2f(this).mul(-1f)
 }
-
-fun Vector2f.toJson(): Any? {
-    return arrayOf(this.x, this.y)
-}
-
-/// Gibt leider keine statischen extension-methods. Deswegen müssen wir hier
-/// [this] mutieren (Anstatt einen neuen Vektor mit den JSON-Daten in [json] zu erzeugen)
-fun Vector2f.fromJson(json: Any?) {
-    val array = json as Array<*>
-    this.set(array[0] as Double, array[1] as Double)
-}

@@ -17,6 +17,10 @@ class WindowStub : Window {
     override val logicalSize: Vector2fc = Vector2f(1280f, 720f)
     override var contentScale: Float= 1f
     override var fullscreen: Boolean = false
+    override var cursor: Texture2D? = null
+    override var icon: Texture2D? = null
+    override var cursorMode: CursorMode = CursorMode.NORMAL
+
     override val aspect: Float
         get() = logicalSize.x() / logicalSize.y()
 
@@ -26,15 +30,9 @@ class WindowStub : Window {
     var keyboardSubject: ReplaySubject<KeyboardAction> = ReplaySubject.create()
     override val onKeyAction: Observable<KeyboardAction> = keyboardSubject
 
-    override fun setCursor(texture: Texture2D) {}
-
-    override fun setIcon(texture: Texture2D) {}
-
-    override fun update() {}
-
-    override fun setCursorMode(mode: CursorMode) {}
-
     override var mousePosition: Vector2fc = Vector2f(0f, 0f)
     override val isLeftMouseButtonDown: Boolean = false
     override val isRightMouseButtonDown: Boolean = false
+
+    override fun update() {}
 }

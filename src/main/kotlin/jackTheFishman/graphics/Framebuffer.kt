@@ -9,11 +9,11 @@ import org.lwjgl.opengl.GL46
 import java.nio.ByteBuffer
 
 class Framebuffer : Usable {
-    val buffer = glGenFramebuffers()
+    val poiner = glGenFramebuffers()
     var size: Vector2ic = Vector2i(0, 0)
 
     init {
-        glBindFramebuffer(GL_FRAMEBUFFER, buffer)
+        glBindFramebuffer(GL_FRAMEBUFFER, poiner)
     }
 
     var texture = Texture2D().also {
@@ -69,7 +69,7 @@ class Framebuffer : Usable {
             // size = Vector2i(GlfwWindow.physicalSize)
             // generateTextures()
         // }
-        glBindFramebuffer(GL_FRAMEBUFFER, buffer)
+        glBindFramebuffer(GL_FRAMEBUFFER, poiner)
         callback()
         glBindFramebuffer(GL_FRAMEBUFFER, 0)
     }
